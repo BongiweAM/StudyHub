@@ -1,0 +1,1326 @@
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0e1a; --surface: #111827; --surface2: #1a2235; --border: rgba(255,255,255,0.08);
+    --text: #e6edf3; --muted: #7d8590; --accent: #4f9cf9; --accent2: #3fb950;
+    --warn: #d29922; --danger: #f85149; --purple: #bc8cff;
+    --font: 'Segoe UI', system-ui, sans-serif;
+    --glow-blue: 0 0 20px rgba(79,156,249,.4), 0 0 40px rgba(79,156,249,.15);
+    --glow-green: 0 0 20px rgba(63,185,80,.4), 0 0 40px rgba(63,185,80,.15);
+    --glow-purple: 0 0 20px rgba(188,140,255,.4), 0 0 40px rgba(188,140,255,.15);
+    --glow-amber: 0 0 20px rgba(210,153,34,.4), 0 0 40px rgba(210,153,34,.15);
+    --glow-red: 0 0 20px rgba(248,81,73,.4), 0 0 40px rgba(248,81,73,.15);
+  }
+
+  /* ANIMATED BACKGROUND */
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(79,156,249,.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(188,140,255,.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(63,185,80,.04) 0%, transparent 60%);
+    background-attachment: fixed;
+  }
+
+  /* FLOATING PARTICLES CANVAS */
+  #particles { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:.4; }
+  #app { position: relative; z-index: 1; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(13,17,23,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; gap: 0; height: 56px; }
+  .nav-brand { font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: -0.3px; margin-right: 2rem; }
+  .nav-brand span { color: var(--text); }
+  .nav-tabs { display: flex; gap: 0; height: 100%; }
+  .nav-tab { display: flex; align-items: center; gap: 6px; padding: 0 16px; font-size: 13px; font-weight: 500;
+    color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; height: 100%;
+    background: none; border-left: none; border-right: none; border-top: none; white-space: nowrap; }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-tab .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+  .nav-tab .dot.warn { background: var(--warn); }
+  .nav-tab .dot.danger { background: var(--danger); }
+  .badge { background: var(--danger); color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 8px; font-weight: 700; }
+
+  /* PAGES */
+  .page { display: none; padding: 1.5rem; max-width: 1100px; margin: 0 auto; animation: fadeIn .3s; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .page.active { animation: fadeIn .35s cubic-bezier(.4,0,.2,1); }
+
+  /* CARDS — 3D tilt + glow on hover */
+  .card {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    transition: transform .25s ease, box-shadow .25s ease;
+    transform-style: preserve-3d;
+    will-change: transform;
+    box-shadow: 0 4px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .card:hover {
+    box-shadow: 0 8px 40px rgba(0,0,0,.6), 0 0 30px rgba(79,156,249,.12), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .card-sm {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+  /* SECTION HEADERS */
+  .section-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: .25rem; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.25rem; }
+  .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: .4rem; }
+
+  /* STAT CARDS */
+  .stat-card {
+    background: linear-gradient(145deg, var(--surface2) 0%, var(--surface) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.1rem 1.25rem;
+    transition: transform .2s ease, box-shadow .2s ease;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 20px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
+    cursor: default;
+  }
+  .stat-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0,0,0,.5), 0 0 20px rgba(79,156,249,.15);
+  }
+  .stat-val { font-size: 28px; font-weight: 700; }
+  .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .stat-sub { font-size: 11px; margin-top: 6px; padding: 3px 8px; border-radius: 6px; display: inline-block; font-weight: 600; }
+  .good { background: rgba(63,185,80,.15); color: var(--accent2); }
+  .bad { background: rgba(248,81,73,.15); color: var(--danger); }
+  .mid { background: rgba(210,153,34,.15); color: var(--warn); }
+
+  /* NAV 3D */
+  nav {
+    box-shadow: 0 4px 30px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.05);
+  }
+  .nav-tab {
+    transition: all .2s, transform .15s;
+  }
+  .nav-tab:hover {
+    transform: translateY(-1px);
+    text-shadow: 0 0 12px rgba(79,156,249,.6);
+  }
+  .nav-tab.active {
+    text-shadow: 0 0 16px rgba(79,156,249,.8);
+  }
+
+  /* TIMETABLE */
+  .tt-grid { display: grid; grid-template-columns: 70px repeat(5, 1fr); gap: 3px; }
+  .tt-cell { background: var(--surface2); border-radius: 6px; padding: 6px 8px; font-size: 11px; min-height: 40px; }
+  .tt-head { font-weight: 600; font-size: 11px; color: var(--muted); padding: 6px 8px; text-align: center; }
+  .tt-time { font-size: 10px; color: var(--muted); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+  .tt-class {
+    border-radius: 10px;
+    padding: 8px;
+    cursor: default;
+    min-height: 50px;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .tt-class:hover {
+    transform: translateY(-3px) scale(1.03);
+    z-index: 2;
+    position: relative;
+  }
+  .tt-class .module { font-weight: 700; font-size: 12px; }
+  .tt-class .lecturer { font-size: 10px; opacity: .75; margin-top: 2px; }
+  .tt-class .room { font-size: 10px; opacity: .6; }
+  .ads { background: rgba(79,156,249,.15); border: 1px solid rgba(79,156,249,.35); color: #7eb8ff; box-shadow: inset 0 0 12px rgba(79,156,249,.1); }
+  .oop { background: rgba(63,185,80,.15); border: 1px solid rgba(63,185,80,.35); color: #6ee47a; box-shadow: inset 0 0 12px rgba(63,185,80,.1); }
+  .dtp { background: rgba(188,140,255,.15); border: 1px solid rgba(188,140,255,.35); color: #d0aaff; box-shadow: inset 0 0 12px rgba(188,140,255,.1); }
+  .cao { background: rgba(210,153,34,.15); border: 1px solid rgba(210,153,34,.4); color: #e6c270; box-shadow: inset 0 0 12px rgba(210,153,34,.1); }
+  .choir { background: rgba(248,81,73,.12); border: 1px solid rgba(248,81,73,.3); color: #f97583; box-shadow: inset 0 0 12px rgba(248,81,73,.1); }
+  .ads:hover { box-shadow: var(--glow-blue); }
+  .oop:hover { box-shadow: var(--glow-green); }
+  .dtp:hover { box-shadow: var(--glow-purple); }
+  .cao:hover { box-shadow: var(--glow-amber); }
+  .choir:hover { box-shadow: var(--glow-red); }
+  .study-block { background: rgba(255,255,255,.04); border: 1px dashed rgba(255,255,255,.12); color: var(--muted); }
+  .empty { background: transparent; border: none; }
+
+  /* PROGRESS BAR — glowing */
+  .pbar-wrap { background: rgba(255,255,255,.06); border-radius: 4px; height: 8px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,.4); }
+  .pbar { height: 100%; border-radius: 4px; transition: width .6s cubic-bezier(.4,0,.2,1); position: relative; }
+  .pbar::after { content:''; position:absolute; top:0; left:0; right:0; height:50%; background: rgba(255,255,255,.2); border-radius: 4px 4px 0 0; }
+  .pbar.blue { background: linear-gradient(90deg, #2563eb, #4f9cf9); box-shadow: 0 0 10px rgba(79,156,249,.5); }
+  .pbar.green { background: linear-gradient(90deg, #16a34a, #3fb950); box-shadow: 0 0 10px rgba(63,185,80,.5); }
+  .pbar.purple { background: linear-gradient(90deg, #7c3aed, #bc8cff); box-shadow: 0 0 10px rgba(188,140,255,.5); }
+  .pbar.amber { background: linear-gradient(90deg, #b45309, #d29922); box-shadow: 0 0 10px rgba(210,153,34,.5); }
+  .pbar.red { background: linear-gradient(90deg, #b91c1c, #f85149); box-shadow: 0 0 10px rgba(248,81,73,.5); }
+
+  /* MARK INPUT */
+  .mark-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    padding: 6px 10px;
+    width: 70px;
+    text-align: center;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .mark-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79,156,249,.2), 0 0 12px rgba(79,156,249,.3);
+  }
+  .mark-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); transition: background .15s; border-radius: 6px; padding-left: 4px; }
+  .mark-row:hover { background: rgba(255,255,255,.03); }
+  .mark-row:last-child { border-bottom: none; }
+  .mark-name { flex: 1; font-size: 13px; }
+  .mark-weight { font-size: 11px; color: var(--muted); }
+  .mark-result { font-size: 13px; font-weight: 600; min-width: 60px; text-align: right; }
+
+  /* SCHEDULE */
+  .week-day { margin-bottom: 1rem; }
+  .sched-item { transition: transform .15s ease, box-shadow .15s ease; }
+  .sched-item:hover { transform: translateX(4px); box-shadow: -3px 0 12px rgba(79,156,249,.15); }
+  .day-header { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: .5rem; 
+    display: flex; align-items: center; gap: 8px; }
+  .sched-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; 
+    border-radius: 8px; background: var(--surface2); margin-bottom: 4px; border-left: 3px solid transparent; }
+  .sched-time { font-size: 11px; color: var(--muted); min-width: 85px; margin-top: 1px; }
+  .sched-title { font-size: 13px; font-weight: 600; }
+  .sched-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .sched-item.cls { border-left-color: var(--accent); }
+  .sched-item.study { border-left-color: var(--accent2); }
+  .sched-item.aws { border-left-color: var(--purple); }
+  .sched-item.choir-s { border-left-color: var(--danger); }
+  .sched-item.break-s { border-left-color: var(--warn); }
+
+  /* ALERTS */
+  .alert {
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: .75rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .alert:hover { transform: translateY(-2px); }
+  .alert.danger { box-shadow: 0 4px 20px rgba(248,81,73,.15); }
+  .alert.warn { box-shadow: 0 4px 20px rgba(210,153,34,.15); }
+  .alert.info { box-shadow: 0 4px 20px rgba(79,156,249,.15); }
+  .alert.success { box-shadow: 0 4px 20px rgba(63,185,80,.15); }
+  .alert.danger { background: rgba(248,81,73,.12); border: 1px solid rgba(248,81,73,.25); color: var(--danger); }
+  .alert.warn { background: rgba(210,153,34,.12); border: 1px solid rgba(210,153,34,.25); color: var(--warn); }
+  .alert.info { background: rgba(79,156,249,.1); border: 1px solid rgba(79,156,249,.2); color: var(--accent); }
+  .alert.success { background: rgba(63,185,80,.1); border: 1px solid rgba(63,185,80,.2); color: var(--accent2); }
+  .alert-icon { font-size: 16px; flex-shrink: 0; }
+  .alert-body .alert-title { font-weight: 700; font-size: 13px; }
+  .alert-body p { font-size: 12px; opacity: .85; margin-top: 3px; color: var(--text); }
+
+  /* TOPIC PILLS */
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 2px;
+    transition: transform .15s ease, box-shadow .15s ease;
+    cursor: default;
+  }
+  .pill:hover { transform: translateY(-2px) scale(1.05); }
+  .pill.blue:hover { box-shadow: 0 4px 12px rgba(79,156,249,.4); }
+  .pill.green:hover { box-shadow: 0 4px 12px rgba(63,185,80,.4); }
+  .pill.purple:hover { box-shadow: 0 4px 12px rgba(188,140,255,.4); }
+  .pill.amber:hover { box-shadow: 0 4px 12px rgba(210,153,34,.4); }
+  .pill.blue { background: rgba(79,156,249,.15); color: #7eb8ff; }
+  .pill.green { background: rgba(63,185,80,.15); color: #6ee47a; }
+  .pill.purple { background: rgba(188,140,255,.15); color: #d0aaff; }
+  .pill.amber { background: rgba(210,153,34,.15); color: #e6c270; }
+
+  /* BTN */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text);
+    transition: all .2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .btn:hover {
+    background: var(--surface); border-color: var(--accent); color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79,156,249,.25);
+  }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { background: linear-gradient(135deg, #3b82f6, #4f9cf9); border-color: var(--accent); color: #fff; box-shadow: 0 4px 15px rgba(79,156,249,.4); }
+  .btn-primary:hover { background: linear-gradient(135deg, #4f9cf9, #6baeff); box-shadow: 0 6px 25px rgba(79,156,249,.6); }
+
+  /* TODAY HIGHLIGHT */
+  .today-card { border: 1px solid rgba(79,156,249,.3); background: rgba(79,156,249,.05); }
+
+  /* MODULE HEADER */
+  .mod-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .mod-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  }
+  .mod-icon:hover { transform: rotate(10deg) scale(1.15); }
+  .mod-name { font-size: 17px; font-weight: 700; }
+  .mod-code { font-size: 11px; color: var(--muted); }
+
+  /* COUNTDOWN */
+  .countdown-box {
+    background: linear-gradient(135deg, rgba(188,140,255,.2), rgba(79,156,249,.12));
+    border: 1px solid rgba(188,140,255,.4);
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(188,140,255,.2), inset 0 1px 0 rgba(255,255,255,.08);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .countdown-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(188,140,255,.3), 0 0 40px rgba(79,156,249,.2);
+  }
+  .countdown-num {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--purple);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(188,140,255,.8), 0 0 60px rgba(188,140,255,.4);
+    animation: pulse-num 2s ease-in-out infinite;
+  }
+  @keyframes pulse-num {
+    0%,100% { text-shadow: 0 0 30px rgba(188,140,255,.8), 0 0 60px rgba(188,140,255,.4); }
+    50% { text-shadow: 0 0 50px rgba(188,140,255,1), 0 0 100px rgba(188,140,255,.6); }
+  }
+  .countdown-lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+  .flex { display: flex; align-items: center; gap: 10px; }
+  .flex-between { display: flex; align-items: center; justify-content: space-between; }
+  .mt-1 { margin-top: .75rem; }
+  .mt-2 { margin-top: 1.25rem; }
+  .mb-1 { margin-bottom: .75rem; }
+
+  select.mark-input { width: auto; min-width: 100px; }
+
+  /* SECTION TITLE GLOW */
+  .section-title {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #e6edf3 0%, #4f9cf9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: .25rem;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(79,156,249,.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(79,156,249,.6); }
+
+  /* ===== MOBILE RESPONSIVE ===== */
+
+  /* Bottom nav for mobile */
+  .bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 200;
+    background: rgba(10,14,26,.97);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    padding: 6px 0 env(safe-area-inset-bottom, 6px);
+    box-shadow: 0 -4px 24px rgba(0,0,0,.5);
+  }
+  .bottom-nav-inner { display: flex; justify-content: space-around; align-items: center; }
+  .bnav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 6px 10px; border: none; background: none; color: var(--muted);
+    font-size: 10px; font-weight: 600; cursor: pointer; border-radius: 10px;
+    transition: all .2s; min-width: 52px;
+  }
+  .bnav-btn .bnav-icon { font-size: 20px; line-height: 1; }
+  .bnav-btn.active { color: var(--accent); }
+  .bnav-btn.active .bnav-icon { filter: drop-shadow(0 0 6px rgba(79,156,249,.8)); }
+
+  @media (max-width: 768px) {
+    /* Show bottom nav, hide top nav tabs */
+    .nav-tabs { display: none; }
+    .bottom-nav { display: block; }
+    .page { padding: 1rem .75rem 90px; }
+
+    /* Grids collapse to 1 column */
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+
+    /* Stat grid stays 2x2 */
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+
+    /* Nav brand centered */
+    nav { justify-content: center; padding: 0 1rem; }
+    .nav-brand { margin-right: 0; font-size: 18px; }
+
+    /* Section title smaller */
+    .section-title { font-size: 18px; }
+
+    /* Mark row wraps on small screens */
+    .mark-row { flex-wrap: wrap; gap: 6px; }
+    .mark-name { width: 100%; font-size: 12px; }
+    .mark-weight { font-size: 10px; }
+    .mark-input { width: 60px; font-size: 13px; }
+    .mark-result { font-size: 12px; min-width: 40px; }
+
+    /* Timetable scrollable */
+    .tt-grid { min-width: 480px; }
+
+    /* Schedule single column */
+    #scheduleGrid { grid-template-columns: 1fr !important; }
+
+    /* Countdown smaller */
+    .countdown-num { font-size: 38px; }
+
+    /* Mod header wraps */
+    .mod-header { flex-wrap: wrap; }
+
+    /* Disable 3D tilt on touch */
+    .card, .stat-card, .countdown-box { transform: none !important; }
+
+    /* Sched time narrower */
+    .sched-time { min-width: 70px; font-size: 10px; }
+    .sched-title { font-size: 12px; }
+
+    /* Stat val smaller */
+    .stat-val { font-size: 22px; }
+
+    /* Pills wrap nicely */
+    .pill { font-size: 10px; padding: 2px 8px; }
+
+    /* Card padding tighter */
+    .card { padding: 1rem; border-radius: 14px; }
+    .card-sm { padding: .75rem; }
+  }
+
+  @media (max-width: 400px) {
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .stat-val { font-size: 20px; }
+    .bnav-btn { min-width: 44px; padding: 5px 6px; font-size: 9px; }
+    .bnav-btn .bnav-icon { font-size: 18px; }
+  }
+</style>
+
+<canvas id="particles"></canvas>
+<div id="app">
+
+<nav>
+  <div class="nav-brand">Study<span>Hub</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="show('dashboard')">
+      <div class="dot"></div> Dashboard
+    </button>
+    <button class="nav-tab" onclick="show('timetable')">
+      Timetable
+    </button>
+    <button class="nav-tab" onclick="show('schedule')">
+      Daily Schedule
+    </button>
+    <button class="nav-tab" onclick="show('marks')">
+      <div class="dot warn"></div> Marks Tracker
+    </button>
+    <button class="nav-tab" onclick="show('modules')">
+      Modules
+    </button>
+    <button class="nav-tab" onclick="show('alerts')">
+      <div class="dot danger"></div> Alerts <span class="badge" id="alertCount">3</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ========== DASHBOARD ========== -->
+<div id="page-dashboard" class="page active">
+  <div class="section-title" id="greeting"></div>
+  <div class="section-sub">Semester 1, 2026 — TUT Soshanguve South Campus</div>
+  <div id="currentActivity"></div>
+
+  <!-- AWS COUNTDOWN -->
+  <div class="countdown-box mb-1" style="margin-bottom:1rem">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">AWS Cloud Practitioner Exam</div>
+    <div class="countdown-num" id="awsDays">7</div>
+    <div class="countdown-lbl">days remaining — 13 April 2026</div>
+    <div style="margin-top:8px">
+      <span class="pill purple">CLF-C02</span>
+      <span class="pill blue">Cloud Concepts</span>
+      <span class="pill blue">Security</span>
+      <span class="pill blue">Technology</span>
+      <span class="pill blue">Billing</span>
+    </div>
+  </div>
+
+  <!-- ALERT STRIP -->
+  <div class="alert danger" style="margin-bottom:.75rem">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-body">
+      <div class="alert-title">Test Week 1 starts in 12 days!</div>
+      <p>18–27 March 2026 — ADS: LO1–LO3 | OOP: LO A.1–B.1 | Databases: LO3–LO7</p>
+    </div>
+  </div>
+
+  <!-- STAT GRID -->
+  <div class="grid-4" style="margin-bottom:1rem">
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent)">4</div>
+      <div class="stat-lbl">Active modules</div>
+      <div class="stat-sub good">On track</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--purple)" id="awsDaysCard">7</div>
+      <div class="stat-lbl">Days to AWS exam</div>
+      <div class="stat-sub mid">Study daily!</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--warn)">12</div>
+      <div class="stat-lbl">Days to Test Week 1</div>
+      <div class="stat-sub mid">Prepare now</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent2)">75%</div>
+      <div class="stat-lbl">Target predicate</div>
+      <div class="stat-sub good">Your goal</div>
+    </div>
+  </div>
+
+  <!-- MODULE PROGRESS -->
+  <div class="card" style="margin-bottom:1rem">
+    <div class="flex-between mb-1">
+      <div style="font-size:15px;font-weight:700">Module overview</div>
+      <button class="btn" style="font-size:11px" onclick="show('marks')">View marks →</button>
+    </div>
+    <div id="moduleOverview"></div>
+  </div>
+
+  <!-- TODAY'S PLAN -->
+  <div class="grid-2">
+    <div class="card today-card">
+      <div style="font-size:15px;font-weight:700;margin-bottom:.75rem">Today — Monday</div>
+      <div class="sched-item cls" style="margin-bottom:4px">
+        <div class="sched-time">8:00–10:00</div>
+        <div><div class="sched-title">ADS — Advanced Discrete Structures</div><div class="sched-desc">L Vlok • 13-G40</div></div>
+      </div>
+      <div class="sched-item cls" style="margin-bottom:4px">
+        <div class="sched-time">15:00–17:00</div>
+        <div><div class="sched-title">DTP — Database Principles</div><div class="sched-desc">K Magapi • 10-140 Lab</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:15px;font-weight:700;margin-bottom:.75rem">Focus priority this week</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">Based on upcoming tests &amp; exam</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">OOP — Java concepts</span><span style="font-size:12px;color:var(--accent2)">High</span></div><div class="pbar-wrap"><div class="pbar green" style="width:25%"></div></div></div>
+        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">ADS — Logic &amp; Sets</span><span style="font-size:12px;color:var(--accent)">High</span></div><div class="pbar-wrap"><div class="pbar blue" style="width:20%"></div></div></div>
+        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">AWS — Cloud Practitioner</span><span style="font-size:12px;color:var(--purple)">Critical</span></div><div class="pbar-wrap"><div class="pbar purple" style="width:35%"></div></div></div>
+        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">DTP — SQL practice</span><span style="font-size:12px;color:var(--warn)">Medium</span></div><div class="pbar-wrap"><div class="pbar amber" style="width:15%"></div></div></div>
+        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">CAO — Theory revision</span><span style="font-size:12px;color:var(--warn)">Medium</span></div><div class="pbar-wrap"><div class="pbar amber" style="width:10%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TIMETABLE ========== -->
+<div id="page-timetable" class="page">
+  <div class="section-title">Class timetable</div>
+  <div class="section-sub">Semester 1, 2026 — weekly schedule with choir commitments</div>
+  <div class="card" style="overflow-x:auto">
+    <div class="tt-grid" id="ttGrid" style="min-width:600px"></div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:1rem">
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(79,156,249,.4)"></div><span style="font-size:12px;color:var(--muted)">ADS</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(63,185,80,.4)"></div><span style="font-size:12px;color:var(--muted)">OOP</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(188,140,255,.4)"></div><span style="font-size:12px;color:var(--muted)">DTP</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(210,153,34,.4)"></div><span style="font-size:12px;color:var(--muted)">CAO</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(248,81,73,.3)"></div><span style="font-size:12px;color:var(--muted)">Choir</span></div>
+  </div>
+</div>
+
+<!-- ========== DAILY SCHEDULE ========== -->
+<div id="page-schedule" class="page">
+  <div class="section-title">Daily study schedule</div>
+  <div class="section-sub">Optimised around your classes, choir commitments, and AWS exam on 13 April</div>
+  <div class="grid-2" id="scheduleGrid"></div>
+</div>
+
+<!-- ========== MARKS TRACKER ========== -->
+<div id="page-marks" class="page">
+  <div class="section-title">Marks tracker</div>
+  <div class="section-sub">Enter your marks below — the system will calculate if you're on track for 75% predicate</div>
+
+  <div id="marksContent"></div>
+</div>
+
+<!-- ========== MODULES ========== -->
+<div id="page-modules" class="page">
+  <div class="section-title">Module details</div>
+  <div class="section-sub">Study guides, learning outcomes &amp; assessment info</div>
+  <div id="modulesContent"></div>
+</div>
+
+<!-- ========== ALERTS ========== -->
+<div id="page-alerts" class="page">
+  <div class="section-title">Alerts &amp; reminders</div>
+  <div class="section-sub">Test weeks, key deadlines, and what topics to study</div>
+  <div id="alertsContent"></div>
+</div>
+
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-btn active" onclick="show('dashboard')"><span class="bnav-icon">🏠</span>Home</button>
+    <button class="bnav-btn" onclick="show('timetable')"><span class="bnav-icon">📅</span>Timetable</button>
+    <button class="bnav-btn" onclick="show('schedule')"><span class="bnav-icon">🗓️</span>Schedule</button>
+    <button class="bnav-btn" onclick="show('marks')"><span class="bnav-icon">📊</span>Marks</button>
+    <button class="bnav-btn" onclick="show('modules')"><span class="bnav-icon">📚</span>Modules</button>
+    <button class="bnav-btn" onclick="show('alerts')"><span class="bnav-icon">🔔</span>Alerts</button>
+  </div>
+</nav>
+
+<script>
+const TODAY = new Date('2026-04-06');
+const AWS_DATE = new Date('2026-04-13');
+const awsDiff = Math.ceil((AWS_DATE - TODAY) / 86400000);
+document.getElementById('awsDays').textContent = awsDiff;
+document.getElementById('awsDaysCard').textContent = awsDiff;
+
+// ---- GREETING + CURRENT ACTIVITY ----
+(function() {
+  const now = new Date();
+  const h = now.getHours();
+  const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : h < 21 ? 'Good evening' : 'Good night';
+  const emoji = h < 12 ? '☀️' : h < 17 ? '🌤️' : h < 21 ? '🌙' : '💤';
+
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dayName = days[now.getDay()];
+  const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+  const schedule = {
+    Monday: [
+      {s:'06:30',e:'07:30',title:'Morning routine + AWS revision'},
+      {s:'07:30',e:'08:00',title:'Travel to campus'},
+      {s:'08:00',e:'10:00',title:'ADS class — L Vlok (13-G40)'},
+      {s:'10:00',e:'12:00',title:'OOP self-study'},
+      {s:'12:00',e:'13:00',title:'Lunch break'},
+      {s:'13:00',e:'15:00',title:'CAO / DTP revision'},
+      {s:'15:00',e:'17:00',title:'DTP class — K Magapi (10-140 Lab)'},
+      {s:'17:00',e:'18:00',title:'OOP practice'},
+      {s:'18:00',e:'18:30',title:'Dinner + get ready for choir'},
+      {s:'18:30',e:'20:30',title:'Choir rehearsal'},
+    ],
+    Tuesday: [
+      {s:'06:30',e:'08:00',title:'Morning AWS study'},
+      {s:'08:00',e:'10:00',title:'OOP class — M Liebenberg (10-120 Lab)'},
+      {s:'10:00',e:'11:00',title:'OOP follow-up revision'},
+      {s:'11:00',e:'12:00',title:'ADS revision'},
+      {s:'12:00',e:'13:00',title:'Lunch + rest'},
+      {s:'13:00',e:'14:00',title:'DTP class — K Magapi (10-140 Lab)'},
+      {s:'14:00',e:'15:00',title:'ADS class — L Vlok (13-G40)'},
+      {s:'15:00',e:'17:00',title:'CAO class — A Mayingi (10-140 Lab)'},
+      {s:'17:00',e:'18:30',title:'CAO revision'},
+      {s:'18:30',e:'20:00',title:'AWS deep dive'},
+    ],
+    Wednesday: [
+      {s:'06:30',e:'08:00',title:'AWS morning session'},
+      {s:'08:00',e:'10:00',title:'ADS self-study'},
+      {s:'10:00',e:'12:00',title:'DTP SQL practice'},
+      {s:'12:00',e:'14:00',title:'OOP class — M Liebenberg (10-120 Lab)'},
+      {s:'14:00',e:'15:00',title:'CAO class — A Mayingi (10-140 Lab)'},
+      {s:'15:00',e:'17:00',title:'CAO revision'},
+      {s:'17:00',e:'18:00',title:'OOP practice'},
+      {s:'18:00',e:'18:30',title:'Dinner + get ready for choir'},
+      {s:'18:30',e:'20:30',title:'Choir rehearsal'},
+    ],
+    Thursday: [
+      {s:'06:30',e:'07:30',title:'AWS practice exam'},
+      {s:'07:30',e:'08:00',title:'Travel to campus'},
+      {s:'08:00',e:'10:00',title:'CAO class — A Mayingi (10-140 Lab)'},
+      {s:'10:00',e:'11:00',title:'ADS class — L Vlok (13-G40)'},
+      {s:'11:00',e:'12:00',title:'ADS follow-up'},
+      {s:'12:00',e:'13:00',title:'Lunch + rest'},
+      {s:'13:00',e:'15:00',title:'OOP self-study'},
+      {s:'15:00',e:'17:00',title:'DTP revision'},
+      {s:'17:00',e:'19:00',title:'CAO deep study'},
+      {s:'19:00',e:'20:00',title:'Review & notes'},
+    ],
+    Friday: [
+      {s:'06:30',e:'08:00',title:'AWS final review'},
+      {s:'08:00',e:'10:00',title:'ADS / CAO self-study'},
+      {s:'10:00',e:'11:00',title:'DTP class — K Magapi (10-140 Lab)'},
+      {s:'11:00',e:'13:00',title:'DTP follow-up'},
+      {s:'13:00',e:'14:00',title:'OOP class — M Liebenberg (10-120 Lab)'},
+      {s:'14:00',e:'15:00',title:'Lunch + rest'},
+      {s:'15:00',e:'17:00',title:'Weekly recap — all modules'},
+      {s:'17:00',e:'19:00',title:'OOP harder problems'},
+    ],
+    Saturday: [
+      {s:'08:00',e:'10:00',title:'OOP catch-up & practice'},
+      {s:'10:00',e:'12:00',title:'ADS problem sets'},
+      {s:'12:00',e:'13:00',title:'Lunch'},
+      {s:'13:00',e:'15:00',title:'DTP SQL projects'},
+      {s:'15:00',e:'17:00',title:'CAO past papers'},
+      {s:'17:00',e:'18:00',title:'AWS exam prep'},
+      {s:'18:00',e:'20:00',title:'Rest / personal time'},
+    ],
+    Sunday: [
+      {s:'09:00',e:'11:00',title:'Weekly review — all modules'},
+      {s:'11:00',e:'13:00',title:'OOP advanced topics'},
+      {s:'13:00',e:'14:00',title:'Lunch'},
+      {s:'14:00',e:'16:00',title:'ADS revision'},
+      {s:'16:00',e:'17:00',title:'AWS full mock exam'},
+      {s:'17:00',e:'18:00',title:'Prepare week ahead'},
+    ],
+  };
+
+  const toMins = t => { const [hh,mm] = t.split(':').map(Number); return hh*60+mm; };
+  const nowMins = h*60 + now.getMinutes();
+  const todaySlots = schedule[dayName] || [];
+  const current = todaySlots.find(s => nowMins >= toMins(s.s) && nowMins < toMins(s.e));
+  const next = todaySlots.find(s => toMins(s.s) > nowMins);
+
+  let activityHtml = '';
+  if (current) {
+    activityHtml = `<div class="alert info" style="margin-bottom:.75rem">
+      <div class="alert-icon">⏰</div>
+      <div class="alert-body"><div class="alert-title">Right now (${timeStr}): ${current.title}</div>
+      <p>Until ${current.e}${next ? ` — up next: ${next.title} at ${next.s}` : ''}</p></div>
+    </div>`;
+  } else if (next) {
+    activityHtml = `<div class="alert info" style="margin-bottom:.75rem">
+      <div class="alert-icon">⏳</div>
+      <div class="alert-body"><div class="alert-title">Up next at ${next.s}: ${next.title}</div>
+      <p>Nothing scheduled right now — use this time to rest or get ahead</p></div>
+    </div>`;
+  } else {
+    activityHtml = `<div class="alert info" style="margin-bottom:.75rem">
+      <div class="alert-icon">🌙</div>
+      <div class="alert-body"><div class="alert-title">No more tasks scheduled today</div>
+      <p>Rest up, Bongiwe — you\'ve earned it!</p></div>
+    </div>`;
+  }
+
+  document.getElementById('greeting').textContent = `${greet}, Bongiwe ${emoji}`;
+  document.getElementById('currentActivity').innerHTML = activityHtml;
+})();
+
+function show(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes(page)) t.classList.add('active');
+  });
+  document.querySelectorAll('.bnav-btn').forEach(t => {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes(page)) t.classList.add('active');
+  });
+}
+
+// MODULES DATA
+const modules = {
+  ADS: {
+    name: 'Advanced Discrete Structures', code: 'ADS216D', color: 'blue', icon: '∑',
+    lecturer: 'L Vlok (Cronjé)', target: 75,
+    assessments: [
+      { name: 'Class Test 1 (LO1)', weight: 10, max: 100, score: 100 },
+      { name: 'Class Test 2 (LO2)', weight: 10, max: 100, score: 90 },
+      { name: 'Class Test 3 (LO3)', weight: 10, max: 100, score: 80 },
+      { name: 'Class Test 4 (LO4)', weight: 10, max: 100, score: null },
+      { name: 'Class Test 5 (LO5)', weight: 10, max: 100, score: null },
+      { name: 'Class Test 6 (LO6)', weight: 10, max: 100, score: null },
+      { name: 'Semester Test 1 (LO1–3)', weight: 30, max: 100, score: 95 },
+      { name: 'Semester Test 2 (LO4–5)', weight: 30, max: 100, score: null },
+    ],
+    note: 'Best 4 of 6 class tests count toward 40% of predicate (10% each). Lowest 2 are dropped. Semester Test 1 = 30%, Semester Test 2 = 30%. Need 40% predicate to write exam. Final = (Predicate + Exam) ÷ 2.',
+    topics: ['Sets, functions & relations','Logic concepts','Proof techniques','Graphs & trees','Counting','Discrete probability'],
+    difficulty: 'Manageable'
+  },
+  OOP: {
+    name: 'Object-Oriented Programming', code: 'OOP216D', color: 'green', icon: '{}',
+    lecturer: 'Marlo Liebenberg', target: 75,
+    assessments: [
+      { name: 'Class Test 1 (GUI basics A.1.1–A.1.6 & B.1)', weight: 8, max: 100, score: null },
+      { name: 'Class Test 2 (Composition & Collections B.2, C.1)', weight: 8, max: 100, score: null },
+      { name: 'Class Test 3 (Inheritance B.3)', weight: 8, max: 100, score: null },
+      { name: 'Class Test 4 (Abstract classes D.1)', weight: 8, max: 100, score: null },
+      { name: 'Class Test 5 (GUI advanced, Exception & File I/O)', weight: 8, max: 100, score: null },
+      { name: 'Assignment', weight: 8, max: 100, score: null },
+      { name: 'Formative Test 1', weight: 30, max: 100, score: null },
+      { name: 'Formative Test 2', weight: 30, max: 100, score: null },
+    ],
+    note: 'Best 4 of 5 class tests count (32%). Java practical module. Need 40% predicate to write exam.',
+    topics: ['GUIs & event handling','User-defined classes','Composition','Inheritance','Abstract classes & interfaces','Exception handling','File I/O'],
+    difficulty: 'Hard'
+  },
+  DTP: {
+    name: 'Databases (Database Principles)', code: 'DAB215D', color: 'purple', icon: '⊗',
+    lecturer: 'Mr SK Mogapi', target: 75,
+    assessments: [
+      { name: 'Quiz 1 (LO1 & LO2)', weight: 10, max: 100, score: null },
+      { name: 'Quiz 2 (LO3 & LO4)', weight: 10, max: 100, score: null },
+      { name: 'Class Test 1 (LO5–LO6)', weight: 15, max: 100, score: null },
+      { name: 'Class Test 2 (LO6–LO8)', weight: 15, max: 100, score: null },
+      { name: 'Semester Test 1 (LO3–LO7)', weight: 25, max: 100, score: null },
+      { name: 'Semester Test 2 (LO7–LO10)', weight: 25, max: 100, score: null },
+    ],
+    note: 'Predicate = all above (50%). Exam counts 50% of final. No sub-minimum on exam.',
+    topics: ['Data modelling','Relational model','ERD','Normalisation','DDL commands','DML commands','SQL SELECT','Functions','Joins','Subqueries'],
+    difficulty: 'Medium'
+  },
+  CAO: {
+    name: 'Computer Architecture & Organisation', code: 'CAO216D', color: 'amber', icon: '⚙',
+    lecturer: 'A Mayingi', target: 75,
+    assessments: [
+      { name: 'SA1 — Semester Test 1 (WR)', weight: 20, max: 100, score: 57 },
+      { name: 'SA2 — Semester Test 2 (WR)', weight: 20, max: 100, score: null },
+      { name: 'Assignment (AS)', weight: 10, max: 100, score: 84 },
+      { name: 'Class Test 1 (AS)', weight: 10, max: 100, score: 63 },
+      { name: 'Class Test 2 (AS)', weight: 10, max: 100, score: 90 },
+      { name: 'Practical Assessment (PA)', weight: 30, max: 100, score: null },
+    ],
+    note: 'Eval 1 — WR: SA1 (20%) + SA2 (20%) = 40%. Eval 2 — AS: Assignment (10%) + Class Test 1 (10%) + Class Test 2 (10%) = 30%. Practical (30%). Predicate = Theory 70% + Practical 30%.',
+    topics: ['Number systems','CPU architecture','Memory hierarchy','Instruction sets','I/O systems','Boolean logic'],
+    difficulty: 'Hard'
+  }
+};
+
+// ---- MODULE OVERVIEW ----
+function buildModuleOverview() {
+  const el = document.getElementById('moduleOverview');
+  let html = '';
+  for (const [k, m] of Object.entries(modules)) {
+    const pred = calcPredicate(k);
+    const predStr = pred !== null ? pred.toFixed(1) + '%' : '—';
+    const pct = pred !== null ? Math.min(pred, 100) : 0;
+    const status = pred === null ? 'No marks yet' : pred >= 75 ? '✓ On track' : pred >= 40 ? 'Need more effort' : 'At risk!';
+    const sc = pred === null ? 'mid' : pred >= 75 ? 'good' : pred >= 40 ? 'mid' : 'bad';
+    html += `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="width:32px;height:32px;border-radius:8px;background:rgba(${colorRgb(m.color)},.2);display:flex;align-items:center;justify-content:center;font-size:13px;color:${colorVar(m.color)};font-weight:700">${m.icon}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${m.name}</div>
+        <div style="margin-top:5px"><div class="pbar-wrap"><div class="pbar ${m.color}" style="width:${pct}%"></div></div></div>
+      </div>
+      <div style="text-align:right;min-width:90px">
+        <div style="font-size:14px;font-weight:700;color:${colorVar(m.color)}">${predStr}</div>
+        <div class="stat-sub ${sc}" style="font-size:10px">${status}</div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function colorRgb(c) { return {blue:'79,156,249',green:'63,185,80',purple:'188,140,255',amber:'210,153,34',red:'248,81,73'}[c] || '255,255,255'; }
+function colorVar(c) { return {blue:'var(--accent)',green:'var(--accent2)',purple:'var(--purple)',amber:'var(--warn)',red:'var(--danger)'}[c] || 'var(--text)'; }
+
+// ---- TIMETABLE ----
+function buildTimetable() {
+  const days = ['Mon','Tue','Wed','Thu','Fri'];
+  const slots = [
+    {t:'8–9'}, {t:'9–10'}, {t:'10–11'}, {t:'11–12'}, {t:'12–13'}, {t:'13–14'}, {t:'14–15'}, {t:'15–16'}, {t:'16–17'}
+  ];
+
+  const classes = {
+    // Monday: ADS 8–10, DTP 15–17
+    'Mon-8–9':   {t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
+    'Mon-9–10':  {t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
+    'Mon-15–16': {t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
+    'Mon-16–17': {t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
+    // Tuesday: OOP 8–10, DTP 13–14, ADS 14–15, CAO 15–17
+    'Tue-8–9':   {t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
+    'Tue-9–10':  {t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
+    'Tue-13–14': {t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
+    'Tue-14–15': {t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
+    'Tue-15–16': {t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
+    'Tue-16–17': {t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
+    // Wednesday: OOP 12–14, CAO 14–15
+    'Wed-12–13': {t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
+    'Wed-13–14': {t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
+    'Wed-14–15': {t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
+    // Thursday: CAO 8–10, ADS 10–11
+    'Thu-8–9':   {t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
+    'Thu-9–10':  {t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
+    'Thu-10–11': {t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
+    // Friday: DTP 10–11, OOP 13–14
+    'Fri-10–11': {t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
+    'Fri-13–14': {t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
+  };
+
+  let html = '<div class="tt-time"></div>';
+  days.forEach(d => html += `<div class="tt-head">${d}</div>`);
+
+  slots.forEach(sl => {
+    html += `<div class="tt-time">${sl.t}</div>`;
+    days.forEach(d => {
+      const key = `${d}-${sl.t}`;
+      const c = classes[key];
+      if (c) {
+        html += `<div class="tt-class ${c.cls}"><div class="module">${c.t}</div>${c.l?`<div class="lecturer">${c.l}</div>`:''}${c.r?`<div class="room">${c.r}</div>`:''}</div>`;
+      } else {
+        html += `<div class="tt-cell empty"></div>`;
+      }
+    });
+  });
+  document.getElementById('ttGrid').innerHTML = html;
+}
+
+// ---- DAILY SCHEDULE ----
+function buildSchedule() {
+  const days = [
+    { day: 'Monday', color: 'var(--accent)', choir: true, items: [
+      {t:'6:30–7:30',title:'Morning routine + AWS revision',desc:'Cloud concepts, security, billing',type:'aws'},
+      {t:'7:30–8:00',title:'Travel to campus',desc:'',type:'break-s'},
+      {t:'8:00–10:00',title:'ADS class — L Vlok',desc:'13-G40',type:'cls'},
+      {t:'10:00–12:00',title:'OOP self-study',desc:'Java practice — Deitel Ch 7',type:'study'},
+      {t:'12:00–13:00',title:'Lunch break',desc:'',type:'break-s'},
+      {t:'13:00–15:00',title:'CAO / DTP revision',desc:'Prep for tomorrow\'s heavy day',type:'study'},
+      {t:'15:00–17:00',title:'DTP class — K Magapi',desc:'10-140 Lab',type:'cls'},
+      {t:'17:00–18:00',title:'OOP practice',desc:'Complete exercises from class',type:'study'},
+      {t:'18:00–18:30',title:'Dinner + get ready',desc:'Prepare for choir',type:'break-s'},
+      {t:'18:30–20:30',title:'Choir rehearsal',desc:'No study — rest & recharge',type:'choir-s'},
+    ]},
+    { day: 'Tuesday', color: 'var(--accent2)', choir: false, items: [
+      {t:'6:30–8:00',title:'Morning AWS study',desc:'Security & compliance — practice questions',type:'aws'},
+      {t:'8:00–10:00',title:'OOP class — M Liebenberg',desc:'10-120 Lab',type:'cls'},
+      {t:'10:00–11:00',title:'OOP follow-up',desc:'Review what was covered in class',type:'study'},
+      {t:'11:00–12:00',title:'ADS revision',desc:'Sets, logic, proof techniques',type:'study'},
+      {t:'12:00–13:00',title:'Lunch + rest',desc:'',type:'break-s'},
+      {t:'13:00–14:00',title:'DTP class — K Magapi',desc:'10-140 Lab',type:'cls'},
+      {t:'14:00–15:00',title:'ADS class — L Vlok',desc:'13-G40',type:'cls'},
+      {t:'15:00–17:00',title:'CAO class — A Mayingi',desc:'10-140 Lab',type:'cls'},
+      {t:'17:00–18:30',title:'CAO revision',desc:'Consolidate what was covered today',type:'study'},
+      {t:'18:30–20:00',title:'AWS deep dive',desc:'Technology services, cloud architecture',type:'aws'},
+    ]},
+    { day: 'Wednesday', color: 'var(--warn)', choir: true, items: [
+      {t:'6:30–8:00',title:'AWS morning session',desc:'Billing, pricing, support plans',type:'aws'},
+      {t:'8:00–10:00',title:'ADS self-study',desc:'Graphs & trees — Epp Ch 10',type:'study'},
+      {t:'10:00–12:00',title:'DTP SQL practice',desc:'DDL & DML — CREATE, INSERT, SELECT',type:'study'},
+      {t:'12:00–14:00',title:'OOP class — M Liebenberg',desc:'10-120 Lab',type:'cls'},
+      {t:'14:00–15:00',title:'CAO class — A Mayingi',desc:'10-140 Lab',type:'cls'},
+      {t:'15:00–17:00',title:'CAO revision',desc:'Past paper review — focus on weak areas',type:'study'},
+      {t:'17:00–18:00',title:'OOP practice',desc:'Inheritance, abstract classes',type:'study'},
+      {t:'18:00–18:30',title:'Dinner + get ready',desc:'Prepare for choir',type:'break-s'},
+      {t:'18:30–20:30',title:'Choir rehearsal',desc:'No study — rest & recharge',type:'choir-s'},
+    ]},
+    { day: 'Thursday', color: 'var(--purple)', choir: false, items: [
+      {t:'6:30–7:30',title:'AWS practice exam',desc:'Attempt 65-question mock exam',type:'aws'},
+      {t:'7:30–8:00',title:'Travel to campus',desc:'',type:'break-s'},
+      {t:'8:00–10:00',title:'CAO class — A Mayingi',desc:'10-140 Lab',type:'cls'},
+      {t:'10:00–11:00',title:'ADS class — L Vlok',desc:'13-G40',type:'cls'},
+      {t:'11:00–12:00',title:'ADS follow-up',desc:'Review & practice problems',type:'study'},
+      {t:'12:00–13:00',title:'Lunch + rest',desc:'',type:'break-s'},
+      {t:'13:00–15:00',title:'OOP self-study',desc:'Exception handling & File I/O — Deitel Ch 11',type:'study'},
+      {t:'15:00–17:00',title:'DTP revision',desc:'Joins, subqueries — multi-table SELECT',type:'study'},
+      {t:'17:00–19:00',title:'CAO deep study',desc:'Instruction sets, memory hierarchy',type:'study'},
+      {t:'19:00–20:00',title:'Review & notes',desc:'Summarise the week so far',type:'study'},
+    ]},
+    { day: 'Friday', color: 'var(--danger)', choir: false, items: [
+      {t:'6:30–8:00',title:'AWS final review',desc:'Full practice test — aim for 80%+',type:'aws'},
+      {t:'8:00–10:00',title:'ADS / CAO self-study',desc:'Catch up on any weak topics',type:'study'},
+      {t:'10:00–11:00',title:'DTP class — K Magapi',desc:'10-140 Lab',type:'cls'},
+      {t:'11:00–13:00',title:'DTP follow-up',desc:'SQL practice from class',type:'study'},
+      {t:'13:00–14:00',title:'OOP class — M Liebenberg',desc:'10-120 Lab',type:'cls'},
+      {t:'14:00–15:00',title:'Lunch + rest',desc:'You deserve it!',type:'break-s'},
+      {t:'15:00–17:00',title:'Weekly recap — all modules',desc:'Review notes, identify gaps',type:'study'},
+      {t:'17:00–19:00',title:'OOP harder problems',desc:'Polymorphism, abstract classes, interfaces',type:'study'},
+    ]},
+    { day: 'Saturday', color: 'var(--accent2)', choir: false, items: [
+      {t:'8:00–10:00',title:'OOP catch-up & practice',desc:'Code exercises from the week',type:'study'},
+      {t:'10:00–12:00',title:'ADS problem sets',desc:'Work through textbook exercises',type:'study'},
+      {t:'12:00–13:00',title:'Lunch',desc:'',type:'break-s'},
+      {t:'13:00–15:00',title:'DTP SQL projects',desc:'Build a mini database from scratch',type:'study'},
+      {t:'15:00–17:00',title:'CAO past papers',desc:'Timed exam practice',type:'study'},
+      {t:'17:00–18:00',title:'AWS exam prep',desc:'Review flash cards',type:'aws'},
+      {t:'18:00–20:00',title:'Rest / personal time',desc:'Recharge for next week',type:'break-s'},
+    ]},
+    { day: 'Sunday', color: 'var(--muted)', choir: false, items: [
+      {t:'9:00–11:00',title:'Weekly review — all modules',desc:'Identify gaps, plan next week',type:'study'},
+      {t:'11:00–13:00',title:'OOP advanced topics',desc:'Abstract classes, interfaces — solidify understanding',type:'study'},
+      {t:'13:00–14:00',title:'Lunch',desc:'',type:'break-s'},
+      {t:'14:00–16:00',title:'ADS revision',desc:'Any learning outcome that needs work',type:'study'},
+      {t:'16:00–17:00',title:'AWS full mock exam',desc:'Simulate real exam conditions',type:'aws'},
+      {t:'17:00–18:00',title:'Prepare week ahead',desc:'Review schedule, print notes',type:'break-s'},
+    ]},
+  ];
+
+  let html = '';
+  days.forEach((d, i) => {
+    if (i % 2 === 0) html += '<div>';
+    html += `<div class="week-day"><div class="day-header" style="color:${d.color}">${d.day}${d.choir?` <span style="font-size:10px;background:rgba(248,81,73,.15);color:var(--danger);padding:2px 7px;border-radius:5px;font-weight:600">Choir 6:30–8:30pm</span>`:''}</div>`;
+    d.items.forEach(it => {
+      html += `<div class="sched-item ${it.type}"><div class="sched-time">${it.t}</div><div><div class="sched-title">${it.title}</div>${it.desc?`<div class="sched-desc">${it.desc}</div>`:''}</div></div>`;
+    });
+    html += '</div>';
+    if (i % 2 === 1) html += '</div>';
+  });
+  if (days.length % 2 !== 0) html += '</div>';
+  document.getElementById('scheduleGrid').innerHTML = html;
+}
+
+// ---- MARKS ----
+function calcPredicate(modKey) {
+  const m = modules[modKey];
+  let total = 0, weight = 0;
+  if (modKey === 'ADS') {
+    const classTests = m.assessments.slice(0,6).filter(a => a.score !== null).map(a => a.score);
+    classTests.sort((a,b) => b-a);
+    const best4 = classTests.slice(0,4);
+    const ctWeight = best4.length > 0 ? (best4.reduce((s,v)=>s+v,0)/best4.length * 0.40) : 0;
+    const st1 = m.assessments[6].score, st2 = m.assessments[7].score;
+    const stWeight = ((st1!==null?st1:0)*0.30 + (st2!==null?st2:0)*0.30);
+    if (best4.length === 0 && st1 === null && st2 === null) return null;
+    const entered = best4.length > 0 || st1 !== null || st2 !== null;
+    const ctW = best4.length > 0 ? 40 : 0;
+    const st1W = st1 !== null ? 30 : 0, st2W = st2 !== null ? 30 : 0;
+    const totalW = ctW + st1W + st2W;
+    if (totalW === 0) return null;
+    const pred = (best4.length>0 ? (best4.reduce((s,v)=>s+v,0)/best4.length * ctW/100) : 0) + (st1!==null ? st1*st1W/100 : 0) + (st2!==null ? st2*st2W/100 : 0);
+    return pred / totalW * 100;
+  }
+  if (modKey === 'CAO') {
+    const [sa1, sa2, asgn, ct1, ct2, prac] = m.assessments.map(a => a.score);
+    const entered = m.assessments.some(a => a.score !== null);
+    if (!entered) return null;
+    return (sa1 !== null ? sa1 * 0.20 : 0) +
+           (sa2 !== null ? sa2 * 0.20 : 0) +
+           (asgn !== null ? asgn * 0.10 : 0) +
+           (ct1 !== null ? ct1 * 0.10 : 0) +
+           (ct2 !== null ? ct2 * 0.10 : 0) +
+           (prac !== null ? prac * 0.30 : 0);
+  }
+  const entered = m.assessments.filter(a => a.score !== null);
+  if (entered.length === 0) return null;
+  let wSum = 0, scoreSum = 0;
+  m.assessments.forEach(a => {
+    if (a.score !== null) { scoreSum += a.score * a.weight / 100; wSum += a.weight; }
+  });
+  return wSum > 0 ? (scoreSum / wSum) * 100 : null;
+}
+
+function calcNeededScore(modKey, idx) {
+  const m = modules[modKey];
+  const target = m.target;
+
+  if (modKey === 'ADS') {
+    const ctScores = m.assessments.slice(0,6).map((a,i) => ({i, score: a.score}));
+    const st1 = m.assessments[6].score, st2 = m.assessments[7].score;
+    if (idx < 6) {
+      // Already have CT1=100, CT2=90, CT3=80 scored. Best 4 of 6 count.
+      // With ST1=95 already locked in, student is well above 75 — realistic aim is to maintain performance
+      const scoredCTs = ctScores.filter(x => x.score !== null && x.i !== idx).map(x => x.score);
+      const stContrib = (st1 !== null ? st1 * 0.30 : 0) + (st2 !== null ? st2 * 0.30 : 0);
+      const ctNeededContrib = target - stContrib;
+      const neededAvg = ctNeededContrib / 0.40;
+      // Realistic: based on their trend (100,90,80) suggest maintaining ~75-80
+      const realistic = Math.max(Math.ceil(neededAvg), 75);
+      return Math.min(100, realistic);
+    }
+    if (idx === 7) {
+      const ctScored = ctScores.filter(x => x.score !== null).map(x => x.score).sort((a,b)=>b-a).slice(0,4);
+      const ctContrib = ctScored.length > 0 ? (ctScored.reduce((s,v)=>s+v,0)/ctScored.length * 0.40) : 0;
+      const st1Contrib = st1 !== null ? st1 * 0.30 : 0;
+      const needed = (target - ctContrib - st1Contrib) / 0.30;
+      // Realistic: they scored 95 on ST1, aim similar
+      return Math.min(100, Math.max(Math.ceil(needed), 70));
+    }
+  }
+
+  if (modKey === 'CAO') {
+    const weights = [0.20, 0.20, 0.10, 0.10, 0.10, 0.30];
+    let earned = 0;
+    m.assessments.forEach((a, i) => { if (i !== idx && a.score !== null) earned += a.score * weights[i]; });
+    const needed = (target - earned) / weights[idx];
+    // SA1=57, Asgn=84, CT1=63, CT2=90 already in. Earned = 57*0.2+84*0.1+63*0.1+90*0.1 = 11.4+8.4+6.3+9 = 35.1
+    // SA2 (idx=1): need (75-35.1)/0.20 = 199.5 — impossible alone, so cap and show honest picture
+    // Practical (idx=5): need (75-35.1)/0.30 = 133 — also impossible alone
+    // Show the actual needed but cap at 100 so student knows they need both
+    return Math.min(100, Math.max(0, Math.ceil(needed)));
+  }
+
+  // Generic (OOP, DTP): distribute target evenly across remaining assessments
+  let earned = 0, totalRemainingWeight = 0;
+  m.assessments.forEach((a, i) => {
+    if (a.score !== null) earned += a.score * a.weight / 100;
+    else totalRemainingWeight += a.weight;
+  });
+  if (totalRemainingWeight === 0) return null;
+  // What score across ALL remaining (including this one) is needed
+  const neededPct = (target - earned) / (totalRemainingWeight / 100);
+  // Realistic: clamp between 50 and 100, round up
+  return Math.min(100, Math.max(50, Math.ceil(neededPct)));
+}
+
+function buildMarks() {
+  let html = '';
+  for (const [k, m] of Object.entries(modules)) {
+    const pred = calcPredicate(k);
+    const predStr = pred !== null ? pred.toFixed(1) + '%' : '—';
+    const needed = pred !== null ? Math.max(0, 75 - pred).toFixed(1) : '75';
+    const isGood = pred !== null && pred >= 75;
+    const isLow = pred !== null && pred < 40;
+    let advice = '';
+    if (pred === null) advice = 'Enter your marks to see progress';
+    else if (pred >= 75) advice = '✓ On track for 75%! Keep it up.';
+    else if (pred >= 60) advice = `Need ${needed}% more from remaining assessments — focus and practice`;
+    else if (pred >= 40) advice = `You have ground to cover — aim for 80%+ in every remaining assessment`;
+    else advice = `⚠ At risk! You need to score very high in all remaining assessments`;
+
+    html += `<div class="card" style="margin-bottom:1rem">
+      <div class="mod-header">
+        <div class="mod-icon" style="background:rgba(${colorRgb(m.color)},.2);color:${colorVar(m.color)}">${m.icon}</div>
+        <div><div class="mod-name">${m.name}</div><div class="mod-code">${m.code} — ${m.lecturer}</div></div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:22px;font-weight:800;color:${colorVar(m.color)}">${predStr}</div>
+          <div style="font-size:11px;color:var(--muted)">current predicate est.</div>
+        </div>
+      </div>
+      <div class="pbar-wrap" style="margin-bottom:.75rem"><div class="pbar ${m.color}" style="width:${pred!==null?Math.min(pred,100):0}%"></div></div>
+      <div class="alert ${isGood?'success':isLow?'danger':'warn'}" style="margin-bottom:.75rem">
+        <div class="alert-icon">${isGood?'✓':isLow?'⚠':'→'}</div>
+        <div class="alert-body"><div class="alert-title">${advice}</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">${m.note}</div>`;
+
+    // For ADS, determine which class tests are dropped
+    let droppedIdxs = new Set();
+    if (k === 'ADS') {
+      const ctScores = m.assessments.slice(0,6).map((a,i) => ({i, score: a.score})).filter(x => x.score !== null);
+      if (ctScores.length > 4) {
+        ctScores.sort((a,b) => a.score - b.score);
+        ctScores.slice(0, ctScores.length - 4).forEach(x => droppedIdxs.add(x.i));
+      }
+    }
+    m.assessments.forEach((a, idx) => {
+      const isDropped = droppedIdxs.has(idx);
+      const displayWeight = (k === 'ADS' && idx < 6) ? (isDropped ? '<span style="color:var(--danger);text-decoration:line-through">10%</span> <span style="font-size:10px;color:var(--danger)">dropped</span>' : '10%') : a.weight + '%';
+      let suggestion = '';
+      if (a.score === null && !isDropped) {
+        const needed = calcNeededScore(k, idx);
+        if (needed !== null) {
+          const sc = needed <= 65 ? 'good' : needed <= 85 ? 'mid' : 'bad';
+          const label = needed >= 100 ? 'must score 100%' : `aim ${needed}%`;
+          suggestion = `<span class="stat-sub ${sc}" style="font-size:10px;margin-left:4px">${label}</span>`;
+        }
+      }
+      html += `<div class="mark-row" style="${isDropped?'opacity:0.5':''}">
+        <div class="mark-name">${a.name}${suggestion}</div>
+        <div class="mark-weight">${displayWeight}</div>
+        <input class="mark-input" type="number" min="0" max="100" placeholder="—" value="${a.score!==null?a.score:''}" 
+          onchange="setMark('${k}',${idx},this.value)" oninput="setMark('${k}',${idx},this.value)">
+        <div class="mark-result" style="color:${isDropped?'var(--danger)':colorVar(m.color)}">${a.score!==null?a.score+'%':'—'}</div>
+      </div>`;
+    });
+
+    html += '<div style="margin-top:.75rem"><div class="label">Topics to master</div><div>';
+    m.topics.forEach(t => html += `<span class="pill ${m.color}">${t}</span>`);
+    html += '</div></div></div>';
+  }
+  document.getElementById('marksContent').innerHTML = html;
+}
+
+function saveMarks() {
+  const data = {};
+  for (const [k, m] of Object.entries(modules))
+    data[k] = m.assessments.map(a => a.score);
+  localStorage.setItem('studyhub_marks', JSON.stringify(data));
+}
+
+function loadMarks() {
+  const data = JSON.parse(localStorage.getItem('studyhub_marks') || 'null');
+  if (!data) return; // use hardcoded defaults
+  for (const [k, scores] of Object.entries(data))
+    if (modules[k]) scores.forEach((s, i) => { if (modules[k].assessments[i]) modules[k].assessments[i].score = s; });
+}
+
+function setMark(modKey, idx, val) {
+  const v = val === '' ? null : Math.min(100, Math.max(0, parseFloat(val)));
+  modules[modKey].assessments[idx].score = v;
+  saveMarks();
+  buildMarks();
+  buildModuleOverview();
+}
+
+// ---- MODULES PAGE ----
+function buildModules() {
+  let html = '';
+  const details = {
+    ADS: { book: 'Epp (Discrete Mathematics with Applications) & Rosen (7th ed.)', platform: 'myTUTor (D2L)' },
+    OOP: { book: 'Java How to Program – Late Objects (Deitel)', platform: 'MyTutor & EC' },
+    DTP: { book: 'Oracle SQL PDF + Database Principles (Rob, Coronel, Morris 12th ed.)', platform: 'myTUTor / EC' },
+    CAO: { book: 'Lecture notes & past papers', platform: 'MyTutor' },
+  };
+  for (const [k, m] of Object.entries(modules)) {
+    const d = details[k];
+    html += `<div class="card" style="margin-bottom:1rem">
+      <div class="mod-header">
+        <div class="mod-icon" style="background:rgba(${colorRgb(m.color)},.2);color:${colorVar(m.color)};font-size:14px;font-weight:900">${m.icon}</div>
+        <div>
+          <div class="mod-name">${m.name}</div>
+          <div class="mod-code">${m.code} | NQF 6 | 15 Credits | Difficulty: <span style="color:${m.difficulty==='Hard'?'var(--danger)':m.difficulty==='Medium'?'var(--warn)':m.difficulty==='Manageable'?'var(--accent2)':'var(--accent2)'}">${m.difficulty}</span></div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-bottom:.75rem">
+        <div class="card-sm">
+          <div class="label">Prescribed resource</div>
+          <div style="font-size:12px;line-height:1.5">${d.book}</div>
+        </div>
+        <div class="card-sm">
+          <div class="label">e-learning platform</div>
+          <div style="font-size:12px">${d.platform}</div>
+          <div class="label" style="margin-top:.5rem">Lecturer</div>
+          <div style="font-size:12px">${m.lecturer}</div>
+        </div>
+      </div>
+      <div class="label">Learning outcomes & topics</div>
+      <div style="margin-bottom:.75rem">`;
+    m.topics.forEach((t, i) => html += `<span class="pill ${m.color}">LO${i+1}: ${t}</span>`);
+    html += `</div>
+      <div class="label">Assessment structure</div>
+      <div style="font-size:12px;color:var(--muted)">${m.note}</div>
+    </div>`;
+  }
+  document.getElementById('modulesContent').innerHTML = html;
+}
+
+// ---- ALERTS ----
+function buildAlerts() {
+  const today = new Date('2026-04-06');
+  const alerts = [
+    { level:'danger', title:'AWS exam — 7 days away!', body:'13 April 2026. Focus: Cloud Concepts, Security & Compliance, Technology Services, Billing & Pricing. Do at least 2 mock exams before the day.', icon:'🔴' },
+    { level:'danger', title:'Test Week 1 approaching — 12 days away', body:'18–27 March 2026. ADS: LO1–LO3 (Sets, Logic, Proof). OOP: LO A.1–B.1 (GUIs, User-defined classes). DTP: LO3–LO7 (ERD, SQL).', icon:'⚠️' },
+    { level:'warn', title:'Test Week 2 — 24 days away', body:'20–30 April 2026. ADS: LO4–LO5 (Graphs, Counting). OOP: LO B.2–F.1 (Inheritance, Exceptions, File I/O). DTP: LO7–LO10 (Functions, Joins).', icon:'📅' },
+    { level:'info', title:'OOP: Classes start with GUIs', body:'First class test covers LO A.1.1–A.1.6 (dialogue boxes, validation, layout managers) and B.1 (user-defined classes). Start with Deitel Chapter 7.', icon:'💡' },
+    { level:'info', title:'ADS: Master sets & logic first', body:'Sets (Epp Ch 1, Rosen Ch 9) and Logic (Epp Ch 2–3, Rosen Ch 1) are the foundation. Proofs (Epp Ch 4–5) build on these. Don\'t skip the basics.', icon:'💡' },
+    { level:'info', title:'DTP: Practice SQL every day', body:'Oracle SQL requires hands-on practice. Do at least 30 minutes of SQL writing daily — focus on SELECT, joins, and subqueries. Use 10-140 Lab after hours.', icon:'🗄️' },
+    { level:'warn', title:'CAO: Theory-heavy — needs consistent revision', body:'Computer Architecture is memorisation-heavy. Use the CAO class time (Wed 8–10, Thu 14–15) to ask questions. Create summary sheets for each topic.', icon:'⚙️' },
+    { level:'info', title:'Predicate minimum: 40% required to write exams', body:'All modules require at least 40% predicate. ADS also requires 40% sub-minimum in the exam. Final mark = (Predicate + Exam) ÷ 2 for ADS. Target 75%+ in everything.', icon:'📊' },
+    { level:'success', title:'Main exams: 25 May – 12 June 2026', body:'Covering all learning outcomes. AWS exam on 13 April. Supplementary exams: 15–30 June 2026.', icon:'✅' },
+  ];
+
+  const by = { danger: [], warn: [], info: [], success: [] };
+  alerts.forEach(a => by[a.level].push(a));
+
+  let html = '';
+  ['danger','warn','info','success'].forEach(lvl => {
+    if (by[lvl].length === 0) return;
+    html += `<div style="margin-bottom:1rem">`;
+    by[lvl].forEach(a => {
+      html += `<div class="alert ${a.level}" style="margin-bottom:.5rem">
+        <div class="alert-icon">${a.icon}</div>
+        <div class="alert-body"><div class="alert-title">${a.title}</div><p>${a.body}</p></div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+
+  html += `<div class="card" style="margin-top:1rem">
+    <div style="font-size:15px;font-weight:700;margin-bottom:.75rem">Upcoming key dates</div>
+    ${[
+      ['13 April 2026','AWS Cloud Practitioner Exam (CLF-C02)','danger'],
+      ['18–27 March 2026','Test Week 1','warn'],
+      ['30 March – 4 April 2026','Mid-semester recess','info'],
+      ['20–30 April 2026','Test Week 2','warn'],
+      ['18 May 2026','Predicate Day','info'],
+      ['25 May – 12 June 2026','Main examinations','danger'],
+      ['15–30 June 2026','Supplementary exams','warn'],
+    ].map(([d,e,l]) => `<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center">
+      <div style="font-size:12px;font-weight:700;min-width:120px;color:${l==='danger'?'var(--danger)':l==='warn'?'var(--warn)':'var(--accent)'}">${d}</div>
+      <div style="font-size:13px">${e}</div>
+    </div>`).join('')}
+  </div>`;
+
+  document.getElementById('alertsContent').innerHTML = html;
+}
+
+// Init
+loadMarks();
+buildModuleOverview();
+buildTimetable();
+buildSchedule();
+buildMarks();
+buildModules();
+buildAlerts();
+
+// ---- PARTICLES ----
+(function(){
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  const COLORS = ['#4f9cf9','#bc8cff','#3fb950','#f85149','#d29922'];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  for(let i=0;i<60;i++) particles.push({
+    x: Math.random()*window.innerWidth,
+    y: Math.random()*window.innerHeight,
+    r: Math.random()*1.5+.5,
+    dx: (Math.random()-.5)*.4,
+    dy: (Math.random()-.5)*.4,
+    color: COLORS[Math.floor(Math.random()*COLORS.length)],
+    alpha: Math.random()*.5+.2
+  });
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.x<0||p.x>W) p.dx*=-1;
+      if(p.y<0||p.y>H) p.dy*=-1;
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ---- 3D CARD TILT ----
+document.addEventListener('mousemove', e => {
+  document.querySelectorAll('.card, .stat-card, .countdown-box').forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const dx = (e.clientX - cx) / rect.width;
+    const dy = (e.clientY - cy) / rect.height;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if(dist < .8) {
+      const rx = dy * 8;
+      const ry = -dx * 8;
+      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(4px)`;
+    } else {
+      card.style.transform = '';
+    }
+  });
+});
+document.addEventListener('mouseleave', () => {
+  document.querySelectorAll('.card, .stat-card, .countdown-box').forEach(c => c.style.transform = '');
+});
+</script>
