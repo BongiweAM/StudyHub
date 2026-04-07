@@ -599,6 +599,8 @@
 // ======================== CONFIG ========================
 const _n=new Date(); const TODAY=new Date(_n.getFullYear(),_n.getMonth(),_n.getDate());
 const AWS_DATE = new Date('2026-04-13T00:00:00');
+const QUIZ2_CAO = new Date('2026-04-14T00:00:00');
+const CT2_CAO = new Date('2026-04-16T00:00:00');
 const EXAM_START = new Date('2026-05-25T00:00:00');
 const EXAM_END = new Date('2026-06-12T00:00:00');
 const RECESS_START = new Date('2026-03-30T00:00:00');
@@ -715,10 +717,11 @@ const modules = {
       {name:'SA2 — Semester Test 2 (Theory)',weight:20,max:100,score:null},
       {name:'Assignment',weight:10,max:100,score:84},
       {name:'Class Test 1',weight:10,max:100,score:63},
-      {name:'Class Test 2',weight:10,max:100,score:90},
+      {name:'Quiz 2 (Ch 6, 7, 8 — 14 Apr)',weight:5,max:100,score:null},
+      {name:'Class Test 2 (Ch 6, 7, 8 — 16 Apr)',weight:5,max:100,score:null},
       {name:'Practical Assessment (PA)',weight:30,max:100,score:null},
     ],
-    note:'Theory 70% = SA1(20%) + SA2(20%) + Assignment(10%) + CT1(10%) + CT2(10%). Practical 30%. Predicate = Theory + Practical. Need 40% to write exam.',
+    note:'Theory 70% = SA1(20%) + SA2(20%) + Assignment(10%) + CT1(10%) + Quiz2(5%) + CT2(5%). Practical 30%. Predicate = Theory + Practical. Need 40% to write exam.',
     topics:['Number systems','CPU architecture','Memory hierarchy','Instruction sets','I/O systems','Boolean logic'],
     difficulty:'Hard'
   }
@@ -1295,6 +1298,14 @@ function getActiveAlerts(){
       alerts.push({level:urgency,title:`ST2 ${mod} — ${name} ${label}`,body:`${ST2[mod].toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}. Focus: ${mod==='ADS'?'LO4–LO5 (Graphs & Trees, Counting) — Epp Ch 9–10':mod==='OOP'?'LO B.2–F.1 (Composition, Inheritance, Collections, Abstract, Exceptions, File I/O)':mod==='DTP'?'LO7–LO10 (Advanced SQL, Functions, Joins, Subqueries)':'All theory — number systems, CPU, memory, I/O, Boolean logic'}`,icon:d<=1?'🚨':'⏰'});
     }
   });
+  // CAO Quiz 2 & Class Test 2 — Chapter 6, 7, 8 - Smart study plan
+  const q2d = daysUntil(QUIZ2_CAO);
+  const ct2d = daysUntil(CT2_CAO);
+  const chapterPhase = inRange(TODAY, new Date('2026-04-07T00:00:00'), new Date('2026-04-09T23:59:59')) 
+    ? 'Ch 6 & 7 Part A/B (now — focus here first!)'
+    : 'Ch 8 + full revision';
+  if(q2d>=-1 && q2d<=7) alerts.push({level:q2d<=1?'danger':'warn',title:`🚨 CAO Quiz 2 — Chapter 6, 7, 8 ${q2d<0?'was yesterday':q2d===0?'TODAY':q2d===1?'tomorrow':`in ${q2d} days`}`,body:`14 April 2026 (released after class). Right now: Focus on ${chapterPhase}. Chapter 8 finishes Tue — study after. Before Quiz: Do practice Qs + check past papers.`,icon:'⚠️'});
+  if(ct2d>=-1 && ct2d<=14) alerts.push({level:ct2d<=2?'danger':ct2d<=7?'warn':'info',title:`📝 CAO Class Test 2 — Chapter 6, 7, 8 ${ct2d<0?'was yesterday':ct2d===0?'TODAY':ct2d===1?'tomorrow':`in ${ct2d} days`}`,body:`16 April 2026. Same scope (Ch 6, 7, 8). If you nail Quiz 2, CT2 is consolidation. Study strategy: Part A/B mastery first, then heavy Ch 8 grind Tue–Wed.`,icon:'📚'});
   // CAO warning — show while SA2/Practical still outstanding
   if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'warn',title:'CAO: SA2 + Practical still outstanding',body:'SA1=57% — need ~80% avg across SA2 (20%) and Practical (30%) to reach 75% predicate.',icon:'⚙️'});
   // OOP info
@@ -2023,18 +2034,21 @@ function buildFocusPriority(){
   const dateEl = document.getElementById('focusPriorityDate');
   const listEl = document.getElementById('focusPriorityList');
   if(!dateEl||!listEl) return;
-  dateEl.textContent = 'Updated for ' + TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'});
+  dateEl.textContent = 'Updated for ' + TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'}) + ' — Smart CAO focus: Ch 6 & 7 (now), then Ch 8 (after Tue)';
 
   // Score each module: ST2 proximity + predicate gap + struggling LOs
   const items = Object.entries(modules).map(([k,m])=>{
     const pred = calcPredicate(k)||0;
     const gap = Math.max(0,75-pred);
     const st2d = ST2[k] ? daysUntil(ST2[k]) : 999;
+    // CAO gets extra priority due to Quiz 2 & Class Test 2 this week
+    const caoBoost = (k==='CAO' && daysUntil(QUIZ2_CAO)<=7) ? 40 : 0;
     const struggling = (LO_DATA[k]||[]).filter(l=>loStatus[l.id]==='struggle').length;
     let score = 0;
     if(st2d<=3) score+=60; else if(st2d<=7) score+=40; else if(st2d<=14) score+=20;
     score += gap*0.6;
     score += struggling*8;
+    score += caoBoost; // CAO quiz/test this week
     if(m.difficulty==='Hard') score+=10;
     const urgency = st2d<=3?'CRITICAL':st2d<=7?'Urgent':gap>25?'High':struggling>2?'High':'Medium';
     const urgencyColor = st2d<=3?'var(--danger)':st2d<=7?'var(--warn)':gap>25?'var(--warn)':'var(--muted)';
