@@ -329,6 +329,9 @@
     <button class="nav-tab" onclick="show('marks')"><div class="dot warn"></div> Marks Tracker</button>
     <button class="nav-tab" onclick="show('modules')">Modules</button>
     <button class="nav-tab" onclick="show('alerts')"><div class="dot danger"></div> Alerts <span class="badge">5</span></button>
+    <button class="nav-tab" onclick="show('focus')">⚡ Focus</button>
+    <button class="nav-tab" onclick="show('emergency')">🆘 Emergency</button>
+    <button class="nav-tab" onclick="show('timer')">🍅 Timer</button>
   </div>
 </nav>
 
@@ -351,20 +354,7 @@
     </div>
   </div>
 
-  <div class="alert danger" style="margin-bottom:.75rem">
-    <div class="alert-icon">⚠️</div>
-    <div class="alert-body">
-      <div class="alert-title">Test Week 1 starts in 12 days! — 18–27 March 2026</div>
-      <p>ADS: LO1–LO3 (Sets, Logic, Proof) | OOP: LO A.1–B.1 (GUIs, Classes) | DTP: LO3–LO7 (ERD, SQL DDL/DML)</p>
-    </div>
-  </div>
-  <div class="alert warn" style="margin-bottom:.75rem">
-    <div class="alert-icon">📅</div>
-    <div class="alert-body">
-      <div class="alert-title">Test Week 2 — 20–30 April 2026</div>
-      <p>ADS: LO4–LO5 (Graphs, Counting) | OOP: LO B.2–F.1 (Inheritance, Exceptions, File I/O) | DTP: LO7–LO10</p>
-    </div>
-  </div>
+  <div id="dashAlerts"></div>
 
   <div class="grid-4" style="margin-bottom:1rem">
     <div class="stat-card">
@@ -403,15 +393,9 @@
       <div id="todayClasses"></div>
     </div>
     <div class="card">
-      <div style="font-size:15px;font-weight:700;margin-bottom:.75rem">Focus priority this week</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">Based on upcoming tests &amp; exam</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">AWS — Cloud Practitioner</span><span style="font-size:12px;color:var(--purple)">CRITICAL (7 days!)</span></div><div class="pbar-wrap"><div class="pbar purple" style="width:85%"></div></div></div>
-        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">OOP — Java (GUIs, Classes)</span><span style="font-size:12px;color:var(--accent2)">High</span></div><div class="pbar-wrap"><div class="pbar green" style="width:60%"></div></div></div>
-        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">ADS — Logic &amp; Proof</span><span style="font-size:12px;color:var(--accent)">High</span></div><div class="pbar-wrap"><div class="pbar blue" style="width:55%"></div></div></div>
-        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">DTP — ERD &amp; SQL</span><span style="font-size:12px;color:var(--warn)">Medium</span></div><div class="pbar-wrap"><div class="pbar amber" style="width:40%"></div></div></div>
-        <div><div class="flex-between" style="margin-bottom:4px"><span style="font-size:13px">CAO — Theory revision</span><span style="font-size:12px;color:var(--warn)">Medium</span></div><div class="pbar-wrap"><div class="pbar amber" style="width:35%"></div></div></div>
-      </div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">Focus priority this week</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem" id="focusPriorityDate"></div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="focusPriorityList"></div>
     </div>
   </div>
 </div>
@@ -441,7 +425,7 @@
 <!-- ========== DAILY SCHEDULE ========== -->
 <div id="page-schedule" class="page">
   <div class="section-title">Daily schedule</div>
-  <div class="section-sub">Every day from today (6 April) until exam end (12 June 2026) — aligned with your study guides</div>
+  <div class="section-sub" id="schedSub"></div>
   <div class="toggle-all-btn" onclick="toggleAll()">▼ Expand all days</div>
   <div id="fullSchedule"></div>
 </div>
@@ -467,6 +451,134 @@
   <div id="alertsContent"></div>
 </div>
 
+<!-- ========== EMERGENCY ========== -->
+<div id="page-emergency" class="page">
+  <div class="section-title">🆘 Emergency Recovery</div>
+  <div class="section-sub">Tell me what you know and what you don't — I'll rebuild your study schedule around your gaps</div>
+
+  <div class="card" style="margin-bottom:1rem;border-color:rgba(248,81,73,.3)">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:1rem;line-height:1.7">
+      For each Learning Outcome below, tap <span style="color:var(--accent2);font-weight:700">✓ I know this</span> or <span style="color:var(--danger);font-weight:700">✗ I'm struggling</span>. Be honest — this is just for you.
+    </div>
+    <div id="loChecklist"></div>
+    <button class="btn" onclick="generateRecoveryPlan()" style="width:100%;justify-content:center;margin-top:1rem;background:rgba(248,81,73,.15);border-color:rgba(248,81,73,.4);color:var(--danger);font-size:14px;padding:12px;font-weight:700">
+      🆘 Generate my recovery schedule
+    </button>
+  </div>
+
+  <div id="recoveryPlan"></div>
+</div>
+
+<!-- ========== TIMER ========== -->
+<div id="page-timer" class="page">
+  <div class="section-title">🍅 Focus Timer</div>
+  <div class="section-sub">Start a session for a specific module &amp; LO — when you stop, log what you covered</div>
+
+  <!-- SESSION SETUP -->
+  <div class="card" style="margin-bottom:1rem" id="timerSetupCard">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">1. Pick your module &amp; topic</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
+      <button class="btn" id="tmod-ADS" onclick="timerPickMod('ADS')">∑ ADS</button>
+      <button class="btn" id="tmod-OOP" onclick="timerPickMod('OOP')">{} OOP</button>
+      <button class="btn" id="tmod-DTP" onclick="timerPickMod('DTP')">⊗ DTP</button>
+      <button class="btn" id="tmod-CAO" onclick="timerPickMod('CAO')">⚙ CAO</button>
+      <button class="btn" id="tmod-AWS" onclick="timerPickMod('AWS')">☁ AWS</button>
+    </div>
+    <div id="timerLOPicker" style="margin-bottom:.75rem"></div>
+    <div style="font-size:14px;font-weight:700;margin-bottom:.5rem">2. Set duration</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
+      <button class="btn" onclick="timerSetDur(25)" id="tdur-25">25 min</button>
+      <button class="btn" onclick="timerSetDur(45)" id="tdur-45">45 min</button>
+      <button class="btn" onclick="timerSetDur(60)" id="tdur-60">60 min</button>
+      <button class="btn" onclick="timerSetDur(90)" id="tdur-90">90 min</button>
+    </div>
+    <button class="btn" id="timerStartBtn" onclick="timerStart()" style="width:100%;justify-content:center;font-size:14px;padding:12px;background:linear-gradient(135deg,rgba(79,156,249,.2),rgba(63,185,80,.15));border-color:rgba(79,156,249,.4)" disabled>
+      ▶ Start session
+    </button>
+  </div>
+
+  <!-- ACTIVE TIMER -->
+  <div class="card" style="margin-bottom:1rem;display:none;border-color:rgba(79,156,249,.4)" id="timerActiveCard">
+    <div style="text-align:center">
+      <div id="timerModLabel" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px"></div>
+      <div id="timerLOLabel" style="font-size:13px;font-weight:600;margin-bottom:8px"></div>
+      <div id="timerDisplay" style="font-size:64px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;text-shadow:0 0 30px rgba(79,156,249,.6);line-height:1">00:00</div>
+      <div id="timerStatus" style="font-size:12px;color:var(--muted);margin:6px 0 16px">Session running...</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn" id="timerPauseBtn" onclick="timerPause()">⏸ Pause</button>
+        <button class="btn" id="timerResumeBtn" onclick="timerResume()" style="display:none">▶ Resume</button>
+        <button class="btn" onclick="timerStop()" style="background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.35);color:var(--danger)">⏹ Stop &amp; log</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG MODAL -->
+  <div class="card" style="margin-bottom:1rem;display:none;border-color:rgba(63,185,80,.3)" id="timerLogCard">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📝 How did that session go?</div>
+    <div id="timerLogSummary" style="font-size:12px;color:var(--muted);margin-bottom:.75rem"></div>
+    <div style="margin-bottom:.75rem">
+      <div class="label">What did you cover?</div>
+      <textarea id="timerLogCovered" rows="3" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 10px;outline:none;resize:vertical;font-family:var(--font)" placeholder="e.g. Graphs — adjacency matrix, BFS traversal, spanning trees..."></textarea>
+    </div>
+    <div style="margin-bottom:.75rem">
+      <div class="label">How confident do you feel now?</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="conf-1" onclick="timerSetConf(1)" style="font-size:12px">😰 Lost</button>
+        <button class="btn" id="conf-2" onclick="timerSetConf(2)" style="font-size:12px">😕 Shaky</button>
+        <button class="btn" id="conf-3" onclick="timerSetConf(3)" style="font-size:12px">😐 Getting it</button>
+        <button class="btn" id="conf-4" onclick="timerSetConf(4)" style="font-size:12px">😊 Solid</button>
+        <button class="btn" id="conf-5" onclick="timerSetConf(5)" style="font-size:12px">🔥 Nailed it</button>
+      </div>
+    </div>
+    <div id="timerLogAnalysis" style="margin-bottom:.75rem"></div>
+    <button class="btn" onclick="timerSaveLog()" style="width:100%;justify-content:center;background:rgba(63,185,80,.15);border-color:rgba(63,185,80,.35);color:var(--accent2);font-size:14px;padding:10px;font-weight:700">
+      ✓ Save session
+    </button>
+  </div>
+
+  <!-- SESSION HISTORY -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <div style="font-size:14px;font-weight:700">📊 Session history</div>
+      <button class="btn" style="font-size:11px;padding:4px 10px" onclick="timerClearLog()">Clear all</button>
+    </div>
+    <div id="timerHistory"></div>
+  </div>
+</div>
+
+<!-- ========== FOCUS ========== -->
+<div id="page-focus" class="page">
+  <div class="section-title">⚡ Focus Hub</div>
+  <div class="section-sub">AI study suggestion · Emergency mode · Pomodoro timer · Progress glow-up</div>
+
+  <!-- AI STUDY SUGGESTION -->
+  <div class="card" style="margin-bottom:1rem;border-color:rgba(79,156,249,.3)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+      <div style="font-size:24px">🤖</div>
+      <div>
+        <div style="font-size:15px;font-weight:700">What should I study RIGHT NOW?</div>
+        <div style="font-size:12px;color:var(--muted)">Based on your marks, upcoming tests &amp; time of day</div>
+      </div>
+    </div>
+    <button class="btn" style="width:100%;justify-content:center;background:linear-gradient(135deg,rgba(79,156,249,.2),rgba(188,140,255,.15));border-color:rgba(79,156,249,.4);font-size:14px;padding:12px" onclick="runAISuggestion()">
+      🧠 Tell me what to study
+    </button>
+    <div id="aiSuggestionResult" style="margin-top:.75rem"></div>
+  </div>
+
+  <!-- GLOW UP GRAPH -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+      <div style="font-size:24px">📈</div>
+      <div>
+        <div style="font-size:15px;font-weight:700">Glow Up — Progress Graph</div>
+        <div style="font-size:12px;color:var(--muted)">Your marks journey &amp; what you need to reach 75%</div>
+      </div>
+    </div>
+    <div id="glowUpGraph"></div>
+  </div>
+</div>
+
 </div>
 
 <nav class="bottom-nav">
@@ -477,13 +589,15 @@
     <button class="bnav-btn" onclick="show('marks')"><span class="bnav-icon">📊</span>Marks</button>
     <button class="bnav-btn" onclick="show('modules')"><span class="bnav-icon">📚</span>Modules</button>
     <button class="bnav-btn" onclick="show('alerts')"><span class="bnav-icon">🔔</span>Alerts</button>
+    <button class="bnav-btn" onclick="show('focus')"><span class="bnav-icon">⚡</span>Focus</button>
+    <button class="bnav-btn" onclick="show('emergency')"><span class="bnav-icon">🆘</span>SOS</button>
+    <button class="bnav-btn" onclick="show('timer')"><span class="bnav-icon">🍅</span>Timer</button>
   </div>
 </nav>
 
 <script>
 // ======================== CONFIG ========================
-const TODAY_STR = '2026-04-06';
-const TODAY = new Date(TODAY_STR + 'T00:00:00');
+const _n=new Date(); const TODAY=new Date(_n.getFullYear(),_n.getMonth(),_n.getDate());
 const AWS_DATE = new Date('2026-04-13T00:00:00');
 const EXAM_START = new Date('2026-05-25T00:00:00');
 const EXAM_END = new Date('2026-06-12T00:00:00');
@@ -515,6 +629,9 @@ function show(page) {
   document.getElementById('page-'+page).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t=>{if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes(page))t.classList.add('active');});
   document.querySelectorAll('.bnav-btn').forEach(t=>{if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes(page))t.classList.add('active');});
+  if(page==='focus') buildGlowUp();
+  if(page==='emergency') initEmergencyPage();
+  if(page==='timer') initTimerPage();
 }
 
 // ======================== GREETING ========================
@@ -1114,7 +1231,7 @@ function loadMarks(){
 function setMark(k,idx,val){
   const v=val===''?null:Math.min(100,Math.max(0,parseFloat(val)));
   modules[k].assessments[idx].score=v;
-  saveMarks();buildMarks();buildModuleOverview();
+  saveMarks();refreshAll();
 }
 
 // ======================== MODULES PAGE ========================
@@ -1149,43 +1266,747 @@ function buildModules(){
 }
 
 // ======================== ALERTS PAGE ========================
+// Semester Test 2 dates
+const ST2 = {
+  DTP: new Date('2026-04-20T00:00:00'),
+  CAO: new Date('2026-04-22T00:00:00'),
+  OOP: new Date('2026-04-24T00:00:00'),
+  ADS: new Date('2026-04-30T00:00:00'),
+};
+
+function daysUntil(d){ return Math.ceil((d-TODAY)/86400000); }
+
+function getActiveAlerts(){
+  const alerts=[];
+  const awsD=daysUntil(AWS_DATE);
+  // AWS — show until exam day passes
+  if(awsD>=-1) alerts.push({level:awsD<=3?'danger':'warn',title:`AWS CLF-C02 exam — ${Math.max(0,awsD)} day${awsD===1?'':'s'} away!`,body:'13 April 2026. Study: Cloud Concepts (26%), Security (25%), Technology (33%), Billing (16%). Do at least 2 full 65-question mock exams before the day.',icon:'🔴'});
+  // Test Week 1 — only show if still in future or active
+  if(TODAY<=TW1_END) alerts.push({level:'danger',title:'Test Week 1 — 18–27 March 2026',body:'ADS: LO1–LO3 (Sets, Logic, Proof) | OOP: A.1–B.1 (GUIs, Classes) | DTP: LO3–LO7 (ERD, SQL DDL/DML)',icon:'⚠️'});
+  // Test Week 2 — show from 7 days before until it ends
+  if(TODAY<=TW2_END && daysUntil(TW2_START)<=7) alerts.push({level:inRange(TODAY,TW2_START,TW2_END)?'danger':'warn',title:'Test Week 2 — 20–30 April 2026',body:'ADS: LO4–LO5 (Graphs, Counting) | OOP: B.2–F.1 (Inheritance, Exceptions, File I/O) | DTP: LO7–LO10',icon:'📅'});
+  // Semester Test 2 countdowns — show each until 1 day after the test
+  const st2entries=[['DTP','Databases','purple'],['CAO','Computer Architecture','amber'],['OOP','Object-Oriented Programming','green'],['ADS','Advanced Discrete Structures','blue']];
+  st2entries.forEach(([mod,name,col])=>{
+    const d=daysUntil(ST2[mod]);
+    if(d>=-1&&d<=14){
+      const urgency=d<=1?'danger':d<=3?'danger':'warn';
+      const label=d<0?'was yesterday':d===0?'TODAY':d===1?'tomorrow':`in ${d} days`;
+      alerts.push({level:urgency,title:`ST2 ${mod} — ${name} ${label}`,body:`${ST2[mod].toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}. Focus: ${mod==='ADS'?'LO4–LO5 (Graphs & Trees, Counting) — Epp Ch 9–10':mod==='OOP'?'LO B.2–F.1 (Composition, Inheritance, Collections, Abstract, Exceptions, File I/O)':mod==='DTP'?'LO7–LO10 (Advanced SQL, Functions, Joins, Subqueries)':'All theory — number systems, CPU, memory, I/O, Boolean logic'}`,icon:d<=1?'🚨':'⏰'});
+    }
+  });
+  // CAO warning — show while SA2/Practical still outstanding
+  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'warn',title:'CAO: SA2 + Practical still outstanding',body:'SA1=57% — need ~80% avg across SA2 (20%) and Practical (30%) to reach 75% predicate.',icon:'⚙️'});
+  // OOP info
+  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'info',title:'OOP: Practice Java daily',body:'GUIs (A.1), Classes (B.1), Composition (B.2), Inheritance (B.3), Abstract/Interfaces (D.1), Exceptions (E.1), File I/O (F.1). Use NetBeans/Eclipse.',icon:'💡'});
+  // DTP info
+  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'info',title:'DTP: Oracle SQL hands-on every day',body:'10-140 Lab after 5PM. Normalise to 3NF, write DDL, then SELECT with WHERE, GROUP BY, JOIN, subqueries.',icon:'🗄️'});
+  // ADS info
+  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'info',title:'ADS: Maintain your strong performance',body:'CT1=100%, CT2=90%, CT3=80%, ST1=95%. Prepare for CT4 (Graphs), CT5 (Counting) and ST2 (30 Apr).',icon:'✅'});
+  // Exam period
+  if(TODAY>=EXAM_START||daysUntil(EXAM_START)<=14) alerts.push({level:'success',title:'Main exams: 25 May – 12 Jun 2026',body:'Predicate Day: 18 May. Supplementary exams: 15–30 Jun 2026. All LOs for all modules.',icon:'🎓'});
+  return alerts;
+}
+
 function buildAlerts(){
-  const alerts=[
-    {level:'danger',title:`AWS CLF-C02 exam — ${Math.max(0,awsDiff)} days away!`,body:'13 April 2026. Study: Cloud Concepts (26%), Security (25%), Technology (33%), Billing (16%). Do at least 2 full 65-question mock exams before the day.',icon:'🔴'},
-    {level:'danger',title:'Test Week 1 — 18–27 March 2026',body:'ADS: LO1 (Sets/Functions), LO2 (Logic), LO3 (Proof Techniques) — Epp Ch 1–5. OOP: LO A.1 (GUIs), B.1 (User-defined Classes) — Deitel Ch 7. DTP: LO3 (ERD), LO4 (Normalisation), LO5 (DDL), LO6 (DML), LO7 (SELECT).',icon:'⚠️'},
-    {level:'warn',title:'Test Week 2 — 20–30 April 2026',body:'ADS: LO4 (Graphs & Trees), LO5 (Counting) — Epp Ch 9–10. OOP: LO B.2 (Composition), B.3 (Inheritance), C.1 (Collections), D.1 (Abstract/Interfaces), E.1 (Exceptions), F.1 (File I/O). DTP: LO7–LO10.',icon:'📅'},
-    {level:'warn',title:'CAO: Semester Test 2 + Practical still outstanding',body:'SA1 = 57% (need higher in SA2). SA2 (20%) + Practical (30%) = 50% of your predicate. Need ~80% average in both to reach 75% predicate. Ask lecturer about practical details.',icon:'⚙️'},
-    {level:'info',title:'OOP: All assessments still to be written',body:'Start with Class Test 1 topics: GUIs (A.1.1–A.1.6) and User-defined Classes (B.1). Deitel Ch 7 is essential. Practice creating classes in NetBeans/Eclipse daily.',icon:'💡'},
-    {level:'info',title:'DTP: Practice Oracle SQL hands-on every day',body:'Use the 10-140 Lab after 5PM. Build schemas from scratch — normalise to 3NF, write DDL, then practice SELECT with WHERE, GROUP BY, JOIN, subqueries.',icon:'🗄️'},
-    {level:'info',title:'ADS: You\'re on track! Maintain performance',body:'CT1=100%, CT2=90%, CT3=80%, ST1=95%. Your best 4 class tests average is very strong. Prepare well for CT4 (Graphs), CT5 (Counting) and ST2.',icon:'✅'},
-    {level:'success',title:'Exam schedule',body:'Main exams: 25 May – 12 June 2026 (LO1–LO6 for all modules). Predicate Day: 18 May. Supplementary exams: 15–30 June 2026.',icon:'🎓'},
-  ];
+  const alerts=getActiveAlerts();
   const by={danger:[],warn:[],info:[],success:[]};
   alerts.forEach(a=>by[a.level].push(a));
   let html='';
   ['danger','warn','info','success'].forEach(lvl=>{
     if(!by[lvl].length) return;
     html+=`<div style="margin-bottom:1rem">`;
-    by[lvl].forEach(a=>{
-      html+=`<div class="alert ${a.level}" style="margin-bottom:.5rem"><div class="alert-icon">${a.icon}</div><div class="alert-body"><div class="alert-title">${a.title}</div><p>${a.body}</p></div></div>`;
-    });
+    by[lvl].forEach(a=>html+=`<div class="alert ${a.level}" style="margin-bottom:.5rem"><div class="alert-icon">${a.icon}</div><div class="alert-body"><div class="alert-title">${a.title}</div><p>${a.body}</p></div></div>`);
     html+='</div>';
   });
   html+=`<div class="card" style="margin-top:1rem"><div style="font-size:15px;font-weight:700;margin-bottom:.75rem">All key dates</div>
     ${[
       ['13 Apr 2026','AWS CLF-C02 Exam','danger'],
-      ['18–27 Mar 2026','Test Week 1','warn'],
-      ['30 Mar – 4 Apr 2026','Mid-semester recess','info'],
-      ['20–30 Apr 2026','Test Week 2','warn'],
+      ['20 Apr 2026','ST2: DTP (Databases)','warn'],
+      ['22 Apr 2026','ST2: CAO (Computer Architecture)','warn'],
+      ['24 Apr 2026','ST2: OOP (Object-Oriented Programming)','warn'],
+      ['30 Apr 2026','ST2: ADS (Advanced Discrete Structures)','warn'],
       ['18 May 2026','Predicate Day (marks locked)','danger'],
       ['25 May – 12 Jun 2026','Main examinations','danger'],
       ['15–30 Jun 2026','Supplementary exams','warn'],
-    ].map(([d,e,l])=>`<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center">
-      <div style="font-size:12px;font-weight:700;min-width:130px;color:${l==='danger'?'var(--danger)':l==='warn'?'var(--warn)':'var(--accent)'}">${d}</div>
-      <div style="font-size:13px">${e}</div>
-    </div>`).join('')}
+    ].map(([d,e,l])=>{
+      const isPast=new Date(d.split(' – ')[0].replace(/–.*/,'').trim()+' 2026')<TODAY;
+      return `<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center;${isPast?'opacity:0.4':''}">
+        <div style="font-size:12px;font-weight:700;min-width:130px;color:${l==='danger'?'var(--danger)':l==='warn'?'var(--warn)':'var(--accent)'}">${d}${isPast?' ✓':''}</div>
+        <div style="font-size:13px">${e}</div>
+      </div>`;
+    }).join('')}
   </div>`;
   document.getElementById('alertsContent').innerHTML=html;
+  // Also update dashboard alert strip
+  const dashAlerts=getActiveAlerts().filter(a=>a.level==='danger'||a.level==='warn').slice(0,2);
+  document.getElementById('dashAlerts').innerHTML=dashAlerts.map(a=>`<div class="alert ${a.level}" style="margin-bottom:.75rem"><div class="alert-icon">${a.icon}</div><div class="alert-body"><div class="alert-title">${a.title}</div><p>${a.body}</p></div></div>`).join('');
+}
+
+// ======================== AI STUDY SUGGESTION ========================
+function runAISuggestion(){
+  const el=document.getElementById('aiSuggestionResult');
+  el.innerHTML='<div style="text-align:center;padding:1rem;color:var(--muted);font-size:13px">🧠 Analysing your marks, upcoming tests and schedule...</div>';
+  setTimeout(()=>{
+    const suggestions=[];
+    const now=new Date(); const h=now.getHours();
+    // Score each module by urgency
+    const scored=Object.entries(modules).map(([k,m])=>{
+      const pred=calcPredicate(k);
+      let score=0;
+      // Days to next ST2
+      const st2d=ST2[k]?daysUntil(ST2[k]):999;
+      if(st2d<=3) score+=50;
+      else if(st2d<=7) score+=30;
+      else if(st2d<=14) score+=15;
+      // Below target
+      if(pred!==null&&pred<75) score+=Math.round((75-pred)*0.8);
+      if(pred===null) score+=20;
+      // Difficulty
+      if(m.difficulty==='Hard') score+=10;
+      return {k,m,pred,st2d,score};
+    }).sort((a,b)=>b.score-a.score);
+
+    const top=scored[0];
+    const second=scored[1];
+    const awsD=daysUntil(AWS_DATE);
+
+    // Primary suggestion
+    let primary,reason,topics,urgency='info';
+    if(awsD>=0&&awsD<=3){
+      primary='AWS CLF-C02'; reason=`Exam in ${awsD} day${awsD===1?'':'s'}!`;
+      topics='Do a full 65-question mock exam. Review weak domains only.';
+      urgency='danger';
+    } else if(top.st2d<=3){
+      primary=top.m.name; reason=`ST2 in ${top.st2d} day${top.st2d===1?'':'s'}!`;
+      topics=top.k==='ADS'?'LO4–LO5: Graphs, Trees & Counting — Epp Ch 9–10':top.k==='OOP'?'B.2–F.1: Composition, Inheritance, Exceptions, File I/O':top.k==='DTP'?'LO7–LO10: Advanced SQL, Joins, Subqueries':'All theory: CPU, memory, I/O, Boolean logic';
+      urgency='danger';
+    } else if(top.pred!==null&&top.pred<50){
+      primary=top.m.name; reason=`Predicate at ${top.pred.toFixed(0)}% — needs urgent attention`;
+      topics=top.m.topics.slice(0,3).join(', ');
+      urgency='warn';
+    } else {
+      primary=top.m.name; reason=top.st2d<999?`ST2 in ${top.st2d} days — stay ahead`:'Highest priority right now';
+      topics=top.m.topics.slice(0,3).join(', ');
+      urgency='info';
+    }
+
+    // Time-of-day tip
+    const timeTip=h<9?'Morning brain is sharp — tackle hard theory now 🌅':h<12?'Peak focus window — do active problem solving 💪':h<14?'Post-lunch: lighter revision or flashcards 🍽️':h<17?'Afternoon: good for practice exercises 📝':h<20?'Evening: review notes, summarise the day 🌙':'Late night: keep it light — no new content 💤';
+
+    let html=`<div class="alert ${urgency}" style="margin-bottom:.5rem">
+      <div class="alert-icon">${urgency==='danger'?'🚨':urgency==='warn'?'⚠️':'💡'}</div>
+      <div class="alert-body">
+        <div class="alert-title">Focus on: ${primary}</div>
+        <p>${reason}</p>
+        <p style="margin-top:4px">📚 Topics: ${topics}</p>
+      </div>
+    </div>`;
+    if(second&&second.st2d<=7){
+      html+=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⏰</div><div class="alert-body"><div class="alert-title">Also coming up: ${second.m.name}</div><p>ST2 in ${second.st2d} days — don't neglect it</p></div></div>`;
+    }
+    html+=`<div class="alert info"><div class="alert-icon">🕐</div><div class="alert-body"><div class="alert-title">${timeTip}</div></div></div>`;
+    el.innerHTML=html;
+  },600);
+}
+
+// ======================== EMERGENCY — LO DATA ========================
+const LO_DATA = {
+  ADS: [
+    {id:'ADS-1', lo:'LO1', label:'Sets & Functions', detail:'Set notation, types of functions, relations — Epp Ch 1–2'},
+    {id:'ADS-2', lo:'LO2', label:'Logic Concepts', detail:'Propositional logic, truth tables, logical equivalence — Epp Ch 2'},
+    {id:'ADS-3', lo:'LO3', label:'Proof Techniques', detail:'Direct proof, contradiction, induction — Epp Ch 3–4'},
+    {id:'ADS-4', lo:'LO4', label:'Graphs & Trees', detail:'Graph types, paths, trees, spanning trees — Epp Ch 10'},
+    {id:'ADS-5', lo:'LO5', label:'Counting', detail:'Permutations, combinations, pigeonhole — Epp Ch 9'},
+    {id:'ADS-6', lo:'LO6', label:'Discrete Probability', detail:'Sample spaces, probability rules — Epp Ch 9'},
+  ],
+  OOP: [
+    {id:'OOP-A1', lo:'A.1', label:'GUIs & Event Handling', detail:'JFrame, JButton, ActionListener, layout managers — Deitel Ch 7'},
+    {id:'OOP-B1', lo:'B.1', label:'User-defined Classes', detail:'Fields, constructors, methods, encapsulation'},
+    {id:'OOP-B2', lo:'B.2', label:'Composition', detail:'Has-a relationship, objects as fields'},
+    {id:'OOP-B3', lo:'B.3', label:'Inheritance', detail:'extends, super, method overriding, polymorphism'},
+    {id:'OOP-C1', lo:'C.1', label:'Collections', detail:'ArrayList, Iterator, generics'},
+    {id:'OOP-D1', lo:'D.1', label:'Abstract Classes & Interfaces', detail:'abstract keyword, implements, interface contracts'},
+    {id:'OOP-E1', lo:'E.1', label:'Exception Handling', detail:'try/catch/finally, custom exceptions, throws'},
+    {id:'OOP-F1', lo:'F.1', label:'File I/O', detail:'FileReader, BufferedReader, FileWriter, Scanner on files'},
+  ],
+  DTP: [
+    {id:'DTP-1', lo:'LO1', label:'Data Models', detail:'Hierarchical, network, relational model concepts'},
+    {id:'DTP-2', lo:'LO2', label:'Relational Model', detail:'Tables, keys, constraints, integrity rules'},
+    {id:'DTP-3', lo:'LO3', label:'ERD', detail:'Entities, attributes, relationships, cardinality'},
+    {id:'DTP-4', lo:'LO4', label:'Normalisation', detail:'1NF, 2NF, 3NF — removing redundancy'},
+    {id:'DTP-5', lo:'LO5', label:'DDL', detail:'CREATE TABLE, ALTER, DROP, constraints'},
+    {id:'DTP-6', lo:'LO6', label:'DML', detail:'INSERT, UPDATE, DELETE'},
+    {id:'DTP-7', lo:'LO7', label:'SQL SELECT', detail:'WHERE, ORDER BY, GROUP BY, HAVING'},
+    {id:'DTP-8', lo:'LO8', label:'SQL Functions', detail:'COUNT, SUM, AVG, MAX, MIN, string/date functions'},
+    {id:'DTP-9', lo:'LO9', label:'Joins', detail:'INNER JOIN, LEFT JOIN, self-join'},
+    {id:'DTP-10', lo:'LO10', label:'Subqueries', detail:'Nested SELECT, correlated subqueries, EXISTS'},
+  ],
+  CAO: [
+    {id:'CAO-1', lo:'LO1', label:'Number Systems', detail:'Binary, octal, hex conversions, arithmetic'},
+    {id:'CAO-2', lo:'LO2', label:'Boolean Logic', detail:'Gates, truth tables, simplification, Karnaugh maps'},
+    {id:'CAO-3', lo:'LO3', label:'CPU Architecture', detail:'ALU, control unit, registers, fetch-decode-execute'},
+    {id:'CAO-4', lo:'LO4', label:'Memory Hierarchy', detail:'Cache, RAM, ROM, virtual memory'},
+    {id:'CAO-5', lo:'LO5', label:'Instruction Sets', detail:'RISC vs CISC, addressing modes, assembly basics'},
+    {id:'CAO-6', lo:'LO6', label:'I/O Systems', detail:'I/O interfaces, interrupts, DMA, buses'},
+  ]
+};
+
+// loStatus: 'know' | 'struggle' | null
+let loStatus = {};
+try{ loStatus = JSON.parse(localStorage.getItem('studyhub_lo')||'{}'); }catch(e){}
+
+function saveLO(){ try{localStorage.setItem('studyhub_lo',JSON.stringify(loStatus));}catch(e){} }
+
+function setLO(id, val){
+  loStatus[id] = loStatus[id]===val ? null : val;
+  saveLO();
+  refreshAll();
+}
+
+function buildLOChecklist(){
+  const modInfo = {
+    ADS:{color:'blue',icon:'∑',name:'Advanced Discrete Structures'},
+    OOP:{color:'green',icon:'{}',name:'Object-Oriented Programming'},
+    DTP:{color:'purple',icon:'⊗',name:'Databases'},
+    CAO:{color:'amber',icon:'⚙',name:'Computer Architecture & Organisation'}
+  };
+  let html = '';
+  for(const [mod, los] of Object.entries(LO_DATA)){
+    const m = modInfo[mod];
+    const total = los.length;
+    const known = los.filter(l=>loStatus[l.id]==='know').length;
+    const struggling = los.filter(l=>loStatus[l.id]==='struggle').length;
+    const pct = Math.round(known/total*100);
+    html += `<div style="margin-bottom:1.25rem">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.6rem">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(${colorRgb(m.color)},.2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:${colorVar(m.color)}">${m.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700">${m.name}</div>
+          <div style="font-size:11px;color:var(--muted)">${known}/${total} known · ${struggling} struggling</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:${pct>=75?'var(--accent2)':pct>=50?'var(--warn)':'var(--danger)'}">${pct}%</div>
+      </div>
+      <div class="pbar-wrap" style="margin-bottom:.6rem"><div class="pbar ${m.color}" style="width:${pct}%"></div></div>`;
+    los.forEach(l=>{
+      const s = loStatus[l.id];
+      html += `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;margin-bottom:4px;background:${
+        s==='know'?'rgba(63,185,80,.08)':s==='struggle'?'rgba(248,81,73,.08)':'var(--surface2)'
+      };border:1px solid ${s==='know'?'rgba(63,185,80,.25)':s==='struggle'?'rgba(248,81,73,.25)':'var(--border)'}">
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:700">${l.lo} — ${l.label}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:1px">${l.detail}</div>
+        </div>
+        <button onclick="setLO('${l.id}','know')" style="border:none;cursor:pointer;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;background:${s==='know'?'rgba(63,185,80,.3)':'rgba(63,185,80,.1)'};color:${s==='know'?'var(--accent2)':'var(--muted)'};transition:all .15s">✓ Know</button>
+        <button onclick="setLO('${l.id}','struggle')" style="border:none;cursor:pointer;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;background:${s==='struggle'?'rgba(248,81,73,.3)':'rgba(248,81,73,.1)'};color:${s==='struggle'?'var(--danger)':'var(--muted)'};transition:all .15s">✗ Struggling</button>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  document.getElementById('loChecklist').innerHTML = html;
+}
+
+function generateRecoveryPlan(){
+  const el = document.getElementById('recoveryPlan');
+
+  // Collect struggling LOs per module
+  const gaps = {};
+  const strong = {};
+  for(const [mod, los] of Object.entries(LO_DATA)){
+    gaps[mod] = los.filter(l=>loStatus[l.id]==='struggle');
+    strong[mod] = los.filter(l=>loStatus[l.id]==='know');
+  }
+
+  const totalGaps = Object.values(gaps).reduce((s,a)=>s+a.length,0);
+  const totalAnswered = Object.values(loStatus).filter(v=>v!==null).length;
+
+  if(totalAnswered < 4){
+    el.innerHTML = '<div class="alert warn"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">Please rate your LOs first</div><p>Tap ✓ Know or ✗ Struggling for at least a few topics above, then generate your plan.</p></div></div>';
+    return;
+  }
+
+  // Score each module: more gaps + closer ST2 = higher priority
+  const modPriority = Object.entries(gaps).map(([mod, gapList])=>{
+    const st2d = ST2[mod] ? daysUntil(ST2[mod]) : 999;
+    const gapScore = gapList.length * 10;
+    const timeScore = st2d<=3?50:st2d<=7?30:st2d<=14?15:0;
+    const pred = calcPredicate(mod)||0;
+    const markScore = Math.max(0, 75-pred);
+    return {mod, gapList, strong:strong[mod], st2d, score:gapScore+timeScore+markScore, pred};
+  }).sort((a,b)=>b.score-a.score);
+
+  // Build daily time slots based on gaps
+  // Each struggling LO gets a dedicated study block
+  // Strong LOs get quick review blocks
+  const timeBlocks = {
+    ADS: {study:'19:00–21:00', quick:'17:00–18:00'},
+    OOP: {study:'17:00–19:00', quick:'06:30–07:30'},
+    DTP: {study:'13:00–15:00', quick:'10:00–11:00'},
+    CAO: {study:'15:00–17:00', quick:'07:00–07:30'},
+  };
+
+  let html = '';
+
+  // Summary banner
+  const criticalMods = modPriority.filter(m=>m.gapList.length>0&&m.st2d<=7);
+  const safeMods = modPriority.filter(m=>m.gapList.length===0);
+  html += `<div class="alert ${totalGaps>5?'danger':totalGaps>2?'warn':'success'}" style="margin-bottom:1rem">
+    <div class="alert-icon">${totalGaps>5?'🚨':totalGaps>2?'⚠️':'✅'}</div>
+    <div class="alert-body">
+      <div class="alert-title">${totalGaps>5?'You are significantly behind — emergency mode activated':totalGaps>2?'Some gaps detected — targeted recovery plan ready':'Looking good! Minor gaps to patch'}</div>
+      <p>${totalGaps} struggling LO${totalGaps!==1?'s':''} across ${Object.values(gaps).filter(g=>g.length>0).length} module${Object.values(gaps).filter(g=>g.length>0).length!==1?'s':''}${safeMods.length?` · ${safeMods.map(m=>m.mod).join(', ')} fully covered ✓`:''}</p>
+    </div>
+  </div>`;
+
+  // Per-module recovery cards
+  html += '<div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📋 Your personalised recovery plan</div>';
+
+  modPriority.forEach((mp, rank)=>{
+    const m = modules[mp.mod];
+    const hasGaps = mp.gapList.length > 0;
+    const urgency = mp.st2d<=3?'danger':mp.st2d<=7?'warn':hasGaps?'info':'success';
+    const urgencyLabel = mp.st2d<=3?`🔴 CRITICAL — ST2 in ${mp.st2d} days`:mp.st2d<=7?`🟠 URGENT — ST2 in ${mp.st2d} days`:hasGaps?'🟡 Needs work':'🟢 On track';
+    const tb = timeBlocks[mp.mod];
+
+    html += `<div class="card" style="margin-bottom:.75rem;border-color:rgba(${colorRgb(m.color)},.3)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(${colorRgb(m.color)},.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:${colorVar(m.color)}">${m.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700">${['1️⃣','2️⃣','3️⃣','4️⃣'][rank]} ${m.name}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:1px">${urgencyLabel}</div>
+        </div>
+        <div style="font-size:13px;font-weight:800;color:${colorVar(m.color)}">${mp.pred>0?mp.pred.toFixed(0)+'%':'—'}</div>
+      </div>`;
+
+    if(hasGaps){
+      html += `<div style="margin-bottom:.6rem">
+        <div class="label" style="color:var(--danger)">⚠ Struggling — needs dedicated study time</div>`;
+      mp.gapList.forEach(l=>{
+        html += `<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(248,81,73,.07);border-radius:6px;margin-bottom:3px;border-left:2px solid var(--danger)">
+          <div style="font-size:11px;font-weight:700;color:var(--danger);min-width:36px">${l.lo}</div>
+          <div><div style="font-size:12px;font-weight:600">${l.label}</div><div style="font-size:10px;color:var(--muted)">${l.detail}</div></div>
+        </div>`;
+      });
+      html += '</div>';
+
+      // Recommended daily block
+      html += `<div style="background:rgba(248,81,73,.08);border-radius:8px;padding:8px 10px;margin-bottom:.6rem">
+        <div style="font-size:11px;font-weight:700;color:var(--danger);margin-bottom:3px">📅 Recommended daily block</div>
+        <div style="font-size:12px">${tb.study} — Deep study: focus only on struggling LOs above</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Do past questions, write notes, explain concepts out loud</div>
+      </div>`;
+    }
+
+    if(mp.strong.length>0){
+      html += `<div style="margin-bottom:.6rem">
+        <div class="label" style="color:var(--accent2)">✓ You know these — quick review only</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px">`;
+      mp.strong.forEach(l=>html+=`<span style="background:rgba(63,185,80,.1);color:var(--accent2);font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px">${l.lo}: ${l.label}</span>`);
+      html += `</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">${tb.quick} — 30 min light review to keep it fresh</div>
+      </div>`;
+    }
+
+    if(!hasGaps && mp.strong.length===0){
+      html += `<div style="font-size:12px;color:var(--muted)">No LOs rated yet for this module — go back and rate them above.</div>`;
+    }
+
+    if(!hasGaps && mp.strong.length>0){
+      html += `<div class="alert success" style="margin-top:.25rem"><div class="alert-icon">✅</div><div class="alert-body"><div class="alert-title">Solid! Just maintain with ${tb.quick} light review daily.</div></div></div>`;
+    }
+
+    html += '</div>';
+  });
+
+  // Today's adjusted schedule
+  const todayGaps = modPriority.filter(m=>m.gapList.length>0);
+  if(todayGaps.length>0){
+    html += `<div class="card" style="border-color:rgba(248,81,73,.25)">
+      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🗓️ Today's adjusted study schedule</div>`;
+    const slots = [
+      {time:'06:30–07:30', mod: todayGaps[0]?.mod, type:'quick', label:'Morning warm-up'},
+      {time:'10:00–12:00', mod: todayGaps[0]?.mod, type:'deep', label:'Deep focus — #1 priority'},
+      {time:'13:00–15:00', mod: todayGaps[1]?.mod||todayGaps[0]?.mod, type:'deep', label:'Deep focus — #2 priority'},
+      {time:'15:00–17:00', mod: todayGaps[2]?.mod||todayGaps[0]?.mod, type:'deep', label:'Deep focus — #3 priority'},
+      {time:'17:00–18:00', mod: modPriority.find(m=>m.strong.length>0)?.mod, type:'quick', label:'Quick review — strong module'},
+      {time:'19:00–21:00', mod: todayGaps[0]?.mod, type:'deep', label:'Evening deep study — biggest gap'},
+    ];
+    slots.forEach(sl=>{
+      if(!sl.mod) return;
+      const m = modules[sl.mod];
+      const gapLabels = gaps[sl.mod].slice(0,2).map(l=>l.label).join(', ');
+      const desc = sl.type==='deep'&&gapLabels ? `Focus: ${gapLabels}` : 'Light review — keep it fresh';
+      html += `<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center">
+        <div style="font-size:11px;color:var(--muted);min-width:110px">${sl.time}</div>
+        <div style="width:3px;height:32px;border-radius:2px;background:${colorVar(m.color)};flex-shrink:0"></div>
+        <div>
+          <div style="font-size:12px;font-weight:700">${sl.label} — ${m.name}</div>
+          <div style="font-size:11px;color:var(--muted)">${desc}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function initEmergencyPage(){
+  buildLOChecklist();
+  document.getElementById('recoveryPlan').innerHTML = '';
+}
+
+// ======================== FOCUS TIMER ========================
+const TIMER_LOS = {
+  ADS:[
+    {id:'ADS-1',label:'LO1 — Sets & Functions'},
+    {id:'ADS-2',label:'LO2 — Logic Concepts'},
+    {id:'ADS-3',label:'LO3 — Proof Techniques'},
+    {id:'ADS-4',label:'LO4 — Graphs & Trees'},
+    {id:'ADS-5',label:'LO5 — Counting'},
+    {id:'ADS-6',label:'LO6 — Discrete Probability'},
+  ],
+  OOP:[
+    {id:'OOP-A1',label:'A.1 — GUIs & Event Handling'},
+    {id:'OOP-B1',label:'B.1 — User-defined Classes'},
+    {id:'OOP-B2',label:'B.2 — Composition'},
+    {id:'OOP-B3',label:'B.3 — Inheritance'},
+    {id:'OOP-C1',label:'C.1 — Collections'},
+    {id:'OOP-D1',label:'D.1 — Abstract & Interfaces'},
+    {id:'OOP-E1',label:'E.1 — Exception Handling'},
+    {id:'OOP-F1',label:'F.1 — File I/O'},
+  ],
+  DTP:[
+    {id:'DTP-1',label:'LO1 — Data Models'},
+    {id:'DTP-2',label:'LO2 — Relational Model'},
+    {id:'DTP-3',label:'LO3 — ERD'},
+    {id:'DTP-4',label:'LO4 — Normalisation'},
+    {id:'DTP-5',label:'LO5 — DDL'},
+    {id:'DTP-6',label:'LO6 — DML'},
+    {id:'DTP-7',label:'LO7 — SQL SELECT'},
+    {id:'DTP-8',label:'LO8 — SQL Functions'},
+    {id:'DTP-9',label:'LO9 — Joins'},
+    {id:'DTP-10',label:'LO10 — Subqueries'},
+  ],
+  CAO:[
+    {id:'CAO-1',label:'LO1 — Number Systems'},
+    {id:'CAO-2',label:'LO2 — Boolean Logic'},
+    {id:'CAO-3',label:'LO3 — CPU Architecture'},
+    {id:'CAO-4',label:'LO4 — Memory Hierarchy'},
+    {id:'CAO-5',label:'LO5 — Instruction Sets'},
+    {id:'CAO-6',label:'LO6 — I/O Systems'},
+  ],
+  AWS:[
+    {id:'AWS-1',label:'Cloud Concepts (26%)'},
+    {id:'AWS-2',label:'Security & Compliance (25%)'},
+    {id:'AWS-3',label:'Technology (33%)'},
+    {id:'AWS-4',label:'Billing & Pricing (16%)'},
+  ]
+};
+
+let timerState = {
+  mod: null, lo: null, durMins: 25,
+  running: false, paused: false,
+  elapsed: 0, startTs: null,
+  conf: null
+};
+let timerInterval = null;
+let timerLogs = [];
+try{ timerLogs = JSON.parse(localStorage.getItem('studyhub_timer')||'[]'); }catch(e){}
+
+function timerSaveLogs(){ try{localStorage.setItem('studyhub_timer',JSON.stringify(timerLogs));}catch(e){} }
+
+function timerPickMod(mod){
+  timerState.mod = mod; timerState.lo = null;
+  // Highlight selected mod button
+  ['ADS','OOP','DTP','CAO','AWS'].forEach(m=>{
+    const b = document.getElementById('tmod-'+m);
+    if(b) b.style.borderColor = m===mod ? colorVar(mod==='AWS'?'purple':modules[mod]?.color||'blue') : '';
+  });
+  // Build LO picker
+  const los = TIMER_LOS[mod]||[];
+  let html = `<div class="label">Pick a topic</div><div style="display:flex;gap:6px;flex-wrap:wrap">`;
+  los.forEach(l=>html+=`<button class="btn" id="tlo-${l.id}" onclick="timerPickLO('${l.id}','${l.label}')" style="font-size:11px;padding:5px 10px">${l.label}</button>`);
+  html += '</div>';
+  document.getElementById('timerLOPicker').innerHTML = html;
+  timerCheckReady();
+}
+
+function timerPickLO(id, label){
+  timerState.lo = {id, label};
+  // Highlight selected LO
+  const los = TIMER_LOS[timerState.mod]||[];
+  los.forEach(l=>{
+    const b = document.getElementById('tlo-'+l.id);
+    if(b) b.style.background = l.id===id ? 'rgba(79,156,249,.2)' : '';
+  });
+  timerCheckReady();
+}
+
+function timerSetDur(mins){
+  timerState.durMins = mins;
+  [25,45,60,90].forEach(d=>{
+    const b = document.getElementById('tdur-'+d);
+    if(b) b.style.borderColor = d===mins ? 'var(--accent)' : '';
+  });
+  timerCheckReady();
+}
+
+function timerCheckReady(){
+  const btn = document.getElementById('timerStartBtn');
+  if(btn) btn.disabled = !(timerState.mod && timerState.lo);
+}
+
+function timerStart(){
+  if(!timerState.mod || !timerState.lo) return;
+  timerState.running = true; timerState.paused = false;
+  timerState.elapsed = 0; timerState.startTs = Date.now();
+  timerState.conf = null;
+  document.getElementById('timerSetupCard').style.display = 'none';
+  document.getElementById('timerActiveCard').style.display = '';
+  document.getElementById('timerLogCard').style.display = 'none';
+  const m = modules[timerState.mod];
+  document.getElementById('timerModLabel').textContent = timerState.mod + (m?' — '+m.name:'');
+  document.getElementById('timerLOLabel').textContent = timerState.lo.label;
+  document.getElementById('timerStatus').textContent = 'Session running...';
+  document.getElementById('timerPauseBtn').style.display = '';
+  document.getElementById('timerResumeBtn').style.display = 'none';
+  timerInterval = setInterval(timerTick, 500);
+  timerRenderHistory();
+}
+
+function timerTick(){
+  if(!timerState.running || timerState.paused) return;
+  timerState.elapsed = Math.floor((Date.now() - timerState.startTs) / 1000);
+  const total = timerState.durMins * 60;
+  const remaining = Math.max(0, total - timerState.elapsed);
+  const m = Math.floor(remaining/60), s = remaining%60;
+  document.getElementById('timerDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const pct = Math.min(100, timerState.elapsed/total*100);
+  document.getElementById('timerStatus').textContent = `${Math.round(pct)}% complete · ${Math.floor(timerState.elapsed/60)}m ${timerState.elapsed%60}s elapsed`;
+  if(remaining === 0){
+    clearInterval(timerInterval);
+    document.getElementById('timerStatus').textContent = '✅ Time\'s up! Log your session below.';
+    if(Notification.permission==='granted') new Notification('⏰ Session complete! Log what you covered.');
+    timerShowLog();
+  }
+}
+
+function timerPause(){
+  timerState.paused = true;
+  timerState.elapsed = Math.floor((Date.now()-timerState.startTs)/1000);
+  document.getElementById('timerPauseBtn').style.display = 'none';
+  document.getElementById('timerResumeBtn').style.display = '';
+  document.getElementById('timerStatus').textContent = '⏸ Paused';
+}
+
+function timerResume(){
+  timerState.paused = false;
+  timerState.startTs = Date.now() - timerState.elapsed*1000;
+  document.getElementById('timerPauseBtn').style.display = '';
+  document.getElementById('timerResumeBtn').style.display = 'none';
+  document.getElementById('timerStatus').textContent = 'Session running...';
+}
+
+function timerStop(){
+  clearInterval(timerInterval);
+  timerState.running = false;
+  timerState.elapsed = Math.floor((Date.now()-timerState.startTs)/1000);
+  timerShowLog();
+}
+
+function timerShowLog(){
+  document.getElementById('timerActiveCard').style.display = 'none';
+  document.getElementById('timerLogCard').style.display = '';
+  const mins = Math.floor(timerState.elapsed/60);
+  const secs = timerState.elapsed%60;
+  document.getElementById('timerLogSummary').innerHTML =
+    `<span style="color:var(--accent);font-weight:700">${timerState.mod}</span> · ${timerState.lo.label} · <span style="color:var(--accent2);font-weight:700">${mins}m ${secs}s</span> studied`;
+  document.getElementById('timerLogCovered').value = '';
+  document.getElementById('timerLogAnalysis').innerHTML = '';
+  timerState.conf = null;
+  [1,2,3,4,5].forEach(n=>{ const b=document.getElementById('conf-'+n); if(b) b.style.background=''; });
+}
+
+function timerSetConf(n){
+  timerState.conf = n;
+  [1,2,3,4,5].forEach(i=>{
+    const b = document.getElementById('conf-'+i);
+    if(b) b.style.background = i===n ? 'rgba(79,156,249,.25)' : '';
+  });
+  timerAnalyse();
+}
+
+function timerAnalyse(){
+  const covered = document.getElementById('timerLogCovered').value.trim();
+  const conf = timerState.conf;
+  const mins = Math.floor(timerState.elapsed/60);
+  if(!conf) return;
+  const confLabels = ['','Lost','Shaky','Getting it','Solid','Nailed it'];
+  const confColors = ['','var(--danger)','var(--warn)','var(--warn)','var(--accent2)','var(--accent2)'];
+  let tips = [];
+  if(conf<=2) tips.push('Go back to basics — re-read the theory section before doing exercises.');
+  if(conf===3) tips.push('You\'re building understanding. Do 3 practice questions on this topic tonight.');
+  if(conf>=4) tips.push('Strong! Move to the next LO or try harder past paper questions.');
+  if(mins<15) tips.push('Short session — try a 45-min block next time for deeper focus.');
+  if(mins>=45&&conf>=4) tips.push('Excellent session length + confidence. This LO is nearly locked in.');
+  if(covered.length<10) tips.push('Add more detail about what you covered so you can track progress over time.');
+  // Check if this LO is marked as struggling in Emergency tab
+  const loId = timerState.lo?.id;
+  if(loId && loStatus[loId]==='struggle' && conf>=4){
+    tips.push('🎉 You marked this as struggling before — looks like it\'s improving! Update your Emergency tab.');
+  }
+  document.getElementById('timerLogAnalysis').innerHTML =
+    `<div style="background:rgba(79,156,249,.08);border-radius:8px;padding:10px;border:1px solid rgba(79,156,249,.15)">
+      <div style="font-size:12px;font-weight:700;margin-bottom:6px">Session analysis</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+        <span style="font-size:11px;color:var(--muted)">Confidence:</span>
+        <span style="font-size:12px;font-weight:700;color:${confColors[conf]}">${confLabels[conf]}</span>
+        <span style="font-size:11px;color:var(--muted)">| Time: ${mins}m | Topic: ${timerState.lo.label}</span>
+      </div>
+      ${tips.map(t=>`<div style="font-size:11px;color:var(--text);margin-bottom:3px">→ ${t}</div>`).join('')}
+    </div>`;
+}
+
+function timerSaveLog(){
+  const covered = document.getElementById('timerLogCovered').value.trim();
+  if(!timerState.conf){ alert('Please rate your confidence first.'); return; }
+  const log = {
+    ts: Date.now(),
+    date: new Date().toLocaleDateString('en-ZA',{weekday:'short',day:'numeric',month:'short'}),
+    time: new Date().toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'}),
+    mod: timerState.mod,
+    lo: timerState.lo.label,
+    loId: timerState.lo.id,
+    mins: Math.floor(timerState.elapsed/60),
+    secs: timerState.elapsed%60,
+    covered: covered||'(not specified)',
+    conf: timerState.conf,
+    planned: timerState.durMins
+  };
+  timerLogs.unshift(log);
+  timerSaveLogs();
+  // Reset UI
+  document.getElementById('timerLogCard').style.display = 'none';
+  document.getElementById('timerSetupCard').style.display = '';
+  timerState = {mod:null,lo:null,durMins:25,running:false,paused:false,elapsed:0,startTs:null,conf:null};
+  timerCheckReady();
+  refreshAll();
+}
+
+function timerRenderHistory(){
+  const el = document.getElementById('timerHistory');
+  if(!timerLogs.length){
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted)">No sessions yet. Start your first one above!</div>';
+    return;
+  }
+  // Stats summary
+  const totalMins = timerLogs.reduce((s,l)=>s+l.mins,0);
+  const avgConf = (timerLogs.reduce((s,l)=>s+l.conf,0)/timerLogs.length).toFixed(1);
+  const modCounts = {};
+  timerLogs.forEach(l=>modCounts[l.mod]=(modCounts[l.mod]||0)+l.mins);
+  const topMod = Object.entries(modCounts).sort((a,b)=>b[1]-a[1])[0];
+  const confLabels = ['','Lost','Shaky','Getting it','Solid','Nailed it'];
+  const confEmoji = ['','😰','😕','😐','😊','🔥'];
+  let html = `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
+    <div style="background:rgba(79,156,249,.1);border-radius:8px;padding:8px 12px;flex:1;min-width:80px">
+      <div style="font-size:18px;font-weight:800;color:var(--accent)">${totalMins}m</div>
+      <div style="font-size:10px;color:var(--muted)">Total studied</div>
+    </div>
+    <div style="background:rgba(63,185,80,.1);border-radius:8px;padding:8px 12px;flex:1;min-width:80px">
+      <div style="font-size:18px;font-weight:800;color:var(--accent2)">${timerLogs.length}</div>
+      <div style="font-size:10px;color:var(--muted)">Sessions</div>
+    </div>
+    <div style="background:rgba(188,140,255,.1);border-radius:8px;padding:8px 12px;flex:1;min-width:80px">
+      <div style="font-size:18px;font-weight:800;color:var(--purple)">${avgConf}/5</div>
+      <div style="font-size:10px;color:var(--muted)">Avg confidence</div>
+    </div>
+    ${topMod?`<div style="background:rgba(210,153,34,.1);border-radius:8px;padding:8px 12px;flex:1;min-width:80px">
+      <div style="font-size:18px;font-weight:800;color:var(--warn)">${topMod[0]}</div>
+      <div style="font-size:10px;color:var(--muted)">Most studied</div>
+    </div>`:''}
+  </div>`;
+  timerLogs.forEach(l=>{
+    const m = modules[l.mod];
+    const col = m?colorVar(m.color):'var(--accent)';
+    const confColor = l.conf>=4?'var(--accent2)':l.conf>=3?'var(--warn)':'var(--danger)';
+    html += `<div style="padding:10px;background:var(--surface2);border-radius:10px;margin-bottom:6px;border-left:3px solid ${col}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div style="font-size:12px;font-weight:700">${l.mod} — ${l.lo}</div>
+        <div style="font-size:11px;color:var(--muted)">${l.date} ${l.time}</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--accent)">⏱ ${l.mins}m ${l.secs}s</span>
+        <span style="font-size:11px;color:${confColor};font-weight:700">${confEmoji[l.conf]} ${confLabels[l.conf]}</span>
+        ${l.covered!=='(not specified)'?`<span style="font-size:11px;color:var(--muted)">📌 ${l.covered.slice(0,60)}${l.covered.length>60?'…':''}</span>`:''}
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function timerClearLog(){
+  if(!confirm('Clear all session history?')) return;
+  timerLogs = []; timerSaveLogs(); timerRenderHistory();
+}
+
+function initTimerPage(){
+  timerRenderHistory();
+  timerCheckReady();
+}
+
+// ======================== GLOW UP GRAPH ========================
+function buildGlowUp(){
+  const el=document.getElementById('glowUpGraph');
+  let html='';
+  for(const[k,m]of Object.entries(modules)){
+    const pred=calcPredicate(k);
+    const entered=m.assessments.filter(a=>a.score!==null);
+    if(entered.length===0){
+      html+=`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:13px;font-weight:600;margin-bottom:6px">${m.icon} ${m.name}</div><div style="font-size:12px;color:var(--muted)">No marks entered yet</div></div>`;
+      continue;
+    }
+    // Build bar chart of individual assessment scores
+    const bars=entered.map(a=>{
+      const pct=Math.min(100,a.score);
+      const col=a.score>=75?'green':a.score>=50?'amber':'red';
+      const shortName=a.name.replace(/\(.*\)/,'').trim().replace('Class Test','CT').replace('Semester Test','ST').replace('Formative Test','FT').replace('Assignment','Asgn').replace('Practical Assessment','PA').replace('Quiz','Q').replace('SA1 — ','').replace('SA2 — ','');
+      return `<div style="flex:1;min-width:40px;max-width:70px">
+        <div style="height:80px;display:flex;align-items:flex-end;justify-content:center">
+          <div class="pbar ${col}" style="width:100%;height:${pct}%;border-radius:4px 4px 0 0;min-height:4px;transition:height .6s"></div>
+        </div>
+        <div style="font-size:9px;color:var(--muted);text-align:center;margin-top:3px;line-height:1.2">${shortName}</div>
+        <div style="font-size:10px;font-weight:700;text-align:center;color:${a.score>=75?'var(--accent2)':a.score>=50?'var(--warn)':'var(--danger)'}">${a.score}%</div>
+      </div>`;
+    }).join('');
+
+    // Required score for remaining assessments
+    let needHtml='';
+    const remaining=m.assessments.filter(a=>a.score===null);
+    if(remaining.length>0&&pred!==null&&pred<75){
+      const gap=75-pred;
+      const needed=Math.min(100,Math.ceil(gap*100/remaining.reduce((s,a)=>s+a.weight,0)*100)/100);
+      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(210,153,34,.1);border-radius:6px;color:var(--warn)">Need ~${needed.toFixed(0)}% avg in remaining ${remaining.length} assessment${remaining.length>1?'s':''} to reach 75%</div>`;
+    } else if(pred!==null&&pred>=75){
+      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(63,185,80,.1);border-radius:6px;color:var(--accent2)">🔥 On track! Keep this up.</div>`;
+    }
+
+    // Trend arrow
+    const scores=entered.map(a=>a.score);
+    const trend=scores.length>=2?(scores[scores.length-1]-scores[scores.length-2]):0;
+    const trendHtml=scores.length>=2?`<span style="font-size:12px;margin-left:8px;color:${trend>0?'var(--accent2)':trend<0?'var(--danger)':'var(--muted)'}">${trend>0?'↑ +'+trend+'%':trend<0?'↓ '+trend+'%':'→ stable'}</span>`:''
+
+    html+=`<div style="padding:12px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:13px;font-weight:700">${m.icon} ${m.name}${trendHtml}</div>
+        <div style="font-size:14px;font-weight:800;color:${colorVar(m.color)}">${pred!==null?pred.toFixed(1)+'%':'—'}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:flex-end">${bars}</div>
+      ${needHtml}
+    </div>`;
+  }
+  el.innerHTML=html||'<div style="color:var(--muted);font-size:13px">Enter marks in the Marks Tracker to see your glow-up graph.</div>';
 }
 
 // ======================== INIT ========================
@@ -1197,6 +2018,96 @@ buildMarks();
 buildModules();
 buildAlerts();
 buildFullSchedule();
+// ======================== FOCUS PRIORITY (DASHBOARD) ========================
+function buildFocusPriority(){
+  const dateEl = document.getElementById('focusPriorityDate');
+  const listEl = document.getElementById('focusPriorityList');
+  if(!dateEl||!listEl) return;
+  dateEl.textContent = 'Updated for ' + TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'});
+
+  // Score each module: ST2 proximity + predicate gap + struggling LOs
+  const items = Object.entries(modules).map(([k,m])=>{
+    const pred = calcPredicate(k)||0;
+    const gap = Math.max(0,75-pred);
+    const st2d = ST2[k] ? daysUntil(ST2[k]) : 999;
+    const struggling = (LO_DATA[k]||[]).filter(l=>loStatus[l.id]==='struggle').length;
+    let score = 0;
+    if(st2d<=3) score+=60; else if(st2d<=7) score+=40; else if(st2d<=14) score+=20;
+    score += gap*0.6;
+    score += struggling*8;
+    if(m.difficulty==='Hard') score+=10;
+    const urgency = st2d<=3?'CRITICAL':st2d<=7?'Urgent':gap>25?'High':struggling>2?'High':'Medium';
+    const urgencyColor = st2d<=3?'var(--danger)':st2d<=7?'var(--warn)':gap>25?'var(--warn)':'var(--muted)';
+    return {k,m,score,urgency,urgencyColor,pred,gap,st2d,struggling};
+  }).sort((a,b)=>b.score-a.score);
+
+  // AWS entry
+  const awsD = daysUntil(AWS_DATE);
+  let html = '';
+  if(awsD>=0){
+    const awsScore = awsD<=3?100:awsD<=7?80:awsD<=14?50:20;
+    const awsUrgency = awsD<=3?'CRITICAL':awsD<=7?'Urgent':'Prep';
+    const awsColor = awsD<=3?'var(--danger)':awsD<=7?'var(--warn)':'var(--purple)';
+    html += `<div><div class="flex-between" style="margin-bottom:4px">
+      <span style="font-size:13px">☁️ AWS — Cloud Practitioner</span>
+      <span style="font-size:12px;color:${awsColor};font-weight:700">${awsUrgency} (${awsD}d)</span>
+    </div><div class="pbar-wrap"><div class="pbar purple" style="width:${Math.min(100,awsScore)}%"></div></div></div>`;
+  }
+
+  items.forEach(it=>{
+    const pct = Math.min(100, it.score);
+    html += `<div><div class="flex-between" style="margin-bottom:4px">
+      <span style="font-size:13px">${it.m.icon} ${it.m.name.split(' ')[0]} — ${it.m.name.split('(')[0].trim()}</span>
+      <span style="font-size:12px;color:${it.urgencyColor};font-weight:700">${it.urgency}${it.st2d<999?' ('+it.st2d+'d)':''}</span>
+    </div><div class="pbar-wrap"><div class="pbar ${it.m.color}" style="width:${pct}%"></div></div></div>`;
+  });
+  listEl.innerHTML = html;
+}
+
+// ======================== GLOBAL REFRESH ========================
+function refreshAll(){
+  // Recalculate TODAY in case of midnight rollover
+  const _n=new Date();
+  const newToday=new Date(_n.getFullYear(),_n.getMonth(),_n.getDate());
+  if(newToday.getTime()!==TODAY.getTime()){
+    location.reload(); return;
+  }
+  buildModuleOverview();
+  buildMarks();
+  buildAlerts();
+  buildGlowUp();
+  buildLOChecklist();
+  buildFocusPriority();
+  timerRenderHistory();
+  // Update dashboard stat counters
+  document.getElementById('awsDays').textContent = Math.max(0,daysUntil(AWS_DATE));
+  document.getElementById('awsDaysCard').textContent = Math.max(0,daysUntil(AWS_DATE));
+  document.getElementById('daysToExam').textContent = Math.max(0,daysUntil(EXAM_START));
+  // Update schedule subtitle
+  const schedSub = document.getElementById('schedSub');
+  if(schedSub) schedSub.textContent = 'From today — '+TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})+' through exam end (12 June 2026)';
+  // Re-run AI suggestion if result is visible
+  const aiEl = document.getElementById('aiSuggestionResult');
+  if(aiEl && aiEl.innerHTML.trim()) runAISuggestion();
+}
+
+// Midnight auto-reload
+(function(){
+  const now=new Date();
+  const msToMidnight=(new Date(now.getFullYear(),now.getMonth(),now.getDate()+1)-now);
+  setTimeout(()=>location.reload(), msToMidnight);
+})();
+
+buildGlowUp();
+initEmergencyPage();
+initTimerPage();
+buildFocusPriority();
+// Set dynamic subtitles on load
+(function(){
+  const schedSub=document.getElementById('schedSub');
+  if(schedSub) schedSub.textContent='From today — '+TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})+' through exam end (12 June 2026)';
+})();
+if(Notification.permission==='default') Notification.requestPermission();
 
 // ======================== PARTICLES ========================
 (function(){
@@ -1226,13 +2137,19 @@ document.addEventListener('mousemove',e=>{
   document.querySelectorAll('.card,.stat-card,.countdown-box').forEach(card=>{
     const rect=card.getBoundingClientRect();
     const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
-    const dx=(e.clientX-cx)/rect.width,dy=(e.clientY-cy)/rect.height;
-    if(Math.sqrt(dx*dx+dy*dy)<.8) card.style.transform=`perspective(800px) rotateX(${dy*6}deg) rotateY(${-dx*6}deg) translateZ(4px)`;
-    else card.style.transform='';
+    const dist=Math.sqrt(Math.pow(e.clientX-cx,2)+Math.pow(e.clientY-cy,2));
+    const maxDist=300;
+    if(dist<maxDist){
+      const intensity=(1-dist/maxDist)*6;
+      card.style.boxShadow=`0 0 ${Math.round(intensity*4)}px rgba(79,156,249,${(intensity*0.06).toFixed(2)}), 0 4px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05)`;
+    } else {
+      card.style.boxShadow='';
+    }
+    card.style.transform='';
   });
 });
 document.addEventListener('mouseleave',()=>{
-  document.querySelectorAll('.card,.stat-card,.countdown-box').forEach(c=>c.style.transform='');
+  document.querySelectorAll('.card,.stat-card,.countdown-box').forEach(c=>{c.style.transform='';c.style.boxShadow='';});
 });
 </script>
 </body>
