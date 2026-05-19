@@ -332,28 +332,34 @@
 
   <div id="dashAlerts"></div>
 
-  <div class="grid-4" style="margin-bottom:1rem">
+  <div class="grid-4" style="margin-bottom:1rem" id="dashStatCards">
     <div class="stat-card">
-      <div class="stat-val" style="color:var(--accent)">4</div>
-      <div class="stat-lbl">Active modules</div>
-      <div class="stat-sub good">On track</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" style="color:var(--danger)">Wed</div>
-      <div class="stat-lbl">ADS WT4 + OOP CT3</div>
-      <div class="stat-sub bad">LO4 Graphs + Inheritance</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" style="color:var(--warn)" id="daysToExam">49</div>
-      <div class="stat-lbl">Days to main exams</div>
-      <div class="stat-sub mid">25 May 2026</div>
+      <div class="stat-val" style="color:var(--danger)" id="daysToExam">—</div>
+      <div class="stat-lbl">Days to first exam</div>
+      <div class="stat-sub bad" id="firstExamLabel">CAO — 27 May</div>
     </div>
     <div class="stat-card">
       <div class="stat-val" style="color:var(--accent2)">75%</div>
-      <div class="stat-lbl">Target predicate</div>
-      <div class="stat-sub good">Your goal</div>
+      <div class="stat-lbl">🏆 Distinction target</div>
+      <div class="stat-sub good">Your goal — go for it!</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--warn)" id="dashAvgPred">—</div>
+      <div class="stat-lbl">Average predicate</div>
+      <div class="stat-sub mid" id="dashPredStatus">Calculating...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent)" id="dashBestMod">—</div>
+      <div class="stat-lbl">Strongest module</div>
+      <div class="stat-sub good" id="dashBestPred">Predicate</div>
     </div>
   </div>
+
+  <!-- Exam countdown cards -->
+  <div class="grid-4" style="margin-bottom:1rem" id="examCountdownCards"></div>
+
+  <!-- Distinction banner -->
+  <div id="distinctionBanner" style="margin-bottom:1rem"></div>
 
   <div class="card" style="margin-bottom:1rem">
     <div class="flex-between mb-1">
@@ -393,7 +399,7 @@
   <div class="card" style="margin-top:1rem">
     <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">Key dates reminder</div>
     <div style="font-size:12px;color:var(--muted);line-height:1.8">
-      Test Week 1: 18–27 Mar | Recess: 30 Mar–4 Apr | Test Week 2: 20–30 Apr | Predicate Day: 18 May | Exams: 25 May–12 Jun | Supp Exams: 15–30 Jun
+      Predicate Day: 18 May 2026 ✓ | CAO Exam: 27 May | DTP Exam: 1 Jun | ADS Exam: 4 Jun | OOP Exam: 8 Jun | Supp Exams: 15–30 Jun
     </div>
   </div>
 </div>
@@ -409,7 +415,7 @@
 <!-- ========== MARKS TRACKER ========== -->
 <div id="page-marks" class="page">
   <div class="section-title">Marks tracker</div>
-  <div class="section-sub">Enter your marks — see exactly what you need in remaining assessments to hit 75%</div>
+  <div class="section-sub">Predicates locked in — see exactly what exam mark you need for Distinction (75%+ final)</div>
   <div id="marksContent"></div>
 </div>
 
@@ -571,9 +577,66 @@ const QUIZ2_CAO = new Date('2026-04-14T00:00:00');
 const CT2_CAO = new Date('2026-04-16T00:00:00');
 const ADS_WT4 = new Date('2026-04-16T00:00:00');
 const OOP_CT3 = new Date('2026-04-16T00:00:00');
-const EXAM_START = new Date('2026-05-25T00:00:00');
+const EXAM_START = new Date('2026-05-27T00:00:00');
 const EXAM_END = new Date('2026-06-12T00:00:00');
+// Individual exam dates
+const EXAM_DATES = {
+  CAO: new Date('2026-05-27T00:00:00'),
+  DTP: new Date('2026-06-01T00:00:00'),
+  ADS: new Date('2026-06-04T00:00:00'),
+  OOP: new Date('2026-06-08T00:00:00'),
+};
+// Final confirmed predicate marks (entered by Bongiwe)
+const PREDICATE_MARKS = { ADS: 98, CAO: 66, DTP: 86, OOP: 63 };
+
 const RECESS_START = new Date('2026-03-30T00:00:00');
+
+// ======================== EMERGENCY — LO DATA ========================
+const LO_DATA = {
+  ADS: [
+    {id:'ADS-1', lo:'LO1', label:'Sets & Functions', detail:'Set notation, types of functions, relations — Epp Ch 1–2'},
+    {id:'ADS-2', lo:'LO2', label:'Logic Concepts', detail:'Propositional logic, truth tables, logical equivalence — Epp Ch 2'},
+    {id:'ADS-3', lo:'LO3', label:'Proof Techniques', detail:'Direct proof, contradiction, induction — Epp Ch 3–4'},
+    {id:'ADS-4', lo:'LO4', label:'Graphs & Trees', detail:'Graph types, paths, trees, spanning trees — Epp Ch 10 ← Web Test 4 Wednesday!'},
+    {id:'ADS-5', lo:'LO5', label:'Counting', detail:'Permutations, combinations, pigeonhole — Epp Ch 9'},
+    {id:'ADS-6', lo:'LO6', label:'Discrete Probability', detail:'Sample spaces, probability rules — Epp Ch 9'},
+  ],
+  OOP: [
+    {id:'OOP-A1', lo:'A.1', label:'GUIs & Event Handling', detail:'JFrame, JButton, ActionListener, layout managers — Deitel Ch 7 | CT1=67%'},
+    {id:'OOP-B1', lo:'B.1', label:'User-defined Classes', detail:'Fields, constructors, methods, encapsulation | CT1=67%'},
+    {id:'OOP-B2', lo:'B.2', label:'Composition', detail:'Has-a relationship, objects as fields | CT2=50%'},
+    {id:'OOP-B3', lo:'B.3', label:'Inheritance', detail:'extends, super, method overriding, polymorphism ← CT3 Wednesday!'},
+    {id:'OOP-C1', lo:'C.1', label:'Collections', detail:'ArrayList, Iterator, generics | CT2=50%'},
+    {id:'OOP-D1', lo:'D.1', label:'Abstract Classes & Interfaces', detail:'abstract keyword, implements, interface contracts ← CT4 coming'},
+    {id:'OOP-E1', lo:'E.1', label:'Exception Handling', detail:'try/catch/finally, custom exceptions, throws'},
+    {id:'OOP-F1', lo:'F.1', label:'File I/O', detail:'FileReader, BufferedReader, FileWriter, Scanner on files'},
+  ],
+  DTP: [
+    {id:'DTP-1', lo:'LO1', label:'Data Models', detail:'Hierarchical, network, relational model concepts'},
+    {id:'DTP-2', lo:'LO2', label:'Relational Model', detail:'Tables, keys, constraints, integrity rules'},
+    {id:'DTP-3', lo:'LO3', label:'ERD', detail:'Entities, attributes, relationships, cardinality'},
+    {id:'DTP-4', lo:'LO4', label:'Normalisation', detail:'1NF, 2NF, 3NF — removing redundancy'},
+    {id:'DTP-5', lo:'LO5', label:'DDL', detail:'CREATE TABLE, ALTER, DROP, constraints'},
+    {id:'DTP-6', lo:'LO6', label:'DML', detail:'INSERT, UPDATE, DELETE | CT1=92%'},
+    {id:'DTP-7', lo:'LO7', label:'SQL SELECT', detail:'WHERE, ORDER BY, GROUP BY, HAVING | ST1=63%'},
+    {id:'DTP-8', lo:'LO8', label:'SQL Functions', detail:'COUNT, SUM, AVG, MAX, MIN, string/date functions'},
+    {id:'DTP-9', lo:'LO9', label:'Joins', detail:'INNER JOIN, LEFT JOIN, self-join ← ST2 focus'},
+    {id:'DTP-10', lo:'LO10', label:'Subqueries', detail:'Nested SELECT, correlated subqueries, EXISTS ← ST2 focus'},
+  ],
+  CAO: [
+    {id:'CAO-1', lo:'LO1', label:'Number Systems', detail:'Binary, octal, hex conversions, arithmetic'},
+    {id:'CAO-2', lo:'LO2', label:'Boolean Logic', detail:'Gates, truth tables, simplification, Karnaugh maps ← Ch 6'},
+    {id:'CAO-3', lo:'LO3', label:'CPU Architecture', detail:'ALU, control unit, registers, fetch-decode-execute'},
+    {id:'CAO-4', lo:'LO4', label:'Memory Hierarchy', detail:'Cache, RAM, ROM, virtual memory'},
+    {id:'CAO-5', lo:'LO5', label:'Instruction Sets', detail:'RISC vs CISC, addressing modes, assembly basics'},
+    {id:'CAO-6', lo:'LO6', label:'I/O Systems', detail:'I/O interfaces, interrupts, DMA, buses'},
+  ]
+};
+
+let loStatus = {};
+try{ loStatus = JSON.parse(localStorage.getItem('studyhub_lo')||'{}'); }catch(e){}
+
+
 const RECESS_END = new Date('2026-04-04T00:00:00');
 const TW1_START = new Date('2026-03-18T00:00:00');
 const TW1_END = new Date('2026-03-27T00:00:00');
@@ -587,8 +650,8 @@ function isSameDay(a,b) { return a.getFullYear()===b.getFullYear()&&a.getMonth()
 function isWeekend(d) { return d.getDay()===0||d.getDay()===6; }
 function inRange(d,s,e) { return d>=s&&d<=e; }
 
-const examDiff = Math.ceil((EXAM_START-TODAY)/86400000);
-document.getElementById('daysToExam').textContent = Math.max(0,examDiff);
+const examDiff = Math.ceil((EXAM_DATES.CAO-TODAY)/86400000);
+// daysToExam updated by buildDashboardStats()
 
 // ======================== NAV ========================
 function show(page) {
@@ -721,10 +784,10 @@ function getDaySchedule(date) {
 
   if(isExam) {
     const examSchedule = {
-      '2026-05-25':{module:'DTP — Databases',lo:'LO1–LO11 (all)',color:'purple'},
-      '2026-05-26':{module:'OOP — Object-Oriented Programming',lo:'LO A–F (all)',color:'green'},
-      '2026-05-27':{module:'ADS — Advanced Discrete Structures',lo:'LO1–LO6 (all)',color:'blue'},
-      '2026-05-28':{module:'CAO — Computer Architecture',lo:'All theory + practical',color:'amber'},
+      '2026-05-27':{module:'CAO — Computer Architecture & Organisation',lo:'All theory + practical',color:'amber'},
+      '2026-06-01':{module:'DTP — Databases (Database Principles)',lo:'LO1–LO10 (all)',color:'purple'},
+      '2026-06-04':{module:'ADS — Advanced Discrete Structures',lo:'LO1–LO6 (all)',color:'blue'},
+      '2026-06-08':{module:'OOP — Object-Oriented Programming',lo:'LO A–F (all)',color:'green'},
     };
     const key = date.toISOString().split('T')[0];
     const ex = examSchedule[key];
@@ -747,85 +810,118 @@ function getDaySchedule(date) {
 
   let items = [];
 
+  // ===== EXAM PREP PERIOD SCHEDULE (from 18 May onwards) =====
+  // Exams: CAO 27 May | DTP 1 Jun | ADS 4 Jun | OOP 8 Jun
+  // Struggling topics are factored in via the Emergency tab
+  const examPrepOrder = [
+    {mod:'CAO',date:'2026-05-27',label:'CAO — Computer Architecture',topics:'Number systems, CPU arch, Memory, I/O, Boolean logic, Instruction sets'},
+    {mod:'DTP',date:'2026-06-01',label:'DTP — Databases',topics:'SQL SELECT, Joins, Subqueries, Functions, DDL/DML, Normalisation, ERD'},
+    {mod:'ADS',date:'2026-06-04',label:'ADS — Advanced Discrete Structures',topics:'Sets, Logic, Proofs, Graphs & Trees, Counting, Probability'},
+    {mod:'OOP',date:'2026-06-08',label:'OOP — Object-Oriented Programming',topics:'GUIs, Classes, Composition, Inheritance, Abstract, Exceptions, File I/O'},
+  ];
+
+  // Pick the most urgent exam to focus on (next upcoming)
+  const nowDate = date;
+  const upcomingExams = examPrepOrder.filter(e=>new Date(e.date+'T00:00:00')>=nowDate);
+  const focus1 = upcomingExams[0];
+  const focus2 = upcomingExams[1];
+  const focus3 = upcomingExams[2];
+
+  // Get struggling topics for personalization
+  const _loData = typeof LO_DATA !== 'undefined' ? LO_DATA : {};
+  const _loStatus = typeof loStatus !== 'undefined' ? loStatus : {};
+  const struggling1 = focus1?(_loData[focus1.mod]||[]).filter(l=>_loStatus[l.id]==='struggle').map(l=>l.label).slice(0,2):[];
+  const struggling2 = focus2?(_loData[focus2.mod]||[]).filter(l=>_loStatus[l.id]==='struggle').map(l=>l.label).slice(0,2):[];
+
   if(dow===1) {
     items = [
-      {s:'06:30',e:'07:30',title:'OOP Inheritance prep — CT3 this week',desc:'Review extends, super(), method overriding, polymorphism',type:'study'},
-      {s:'07:30',e:'08:00',title:'Travel to campus',desc:'',type:'break-s'},
-      {s:'08:00',e:'10:00',title:'ADS class — L Vlok',desc:'Room 13-G40',type:'cls'},
-      {s:'10:00',e:'12:00',title:'ADS LO4 — Graphs & Trees self-study',desc:'Web Test 4 due Wednesday — adjacency matrix/list, BFS, DFS, spanning trees',type:'study'},
-      {s:'12:00',e:'13:00',title:'Lunch break',desc:'',type:'break-s'},
-      {s:'13:00',e:'15:00',title:'DTP SQL practice',desc:'Oracle SQL: SELECT, DDL, DML — ST1 was 63%, push for 80%+ in CT2 & ST2',type:'study'},
-      {s:'15:00',e:'17:00',title:'DTP class — K Magapi',desc:'10-140 Lab',type:'cls'},
-      {s:'17:00',e:'18:00',title:'CAO — Ch 6 & 7 revision',desc:'Quiz 2 due TODAY (14 Apr) — number representation, Boolean logic',type:'study'},
-      {s:'18:00',e:'18:30',title:'Dinner + get ready',desc:'',type:'break-s'},
-      {s:'18:30',e:'20:30',title:'Choir rehearsal',desc:'No study — recharge',type:'choir-s'},
+      {s:'06:00',e:'07:00',title:`${focus1?focus1.mod+' — Morning warm-up':'Study warm-up'}`,desc:focus1?`Quick review: ${struggling1.length?'Focus: '+struggling1.join(', '):focus1.topics.split(',')[0]}`:' Review yesterdays notes',type:'study'},
+      {s:'07:00',e:'07:30',title:'Breakfast + prepare',desc:'Eat well — your brain needs fuel',type:'break-s'},
+      {s:'08:00',e:'11:00',title:`📚 Deep Study: ${focus1?focus1.label:'Priority exam prep'}`,desc:focus1?`Exam: ${new Date(focus1.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'short'})} — ${struggling1.length?'Target struggling: '+struggling1.join(', '):focus1.topics}`:'Revise all LOs systematically',type:'study'},
+      {s:'11:00',e:'11:30',title:'Break',desc:'Walk, stretch, water',type:'break-s'},
+      {s:'11:30',e:'13:00',title:`📚 Continued: ${focus1?focus1.mod+' practice questions':'Practice questions'}`,desc:'Past exam papers — timed conditions. Mark yourself.',type:'study'},
+      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
+      {s:'14:00',e:'16:30',title:`📗 Deep Study: ${focus2?focus2.label:'Second priority exam'}`,desc:focus2?`Exam: ${new Date(focus2.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'short'})} — ${struggling2.length?'Target: '+struggling2.join(', '):focus2.topics.split(',').slice(0,2).join(', ')}`:' Revise next module',type:'study'},
+      {s:'16:30',e:'17:00',title:'Break',desc:'Rest your eyes',type:'break-s'},
+      {s:'17:00',e:'18:30',title:`📝 ${focus1?focus1.mod+' — Past paper drill':'Exam practice'}`,desc:'Write out answers as if in the actual exam',type:'study'},
+      {s:'18:30',e:'19:00',title:'Dinner',desc:'',type:'break-s'},
+      {s:'19:00',e:'20:30',title:`🔁 Revision & summary notes`,desc:`Summarise key formulas/concepts from todays study`,type:'study'},
     ];
   } else if(dow===2) {
     items = [
-      {s:'06:30',e:'08:00',title:'ADS LO4 final prep — Web Test 4 tomorrow',desc:'Graph types, BFS/DFS, spanning trees, Epp Ch 10',type:'study'},
-      {s:'08:00',e:'10:00',title:'OOP class — M Liebenberg',desc:'10-120 Lab',type:'cls'},
-      {s:'10:00',e:'11:00',title:'OOP Inheritance drill — CT3 tomorrow',desc:'Write subclass hierarchies — extends, super(), polymorphism',type:'study'},
-      {s:'11:00',e:'12:00',title:'CAO Ch 8 study — CT2 Friday',desc:'Finish Ch 8 after today\'s class, then review Ch 6 & 7',type:'study'},
-      {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'13:00',e:'14:00',title:'DTP class — K Magapi',desc:'10-140 Lab',type:'cls'},
-      {s:'14:00',e:'15:00',title:'ADS class — L Vlok',desc:'13-G40',type:'cls'},
-      {s:'15:00',e:'17:00',title:'CAO class — A Mayingi',desc:'10-140 Lab — Ch 8 content today',type:'cls'},
-      {s:'17:00',e:'18:30',title:'CAO Ch 8 consolidation',desc:'Summarise today — CT2 is Friday',type:'study'},
-      {s:'18:30',e:'20:00',title:'OOP Inheritance practice',desc:'Write full Java programs with inheritance hierarchies',type:'study'},
+      {s:'06:00',e:'07:30',title:`${focus1?focus1.mod+' — Pre-breakfast revision':'Morning revision'}`,desc:focus1?`Review yesterday's work — ${focus1.topics.split(',')[0]}`:' Quick notes review',type:'study'},
+      {s:'07:30',e:'08:00',title:'Breakfast',desc:'',type:'break-s'},
+      {s:'08:00',e:'10:30',title:`📚 Deep Study: ${focus1?focus1.label:'Priority exam'}`,desc:focus1?`Target: ${struggling1.length?struggling1.join(', '):focus1.topics.split(',').slice(0,3).join(', ')}`:' Systematic LO review',type:'study'},
+      {s:'10:30',e:'11:00',title:'Break + snack',desc:'',type:'break-s'},
+      {s:'11:00',e:'13:00',title:`📗 Study: ${focus2?focus2.label:'Second priority'}`,desc:focus2?`${focus2.topics.split(',').slice(0,3).join(', ')}`:' Next exam prep',type:'study'},
+      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
+      {s:'14:00',e:'16:00',title:`📚 ${focus1?focus1.mod+' — Mock exam':' Mock exam'}`,desc:'Time yourself: 2 hours, exam conditions, no notes',type:'study'},
+      {s:'16:00',e:'16:30',title:'Break',desc:'',type:'break-s'},
+      {s:'16:30',e:'18:00',title:`📗 ${focus3?focus3.mod+' — intro revision':'Third priority'}`,desc:focus3?`Light intro: ${focus3.topics.split(',').slice(0,2).join(', ')}`:' Review remaining modules',type:'study'},
+      {s:'18:00',e:'18:30',title:'Dinner',desc:'',type:'break-s'},
+      {s:'18:30',e:'20:00',title:'Review & plan tomorrow',desc:'Mark your mock exam, note gaps, plan tomorrows focus',type:'study'},
     ];
   } else if(dow===3) {
     items = [
-      {s:'06:30',e:'08:00',title:'CAO Ch 6,7,8 final revision — CT2 Friday',desc:'Simulate quiz conditions — past examples',type:'study'},
-      {s:'08:00',e:'10:00',title:'ADS LO4 last-minute review',desc:'Web Test 4 DUE TODAY — graphs, trees, spanning',type:'study'},
-      {s:'10:00',e:'12:00',title:'OOP CT3 last-minute prep',desc:'CT3 Inheritance DUE TODAY — extends, overriding, polymorphism',type:'study'},
-      {s:'12:00',e:'14:00',title:'OOP class — M Liebenberg',desc:'10-120 Lab — CT3 WRITTEN TODAY',type:'cls'},
-      {s:'14:00',e:'15:00',title:'CAO class — A Mayingi',desc:'10-140 Lab',type:'cls'},
-      {s:'15:00',e:'17:00',title:'DTP SQL advanced practice',desc:'Joins, subqueries — multi-table SELECT for ST2',type:'study'},
-      {s:'17:00',e:'18:00',title:'Post-CT3 reflection',desc:'What was tested? Update Emergency tab with gaps',type:'study'},
+      {s:'06:00',e:'08:00',title:`${focus1?focus1.mod+' — Morning intensify':'Morning study'}`,desc:focus1?`Exam date ${new Date(focus1.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'short'})} — push today!`:' Push hard today',type:'study'},
+      {s:'08:00',e:'10:00',title:`📚 Past papers: ${focus1?focus1.mod:'Priority module'}`,desc:'Timed practice — write and mark',type:'study'},
+      {s:'10:00',e:'10:30',title:'Break',desc:'',type:'break-s'},
+      {s:'10:30',e:'12:30',title:`📗 ${focus2?focus2.label:'Second module'}`,desc:focus2?`${struggling2.length?'Struggling topics: '+struggling2.join(', '):focus2.topics.split(',').slice(0,3).join(', ')}`:' Systematic revision',type:'study'},
+      {s:'12:30',e:'13:30',title:'Lunch',desc:'',type:'break-s'},
+      {s:'13:30',e:'15:30',title:`📚 ${focus1?focus1.mod+' — Concept consolidation':'Concept consolidation'}`,desc:'Write your own summary notes — explain each LO in your own words',type:'study'},
+      {s:'15:30',e:'16:00',title:'Break',desc:'',type:'break-s'},
+      {s:'16:00',e:'18:00',title:`📗 ${focus2?focus2.mod+' practice':' Practice questions'}`,desc:'Focus on weak areas flagged in Emergency tab',type:'study'},
       {s:'18:00',e:'18:30',title:'Dinner',desc:'',type:'break-s'},
-      {s:'18:30',e:'20:30',title:'Choir rehearsal',desc:'No study — recharge',type:'choir-s'},
+      {s:'18:30',e:'20:30',title:'Choir rehearsal',desc:'Mental break — recharge for tomorrow',type:'choir-s'},
     ];
   } else if(dow===4) {
     items = [
-      {s:'06:30',e:'07:30',title:'CAO Ch 6,7,8 — mock questions',desc:'Simulate CT2 conditions — Friday!',type:'study'},
-      {s:'07:30',e:'08:00',title:'Travel to campus',desc:'',type:'break-s'},
-      {s:'08:00',e:'10:00',title:'CAO class — A Mayingi',desc:'10-140 Lab',type:'cls'},
-      {s:'10:00',e:'11:00',title:'ADS class — L Vlok',desc:'13-G40',type:'cls'},
-      {s:'11:00',e:'12:00',title:'ADS LO4 follow-up',desc:'Review web test content, consolidate graphs',type:'study'},
-      {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'13:00',e:'15:00',title:'OOP — Inheritance + Collections review',desc:'B.3 + C.1 learning outcomes — practice programs',type:'study'},
-      {s:'15:00',e:'17:00',title:'DTP revision',desc:'Joins, subqueries — multi-table SELECT',type:'study'},
-      {s:'17:00',e:'19:00',title:'CAO CT2 final prep',desc:'Ch 6, 7, 8 — timed practice questions',type:'study'},
+      {s:'06:00',e:'07:30',title:`${focus1?focus1.mod+' — Early review':'Early review'}`,desc:focus1?`Recap key concepts: ${focus1.topics.split(',').slice(0,2).join(', ')}`:' Review notes',type:'study'},
+      {s:'07:30',e:'08:00',title:'Breakfast',desc:'',type:'break-s'},
+      {s:'08:00',e:'10:30',title:`📚 Full focus: ${focus1?focus1.label:'Priority exam'}`,desc:focus1?`${struggling1.length?'Focus on gaps: '+struggling1.join(', '):focus1.topics.split(',').slice(0,3).join(', ')}`:' Deep study',type:'study'},
+      {s:'10:30',e:'11:00',title:'Break',desc:'',type:'break-s'},
+      {s:'11:00',e:'13:00',title:`📗 ${focus2?focus2.label:'Second module'}`,desc:focus2?`Practice questions — ${focus2.topics.split(',').slice(0,2).join(', ')}`:' Second module',type:'study'},
+      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
+      {s:'14:00',e:'16:00',title:`📚 Mock exam: ${focus1?focus1.mod:'Priority module'}`,desc:'Full past paper under timed conditions',type:'study'},
+      {s:'16:00',e:'16:30',title:'Break',desc:'',type:'break-s'},
+      {s:'16:30',e:'18:30',title:`📗 ${focus3?focus3.mod+' light revision':'Third module'}`,desc:focus3?`Intro revision: ${focus3.topics.split(',').slice(0,2).join(', ')}`:' Cover remaining modules',type:'study'},
+      {s:'18:30',e:'20:00',title:'Dinner + rest',desc:'Prepare for tomorrow',type:'break-s'},
     ];
   } else if(dow===5) {
     items = [
-      {s:'06:30',e:'08:00',title:'CAO final review — CT2 TODAY',desc:'Ch 6,7,8 — skim formulas, key concepts',type:'study'},
-      {s:'08:00',e:'10:00',title:'ADS problem sets',desc:'LO4 Graphs — consolidate after Web Test 4',type:'study'},
-      {s:'10:00',e:'11:00',title:'DTP class — K Magapi',desc:'10-140 Lab',type:'cls'},
-      {s:'11:00',e:'13:00',title:'DTP SQL coding practice',desc:'Practice queries from today\'s class',type:'study'},
-      {s:'13:00',e:'14:00',title:'OOP class — M Liebenberg',desc:'10-120 Lab',type:'cls'},
-      {s:'14:00',e:'15:00',title:'CAO CT2 — Ch 6,7,8',desc:'Class test TODAY',type:'cls'},
-      {s:'15:00',e:'17:00',title:'Weekly revision — all modules',desc:'Review notes, identify weak areas for weekend',type:'study'},
-      {s:'17:00',e:'19:00',title:'OOP Abstract Classes & Interfaces',desc:'D.1 learning outcome — coming up CT4',type:'study'},
+      {s:'07:00',e:'09:00',title:`📚 ${focus1?focus1.mod+' — Friday deep push':'Friday deep push'}`,desc:focus1?`${focus1.topics.split(',').slice(0,3).join(', ')}`:' Major revision',type:'study'},
+      {s:'09:00',e:'09:30',title:'Break',desc:'',type:'break-s'},
+      {s:'09:30',e:'11:30',title:`📗 ${focus2?focus2.label:'Second module deep study'}`,desc:focus2?`${focus2.topics.split(',').slice(0,3).join(', ')}`:' Second module',type:'study'},
+      {s:'11:30',e:'12:30',title:'Lunch',desc:'',type:'break-s'},
+      {s:'12:30',e:'14:30',title:`📚 Past paper: ${focus1?focus1.mod:'Priority module'}`,desc:'Timed conditions — simulate the actual exam',type:'study'},
+      {s:'14:30',e:'15:00',title:'Break',desc:'',type:'break-s'},
+      {s:'15:00',e:'17:00',title:'Review weak topics — Emergency tab',desc:'Update your LO checklist and generate recovery plan',type:'study'},
+      {s:'17:00',e:'19:00',title:`📗 ${focus3?focus3.mod+' revision':'Third module'}`,desc:focus3?`${focus3.topics.split(',').slice(0,2).join(', ')}`:' Cover remaining',type:'study'},
+      {s:'19:00',e:'20:00',title:'Dinner + plan weekend',desc:'Weekend = last push before exams. Plan each block.',type:'break-s'},
     ];
   } else if(dow===6) {
     items = [
-      {s:'08:00',e:'10:00',title:'OOP — Inheritance & Collections practice',desc:'Write complete Java programs — B.3 + C.1',type:'study'},
-      {s:'10:00',e:'12:00',title:'ADS — LO4 problem sets',desc:'Graph exercises from Epp Ch 10 — Kruskal, Prim, DFS/BFS',type:'study'},
+      {s:'07:00',e:'09:30',title:`📚 ${focus1?focus1.mod+' — Saturday deep dive':'Saturday deep dive'}`,desc:focus1?`Comprehensive revision: ${focus1.topics}`:' All LOs',type:'study'},
+      {s:'09:30',e:'10:00',title:'Break + snack',desc:'',type:'break-s'},
+      {s:'10:00',e:'12:00',title:`📗 ${focus2?focus2.mod+' — deep revision':'Second module'}`,desc:focus2?`${focus2.topics.split(',').slice(0,4).join(', ')}`:' Second module',type:'study'},
       {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'13:00',e:'15:00',title:'DTP — build a full SQL database',desc:'Create tables, insert data, write SELECT + JOIN queries',type:'study'},
-      {s:'15:00',e:'17:00',title:'CAO — timed past paper',desc:'Ch 6,7,8 review — simulate test conditions',type:'study'},
-      {s:'17:00',e:'19:00',title:'DTP ST2 prep — Advanced SQL',desc:'LO7–LO10: SELECT, Functions, Joins, Subqueries',type:'study'},
-      {s:'19:00',e:'20:00',title:'Rest & personal time',desc:'You\'ve earned it',type:'break-s'},
+      {s:'13:00',e:'15:30',title:`📚 Mock exam: ${focus1?focus1.mod:'Priority module'}`,desc:'2.5hr mock — full past paper, no notes',type:'study'},
+      {s:'15:30',e:'16:00',title:'Break',desc:'',type:'break-s'},
+      {s:'16:00',e:'18:00',title:`📗 ${focus3?focus3.mod+' revision':'Third module'}`,desc:focus3?`${focus3.topics.split(',').slice(0,3).join(', ')}`:' Third module',type:'study'},
+      {s:'18:00',e:'19:00',title:'Dinner + rest',desc:'You earned it — eat well',type:'break-s'},
+      {s:'19:00',e:'20:30',title:'Summary notes — all modules',desc:'Write key formulas, diagrams, concepts in one sheet per module',type:'study'},
     ];
   } else {
     items = [
-      {s:'09:00',e:'11:00',title:'Weekly review — all 4 modules',desc:'Identify gaps, adjust the week ahead',type:'study'},
-      {s:'11:00',e:'13:00',title:'OOP — Inheritance deep dive',desc:'CT3 just passed — consolidate, prep for CT4 (Abstract/Interfaces)',type:'study'},
-      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'14:00',e:'16:00',title:'ADS — LO4 comprehensive revision',desc:'Graphs & Trees — all concepts from Epp Ch 10',type:'study'},
-      {s:'16:00',e:'18:00',title:'DTP — SQL practice set',desc:'ST1=63%, need strong ST2 — focus on Joins & Subqueries',type:'study'},
-      {s:'18:00',e:'19:00',title:'Plan next week',desc:'Review schedule, print notes, check announcements on myTUTor',type:'break-s'},
+      {s:'08:00',e:'10:00',title:`📚 ${focus1?focus1.mod+' — Sunday revision':'Sunday revision'}`,desc:focus1?`Week final review: ${focus1.topics.split(',').slice(0,3).join(', ')}`:' All modules',type:'study'},
+      {s:'10:00',e:'10:30',title:'Break',desc:'',type:'break-s'},
+      {s:'10:30',e:'12:30',title:`📗 ${focus2?focus2.mod+' — revision':'Second module'}`,desc:focus2?`${focus2.topics.split(',').slice(0,3).join(', ')}`:' Second module',type:'study'},
+      {s:'12:30',e:'13:30',title:'Lunch',desc:'',type:'break-s'},
+      {s:'13:30',e:'15:30',title:'Timed practice — both modules',desc:'30 min timed questions per module',type:'study'},
+      {s:'15:30',e:'16:00',title:'Break',desc:'',type:'break-s'},
+      {s:'16:00',e:'18:00',title:`📗 ${focus3?focus3.mod+' + remaining modules':'Remaining modules'}`,desc:'Cover all LOs — use your summary notes',type:'study'},
+      {s:'18:00',e:'19:00',title:'Dinner',desc:'',type:'break-s'},
+      {s:'19:00',e:'20:00',title:'Plan the week ahead',desc:'Review exam dates, set daily targets, update Emergency tab topics',type:'study'},
     ];
   }
 
@@ -1025,7 +1121,18 @@ function buildTimetable() {
 function colorRgb(c){return{blue:'79,156,249',green:'63,185,80',purple:'188,140,255',amber:'210,153,34',red:'248,81,73'}[c]||'255,255,255';}
 function colorVar(c){return{blue:'var(--accent)',green:'var(--accent2)',purple:'var(--purple)',amber:'var(--warn)',red:'var(--danger)'}[c]||'var(--text)';}
 
+// Calculate what exam mark is needed for distinction (75% combined)
+// Final = (predicate + exam) / 2 => exam = 150 - predicate
+function calcExamNeeded(k, targetFinal=75) {
+  const pred = calcPredicate(k);
+  if(pred === null) return null;
+  const needed = targetFinal * 2 - pred;
+  return Math.max(0, Math.min(100, needed));
+}
+
 function calcPredicate(k) {
+  // Use confirmed predicate marks if available
+  if(PREDICATE_MARKS[k] !== undefined && PREDICATE_MARKS[k] !== null) return PREDICATE_MARKS[k];
   const m=modules[k];
   if(k==='ADS'){
     const ctScores=m.assessments.slice(0,6).filter(a=>a.score!==null).map(a=>a.score);
@@ -1091,60 +1198,64 @@ function buildMarks(){
     const isLow=pred!==null&&pred<40;
     const remaining=m.assessments.filter(a=>a.score===null).length;
 
-    // ---- What do I need? ----
-    const enteredContrib = m.assessments.filter(a=>a.score!==null).reduce((s,a)=>s+a.score*a.weight/100,0);
-    const remWeight = m.assessments.filter(a=>a.score===null).reduce((s,a)=>s+a.weight,0);
-    const needed = remWeight>0 ? (75 - enteredContrib)/(remWeight/100) : null;
+    // ---- Distinction exam target ----
+    const examNeeded = calcExamNeeded(k, 75);
+    const examDate = EXAM_DATES[k];
+    const daysToExam = examDate ? daysUntil(examDate) : null;
+    const examDateStr = examDate ? examDate.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : '';
+    const finalIfExam100 = pred !== null ? ((pred + 100) / 2).toFixed(1) : null;
+    const finalIfExam75 = pred !== null ? ((pred + 75) / 2).toFixed(1) : null;
 
-    let advice='';
-    if(pred===null) advice='Enter your marks to see your progress towards 75%';
-    else if(pred>=75) advice=`✓ On track for 75%! Maintain performance across ${remaining} remaining assessment${remaining!==1?'s':''}.`;
+    let advice = '';
+    if(pred===null) advice='Your predicate is confirmed — exam info will show below.';
     else {
-      if(needed===null) advice='No remaining assessments — final predicate is locked in.';
-      else if(needed>100) advice=`⚠ Even with 100% in all remaining work, 75% may not be reachable — maximise every mark!`;
-      else if(needed<=75) advice=`Need avg ${needed.toFixed(1)}% across remaining ${remaining} assessment${remaining!==1?'s':''} — very achievable, stay consistent!`;
-      else if(needed<=85) advice=`Need avg ${needed.toFixed(1)}% across remaining ${remaining} assessment${remaining!==1?'s':''} — push hard, this is doable!`;
-      else advice=`Need avg ${needed.toFixed(1)}% across remaining ${remaining} assessment${remaining!==1?'s':''} — critical zone, aim for full marks in everything!`;
+      const examNeedLabel = examNeeded!==null?(examNeeded>85?'Push hard':examNeeded>65?'Achievable':'You got this!'):'?';
+      advice = `Predicate locked at ${pred}%. ${examNeedLabel} — need ${examNeeded !== null ? examNeeded.toFixed(0)+'%' : '?'} in exam for Distinction (75% final).`;
     }
 
-    // ---- Per-assessment "what I need" breakdown ----
+    // ---- Distinction box ----
     let needBoxHtml = '';
-    if(pred!==null && pred<75 && needed!==null && needed<=100 && remaining>0) {
-      const remAsm = m.assessments.filter(a=>a.score===null);
-      needBoxHtml = `<div class="need-box" style="margin-bottom:.75rem">
-        <div class="need-box-title">🎯 What you need to reach 75%</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Need <strong style="color:var(--text)">${needed.toFixed(1)}%</strong> average across your ${remaining} remaining assessment${remaining!==1?'s':''}. Breakdown:</div>`;
-      remAsm.forEach(a=>{
-        const col = needed>85?'var(--danger)':needed>75?'var(--warn)':'var(--accent2)';
-        needBoxHtml += `<div class="need-item">
-          <span>${a.name.replace(/\(.*\)/,'').trim()}</span>
-          <span class="need-pct" style="color:${col}">${needed.toFixed(0)}%</span>
-        </div>`;
-      });
-      needBoxHtml += '</div>';
-    } else if(pred!==null && pred>=75) {
-      needBoxHtml = `<div class="need-box" style="margin-bottom:.75rem;background:rgba(63,185,80,.08);border-color:rgba(63,185,80,.25)">
-        <div class="need-box-title" style="color:var(--accent2)">✅ You're on track for 75%!</div>
-        <div style="font-size:12px;color:var(--muted)">Current estimated predicate: <strong style="color:var(--accent2)">${predStr}</strong>. Keep going — maintain this level.</div>
-      </div>`;
+    if(pred !== null && examNeeded !== null) {
+      const boxColor = examNeeded > 85 ? 'rgba(248,81,73,.12)' : examNeeded > 75 ? 'rgba(210,153,34,.12)' : 'rgba(63,185,80,.1)';
+      const borderColor = examNeeded > 85 ? 'rgba(248,81,73,.3)' : examNeeded > 75 ? 'rgba(210,153,34,.3)' : 'rgba(63,185,80,.25)';
+      const titleColor = examNeeded > 85 ? 'var(--danger)' : examNeeded > 75 ? 'var(--warn)' : 'var(--accent2)';
+      const feasible = examNeeded <= 100;
+      const innerHtml = feasible ? (
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">'
+        + '<div style="background:rgba(0,0,0,.2);border-radius:8px;padding:6px 10px;flex:1;min-width:80px;text-align:center">'
+        + '<div style="font-size:22px;font-weight:800;color:'+titleColor+'">'+examNeeded.toFixed(0)+'%</div>'
+        + '<div style="font-size:10px;color:var(--muted)">Exam needed for Distinction</div></div>'
+        + '<div style="background:rgba(0,0,0,.2);border-radius:8px;padding:6px 10px;flex:1;min-width:80px;text-align:center">'
+        + '<div style="font-size:22px;font-weight:800;color:var(--accent2)">'+finalIfExam100+'%</div>'
+        + '<div style="font-size:10px;color:var(--muted)">Final if exam = 100%</div></div>'
+        + '<div style="background:rgba(0,0,0,.2);border-radius:8px;padding:6px 10px;flex:1;min-width:80px;text-align:center">'
+        + '<div style="font-size:22px;font-weight:800;color:var(--muted)">'+finalIfExam75+'%</div>'
+        + '<div style="font-size:10px;color:var(--muted)">Final if exam = 75%</div></div></div>'
+        + '<div style="font-size:11px;color:var(--muted)">Predicate: <strong style="color:var(--text)">'+pred+'%</strong> &nbsp;|&nbsp; Formula: ('+pred+' + exam) ÷ 2 &nbsp;|&nbsp; Need exam ≥ <strong style="color:'+titleColor+'">'+examNeeded.toFixed(0)+'%</strong> for Distinction</div>'
+      ) : '<div style="font-size:12px;color:var(--danger)">⚠ Predicate '+pred+'% — distinction needs exam > 100%. Aim to pass and maximise every mark!</div>';
+      const dayLabel = daysToExam!==null&&daysToExam>0?' (in '+daysToExam+' days)':daysToExam===0?' (TODAY!)':'';
+      needBoxHtml = '<div style="background:'+boxColor+';border:1px solid '+borderColor+';border-radius:12px;padding:10px 14px;margin-bottom:.75rem">'
+        + '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:'+titleColor+';margin-bottom:8px">🎯 Distinction Target — Exam: '+examDateStr+dayLabel+'</div>'
+        + innerHtml
+        + '</div>';
     }
 
     // CAO specific warning
     let caoWarning='';
     if(k==='CAO'){
-      caoWarning=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">CAO focus needed</div><p>SA1=57%, CT1=63% dragging you down. SA2 (20%) + Practical (30%) are your recovery path. Need strong marks in both.</p></div></div>`;
+      caoWarning=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">CAO: Predicate 66% — need 84% in exam for Distinction</div><p>Exam is 27 May. Strong exam performance can still get you distinction. Focus on all theory and practical topics.</p></div></div>`;
     }
 
     // OOP specific warning
     let oopWarning='';
     if(k==='OOP'){
-      oopWarning=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">OOP recovery needed</div><p>CT1=67%, CT2=50% — below target. CT3 (Inheritance) is Wednesday. Need 80%+ in CT3–5 to bring up your predicate. Best 4 of 5 CTs count.</p></div></div>`;
+      oopWarning=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">OOP: Predicate 63% — need 87% in exam for Distinction</div><p>Exam is 8 June. Work through ALL Java topics: GUIs, Classes, Composition, Inheritance, Abstract, Exceptions, File I/O. Practice past papers!</p></div></div>`;
     }
 
     // DTP specific warning
     let dtpWarning='';
     if(k==='DTP'){
-      dtpWarning=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">DTP ST1=63% — needs recovery</div><p>Strong assignments (100, 93) and CT1 (92) are helping. ST2 (30%) is your biggest lever — aim for 85%+.</p></div></div>`;
+      dtpWarning=`<div class="alert info" style="margin-bottom:.5rem"><div class="alert-icon">📌</div><div class="alert-body"><div class="alert-title">DTP: Predicate 86% — need only 64% in exam for Distinction!</div><p>Exam is 1 June. You are in a great position! Just maintain — revise LO7–LO10 (SELECT, Joins, Subqueries, Functions).</p></div></div>`;
     }
 
     // ADS specific notice
@@ -1153,7 +1264,7 @@ function buildMarks(){
       const ctScores=m.assessments.slice(0,6).filter(a=>a.score!==null).map(a=>a.score).sort((a,b)=>b-a);
       const best4=ctScores.slice(0,4);
       const avg=best4.length>0?(best4.reduce((s,v)=>s+v,0)/best4.length).toFixed(1):0;
-      adsNote=`<div style="font-size:12px;color:var(--muted);margin-bottom:.5rem">Best 4 class tests avg: <strong>${avg}%</strong> | ST1: <strong>${m.assessments[6].score!==null?m.assessments[6].score+'%':'not yet'}</strong> | Web Test 4 (LO4 Graphs) due Wednesday</div>`;
+      adsNote=`<div style="font-size:12px;color:var(--accent2);margin-bottom:.5rem;padding:6px 10px;background:rgba(63,185,80,.08);border-radius:8px">🌟 ADS Predicate: 98% — only need 52% in exam for Distinction! Exam: 4 June. Excellent position — stay consistent.</div>`;
     }
 
     let droppedIdxs=new Set();
@@ -1263,11 +1374,11 @@ function getActiveAlerts(){
 
   // ADS Web Test 4 — LO4 Graphs & Trees — Wednesday 16 Apr
   const adsWT4d = daysUntil(ADS_WT4);
-  if(adsWT4d>=-1&&adsWT4d<=5) alerts.push({level:adsWT4d<=1?'danger':'warn',title:`📐 ADS Web Test 4 — LO4 Graphs & Trees ${adsWT4d<0?'(was yesterday)':adsWT4d===0?'TODAY':adsWT4d===1?'tomorrow':`in ${adsWT4d} days`}`,body:'Wednesday 16 Apr. Topics: Graph types, adjacency matrix/list, BFS/DFS traversal, spanning trees (Kruskal, Prim). Study Epp Ch 10. Do past examples.',icon:'📐'});
+  if(adsWT4d>=-1&&adsWT4d<=5) alerts.push({level:adsWT4d<=1?'danger':'warn',title:`📐 ADS Web Test 4 — LO4 Graphs & Trees ${adsWT4d<0?'(was yesterday)':adsWT4d===0?'TODAY':adsWT4d===1?'tomorrow':'in '+adsWT4d+' days'}`,body:'Wednesday 16 Apr. Topics: Graph types, adjacency matrix/list, BFS/DFS traversal, spanning trees (Kruskal, Prim). Study Epp Ch 10. Do past examples.',icon:'📐'});
 
   // OOP CT3 — Inheritance — Wednesday 16 Apr
   const oopCT3d = daysUntil(OOP_CT3);
-  if(oopCT3d>=-1&&oopCT3d<=5) alerts.push({level:oopCT3d<=1?'danger':'warn',title:`☕ OOP Class Test 3 — Inheritance ${oopCT3d<0?'(was yesterday)':oopCT3d===0?'TODAY':oopCT3d===1?'tomorrow':`in ${oopCT3d} days`}`,body:'Wednesday at 10:00 (during OOP class). Topics: extends, super(), method overriding, polymorphism, is-a relationship. CT1=67, CT2=50 — need 80%+ here to recover.',icon:'☕'});
+  if(oopCT3d>=-1&&oopCT3d<=5) alerts.push({level:oopCT3d<=1?'danger':'warn',title:`☕ OOP Class Test 3 — Inheritance ${oopCT3d<0?'(was yesterday)':oopCT3d===0?'TODAY':oopCT3d===1?'tomorrow':'in '+oopCT3d+' days'}`,body:'Wednesday at 10:00 (during OOP class). Topics: extends, super(), method overriding, polymorphism, is-a relationship. CT1=67, CT2=50 — need 80%+ here to recover.',icon:'☕'});
 
   // Test Week 1
   if(TODAY<=TW1_END) alerts.push({level:'danger',title:'Test Week 1 — 18–27 March 2026',body:'ADS: LO1–LO3 (Sets, Logic, Proof) | OOP: A.1–B.1 (GUIs, Classes) | DTP: LO3–LO7 (ERD, SQL DDL/DML)',icon:'⚠️'});
@@ -1281,7 +1392,7 @@ function getActiveAlerts(){
     const d=daysUntil(ST2[mod]);
     if(d>=-1&&d<=14){
       const urgency=d<=3?'danger':'warn';
-      const label=d<0?'was yesterday':d===0?'TODAY':d===1?'tomorrow':`in ${d} days`;
+      const label=d<0?'was yesterday':d===0?'TODAY':d===1?'tomorrow':'in '+d+' days';
       alerts.push({level:urgency,title:`ST2 ${mod} — ${name} ${label}`,body:`${ST2[mod].toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}. Focus: ${mod==='ADS'?'LO4–LO5 (Graphs & Trees, Counting) — Epp Ch 9–10':mod==='OOP'?'LO B.2–F.1 (Composition, Inheritance, Collections, Abstract, Exceptions, File I/O)':mod==='DTP'?'LO7–LO10 (Advanced SQL, Functions, Joins, Subqueries)':'All theory — number systems, CPU, memory, I/O, Boolean logic'}`,icon:d<=1?'🚨':'⏰'});
     }
   });
@@ -1289,23 +1400,30 @@ function getActiveAlerts(){
   // CAO Quiz 2 & CT2
   const q2d = daysUntil(QUIZ2_CAO);
   const ct2d = daysUntil(CT2_CAO);
-  if(q2d>=-1 && q2d<=5) alerts.push({level:q2d<=1?'danger':'warn',title:`⚙ CAO Quiz 2 — Ch 6,7,8 ${q2d<0?'(was yesterday)':q2d===0?'TODAY':q2d===1?'tomorrow':`in ${q2d} days`}`,body:'14 April 2026. Chapter 6 (Boolean Logic/Simplification), Ch 7 (Combinational Circuits), Ch 8 (Sequential Circuits). Do practice questions from each chapter.',icon:'⚙️'});
-  if(ct2d>=-1 && ct2d<=7) alerts.push({level:ct2d<=2?'danger':ct2d<=5?'warn':'info',title:`📝 CAO Class Test 2 — Ch 6,7,8 ${ct2d<0?'(was yesterday)':ct2d===0?'TODAY':ct2d===1?'tomorrow':`in ${ct2d} days`}`,body:'16 April 2026. Same scope as Quiz 2. Master Ch 6 & 7 first, then Ch 8 after Tuesday class.',icon:'📚'});
+  if(q2d>=-1 && q2d<=5) alerts.push({level:q2d<=1?'danger':'warn',title:`⚙ CAO Quiz 2 — Ch 6,7,8 ${q2d<0?'(was yesterday)':q2d===0?'TODAY':q2d===1?'tomorrow':'in '+q2d+' days'}`,body:'14 April 2026. Chapter 6 (Boolean Logic/Simplification), Ch 7 (Combinational Circuits), Ch 8 (Sequential Circuits). Do practice questions from each chapter.',icon:'⚙️'});
+  if(ct2d>=-1 && ct2d<=7) alerts.push({level:ct2d<=2?'danger':ct2d<=5?'warn':'info',title:`📝 CAO Class Test 2 — Ch 6,7,8 ${ct2d<0?'(was yesterday)':ct2d===0?'TODAY':ct2d===1?'tomorrow':'in '+ct2d+' days'}`,body:'16 April 2026. Same scope as Quiz 2. Master Ch 6 & 7 first, then Ch 8 after Tuesday class.',icon:'📚'});
 
-  // CAO warning
-  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'warn',title:'CAO: SA2 + Practical recovery critical',body:'SA1=57%, CT1=63% — current predicate is low. SA2 (20%) + Practical (30%) are your path to 75%. Aim 80%+ in both.',icon:'⚙️'});
+  // Predicate summary alerts
+  alerts.push({level:'info',title:'🎯 Distinction Plan — Your Exam Targets',body:'ADS (4 Jun): pred 98%, need 52% | DTP (1 Jun): pred 86%, need 64% | CAO (27 May): pred 66%, need 84% | OOP (8 Jun): pred 63%, need 87%',icon:'🏆'});
+  alerts.push({level:'success',title:'ADS: Predicate 98% — Distinction almost guaranteed!',body:'Need only 52% in exam (4 June). Focus revision on LO4 Graphs & Trees, LO5 Counting, LO6 Probability. Stay consistent.',icon:'✅'});
+  alerts.push({level:'success',title:'DTP: Predicate 86% — Strong position!',body:'Need 64% in exam (1 June). Revise LO7–LO10: SQL SELECT, Functions, Joins, Subqueries. You can do this!',icon:'🗄️'});
+  alerts.push({level:'warn',title:'CAO: Predicate 66% — Need 84% in exam (27 May)',body:'CAO exam is FIRST — 27 May! Focus: Number systems, CPU, Memory, I/O, Boolean logic, Instruction sets. Past papers are key.',icon:'⚙️'});
+  alerts.push({level:'warn',title:'OOP: Predicate 63% — Need 87% in exam (8 June)',body:'Highest exam target! Practice all Java topics: GUIs, User Classes, Composition, Inheritance, Abstract, Exceptions, File I/O. Practise coding from scratch.',icon:'☕'});
 
-  // OOP warning
-  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'warn',title:'OOP: CT1=67%, CT2=50% — recovery needed',body:'Best 4 of 5 CTs count. CT3 (Inheritance) is Wed — need 80%+. Then CT4 (Abstract/Interfaces) and CT5 coming up. ST1 & ST2 are 30% each.',icon:'☕'});
+  // Exam period with individual exam dates
+  if(TODAY>=EXAM_START||daysUntil(EXAM_START)<=14) alerts.push({level:'success',title:'Main exams: 27 May – 8 Jun 2026',body:'CAO: 27 May | DTP: 1 Jun | ADS: 4 Jun | OOP: 8 Jun. Supplementary exams: 15–30 Jun 2026.',icon:'🎓'});
 
-  // DTP info
-  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'warn',title:'DTP: ST1=63% — push ST2 to 85%+',body:'Strong: AS1=100, AS2=93, CT1=92. ST1 hurts but ST2 (30%) can rescue you. Focus on LO7–LO10: Joins, Subqueries, Functions.',icon:'🗄️'});
-
-  // ADS info
-  if(TODAY<new Date('2026-05-18T00:00:00')) alerts.push({level:'success',title:'ADS: Strong start — maintain it!',body:'CT1=100%, CT2=90%, CT3=80%, ST1=95%. Web Test 4 (LO4 Graphs) due Wednesday. Prepare for ST2 (30 Apr).',icon:'✅'});
-
-  // Exam period
-  if(TODAY>=EXAM_START||daysUntil(EXAM_START)<=14) alerts.push({level:'success',title:'Main exams: 25 May – 12 Jun 2026',body:'Predicate Day: 18 May. Supplementary exams: 15–30 Jun 2026.',icon:'🎓'});
+  // Individual exam countdowns
+  const examEntries=[['CAO','Computer Architecture','amber','2026-05-27',66,84],['DTP','Databases','purple','2026-06-01',86,64],['ADS','Advanced Discrete Structures','blue','2026-06-04',98,52],['OOP','Object-Oriented Programming','green','2026-06-08',63,87]];
+  examEntries.forEach(([mod,name,col,dateStr,pred,examNeed])=>{
+    const d=daysUntil(new Date(dateStr+'T00:00:00'));
+    if(d>=0&&d<=14){
+      const urgency=d<=3?'danger':d<=7?'warn':'info';
+      const label=d===0?'TODAY':d===1?'tomorrow':'in '+d+' days';
+      const feasibility=examNeed<=70?'🟢 In great shape!':examNeed<=80?'🟡 Achievable':'🔴 Push hard!';
+      alerts.push({level:urgency,title:`📝 ${mod} EXAM — ${name} (${label})`,body:`${new Date(dateStr+'T00:00:00').toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})}. Predicate: ${pred}%. Need ${examNeed}% in exam for Distinction. ${feasibility}`,icon:d<=3?'🚨':'📝'});
+    }
+  });
 
   return alerts;
 }
@@ -1323,15 +1441,13 @@ function buildAlerts(){
   });
   html+=`<div class="card" style="margin-top:1rem"><div style="font-size:15px;font-weight:700;margin-bottom:.75rem">All key dates</div>
     ${[
-      ['14 Apr 2026','CAO Quiz 2 — Chapter 6,7,8','warn'],
-      ['16 Apr 2026','ADS Web Test 4 (LO4 Graphs) + OOP CT3 (Inheritance) + CAO CT2','danger'],
-      ['20 Apr 2026','ST2: DTP (Databases)','warn'],
-      ['22 Apr 2026','ST2: CAO (Computer Architecture)','warn'],
-      ['24 Apr 2026','ST2: OOP (Object-Oriented Programming)','warn'],
-      ['30 Apr 2026','ST2: ADS (Advanced Discrete Structures)','warn'],
-      ['18 May 2026','Predicate Day (marks locked)','danger'],
-      ['25 May – 12 Jun 2026','Main examinations','danger'],
-      ['15–30 Jun 2026','Supplementary exams','warn'],
+      ['18 May 2026','Predicate Day — marks locked in ✓','info'],
+      ['27 May 2026','🎯 CAO EXAM — Computer Architecture (pred 66%, need 84%)','danger'],
+      ['1 Jun 2026','🎯 DTP EXAM — Databases (pred 86%, need 64%)','warn'],
+      ['4 Jun 2026','🎯 ADS EXAM — Advanced Discrete Structures (pred 98%, need 52%)','warn'],
+      ['8 Jun 2026','🎯 OOP EXAM — Object-Oriented Programming (pred 63%, need 87%)','warn'],
+      ['12 Jun 2026','Exam period ends','info'],
+      ['15–30 Jun 2026','Supplementary exams (if needed)','warn'],
     ].map(([d,e,l])=>{
       const dateStr=d.split(' – ')[0].replace(/–.*/,'').trim();
       const isPast=new Date(dateStr+' 2026')<TODAY;
@@ -1353,47 +1469,28 @@ function runAISuggestion(){
   el.innerHTML='<div style="text-align:center;padding:1rem;color:var(--muted);font-size:13px">🧠 Analysing your marks, upcoming tests and schedule...</div>';
   setTimeout(()=>{
     const now=new Date(); const h=now.getHours();
-    const scored=Object.entries(modules).map(([k,m])=>{
-      const pred=calcPredicate(k);
-      let score=0;
-      const st2d=ST2[k]?daysUntil(ST2[k]):999;
-      if(st2d<=3) score+=50; else if(st2d<=7) score+=30; else if(st2d<=14) score+=15;
-      if(pred!==null&&pred<75) score+=Math.round((75-pred)*0.8);
-      if(pred===null) score+=20;
-      if(m.difficulty==='Hard') score+=10;
-      const oopBoost=(k==='OOP'&&daysUntil(OOP_CT3)<=4)?35:0;
-      const adsBoost=(k==='ADS'&&daysUntil(ADS_WT4)<=4)?30:0;
-      score+=oopBoost+adsBoost;
-      return {k,m,pred,st2d,score};
-    }).sort((a,b)=>b.score-a.score);
-
-    const top=scored[0];
-    const second=scored[1];
+    // Exam-focused scoring
+    const examOrder=[
+      {k:'CAO',date:'2026-05-27',pred:66,examNeed:84,topics:'Number systems, CPU architecture, Memory hierarchy, I/O, Boolean logic, Instruction sets'},
+      {k:'DTP',date:'2026-06-01',pred:86,examNeed:64,topics:'SQL SELECT, Functions, Joins, Subqueries, DDL/DML, Normalisation, ERD'},
+      {k:'ADS',date:'2026-06-04',pred:98,examNeed:52,topics:'Sets, Logic, Proofs, Graphs & Trees, Counting, Discrete Probability'},
+      {k:'OOP',date:'2026-06-08',pred:63,examNeed:87,topics:'GUIs, User Classes, Composition, Inheritance, Abstract & Interfaces, Exceptions, File I/O'},
+    ];
+    const upcoming=examOrder.filter(e=>daysUntil(new Date(e.date+'T00:00:00'))>=0).sort((a,b)=>daysUntil(new Date(a.date+'T00:00:00'))-daysUntil(new Date(b.date+'T00:00:00')));
+    const top=upcoming[0];
+    const second=upcoming[1];
 
     let primary,reason,topics,urgency='info';
-    const oopCT3d=daysUntil(OOP_CT3);
-    const adsWT4d=daysUntil(ADS_WT4);
-    const ct2d=daysUntil(CT2_CAO);
-
-    if(oopCT3d>=0&&oopCT3d<=2){
-      primary='OOP Class Test 3 — Inheritance'; reason=`CT3 ${oopCT3d===0?'TODAY':oopCT3d===1?'tomorrow':'in 2 days'}! CT1=67%, CT2=50% — this is your recovery chance`;
-      topics='extends keyword, super(), method overriding, polymorphism, is-a relationship. Write multiple subclass programs now!';
-      urgency='danger';
-    } else if(adsWT4d>=0&&adsWT4d<=2){
-      primary='ADS Web Test 4 — Graphs & Trees'; reason=`Web Test 4 ${adsWT4d===0?'TODAY':adsWT4d===1?'tomorrow':'in 2 days'}!`;
-      topics='Graph types, adjacency matrix/list, BFS traversal, DFS traversal, spanning trees (Kruskal, Prim). Epp Ch 10.';
-      urgency='danger';
-    } else if(ct2d>=0&&ct2d<=2){
-      primary='CAO Class Test 2 — Ch 6,7,8'; reason=`CT2 ${ct2d===0?'TODAY':ct2d===1?'tomorrow':'in 2 days'}!`;
-      topics='Boolean Logic (Ch6), Combinational Circuits (Ch7), Sequential Circuits (Ch8). Past questions + timed practice.';
-      urgency='danger';
-    } else if(top.st2d<=3){
-      primary=top.m.name; reason=`ST2 in ${top.st2d} day${top.st2d===1?'':'s'}!`;
-      topics=top.k==='ADS'?'LO4–LO5: Graphs, Trees & Counting':top.k==='OOP'?'B.2–F.1: all remaining LOs':top.k==='DTP'?'LO7–LO10: Advanced SQL':'All theory';
-      urgency='danger';
+    if(top){
+      const td=daysUntil(new Date(top.date+'T00:00:00'));
+      const m=modules[top.k];
+      primary=m.name; 
+      const struggling=(LO_DATA[top.k]||[]).filter(l=>loStatus[l.id]==='struggle').map(l=>l.label);
+      urgency=td<=3?'danger':td<=7?'warn':'info';
+      reason=`Exam ${td===0?'TODAY!':td===1?'tomorrow!':'in '+td+' days'} (${new Date(top.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'long'})}). Predicate: ${top.pred}% — need ${top.examNeed}% for Distinction!`;
+      topics=struggling.length>0?`⚠ Struggling: ${struggling.slice(0,3).join(', ')} — focus here first! Then: ${top.topics.split(',').slice(0,2).join(', ')}`:top.topics;
     } else {
-      primary=top.m.name; reason=top.st2d<999?`ST2 in ${top.st2d} days — stay ahead`:'Highest priority right now';
-      topics=top.m.topics.slice(0,3).join(', ');
+      primary='All done!'; reason='All exams completed.'; topics=''; urgency='success';
     }
 
     const timeTip=h<9?'Morning brain is sharp — tackle hard theory now 🌅':h<12?'Peak focus window — do active problem solving 💪':h<14?'Post-lunch: lighter revision or flashcards 🍽️':h<17?'Afternoon: good for practice exercises 📝':h<20?'Evening: review notes, summarise the day 🌙':'Late night: keep it light — no new content 💤';
@@ -1403,61 +1500,20 @@ function runAISuggestion(){
       <div class="alert-body">
         <div class="alert-title">Focus on: ${primary}</div>
         <p>${reason}</p>
-        <p style="margin-top:4px">📚 Topics: ${topics}</p>
+        ${topics?`<p style="margin-top:4px">📚 Topics: ${topics}</p>`:''}
       </div>
     </div>`;
-    if(second&&second.st2d<=7){
-      html+=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⏰</div><div class="alert-body"><div class="alert-title">Also coming up: ${second.m.name}</div><p>ST2 in ${second.st2d} days — don't neglect it</p></div></div>`;
+    if(second){
+      const sd=daysUntil(new Date(second.date+'T00:00:00'));
+      const sm=modules[second.k];
+      html+=`<div class="alert info" style="margin-bottom:.5rem"><div class="alert-icon">📖</div><div class="alert-body"><div class="alert-title">After that: ${sm.name} (${sd} days)</div><p>Predicate: ${second.pred}% — need ${second.examNeed}% for Distinction. Start light revision now!</p></div></div>`;
     }
+    // Distinction summary
+    html+=`<div class="alert success" style="margin-bottom:.5rem"><div class="alert-icon">🏆</div><div class="alert-body"><div class="alert-title">Your Distinction Targets</div><p>CAO: 84% · DTP: 64% · ADS: 52% · OOP: 87%</p></div></div>`;
     html+=`<div class="alert info"><div class="alert-icon">🕐</div><div class="alert-body"><div class="alert-title">${timeTip}</div></div></div>`;
     el.innerHTML=html;
   },600);
 }
-
-// ======================== EMERGENCY — LO DATA ========================
-const LO_DATA = {
-  ADS: [
-    {id:'ADS-1', lo:'LO1', label:'Sets & Functions', detail:'Set notation, types of functions, relations — Epp Ch 1–2'},
-    {id:'ADS-2', lo:'LO2', label:'Logic Concepts', detail:'Propositional logic, truth tables, logical equivalence — Epp Ch 2'},
-    {id:'ADS-3', lo:'LO3', label:'Proof Techniques', detail:'Direct proof, contradiction, induction — Epp Ch 3–4'},
-    {id:'ADS-4', lo:'LO4', label:'Graphs & Trees', detail:'Graph types, paths, trees, spanning trees — Epp Ch 10 ← Web Test 4 Wednesday!'},
-    {id:'ADS-5', lo:'LO5', label:'Counting', detail:'Permutations, combinations, pigeonhole — Epp Ch 9'},
-    {id:'ADS-6', lo:'LO6', label:'Discrete Probability', detail:'Sample spaces, probability rules — Epp Ch 9'},
-  ],
-  OOP: [
-    {id:'OOP-A1', lo:'A.1', label:'GUIs & Event Handling', detail:'JFrame, JButton, ActionListener, layout managers — Deitel Ch 7 | CT1=67%'},
-    {id:'OOP-B1', lo:'B.1', label:'User-defined Classes', detail:'Fields, constructors, methods, encapsulation | CT1=67%'},
-    {id:'OOP-B2', lo:'B.2', label:'Composition', detail:'Has-a relationship, objects as fields | CT2=50%'},
-    {id:'OOP-B3', lo:'B.3', label:'Inheritance', detail:'extends, super, method overriding, polymorphism ← CT3 Wednesday!'},
-    {id:'OOP-C1', lo:'C.1', label:'Collections', detail:'ArrayList, Iterator, generics | CT2=50%'},
-    {id:'OOP-D1', lo:'D.1', label:'Abstract Classes & Interfaces', detail:'abstract keyword, implements, interface contracts ← CT4 coming'},
-    {id:'OOP-E1', lo:'E.1', label:'Exception Handling', detail:'try/catch/finally, custom exceptions, throws'},
-    {id:'OOP-F1', lo:'F.1', label:'File I/O', detail:'FileReader, BufferedReader, FileWriter, Scanner on files'},
-  ],
-  DTP: [
-    {id:'DTP-1', lo:'LO1', label:'Data Models', detail:'Hierarchical, network, relational model concepts'},
-    {id:'DTP-2', lo:'LO2', label:'Relational Model', detail:'Tables, keys, constraints, integrity rules'},
-    {id:'DTP-3', lo:'LO3', label:'ERD', detail:'Entities, attributes, relationships, cardinality'},
-    {id:'DTP-4', lo:'LO4', label:'Normalisation', detail:'1NF, 2NF, 3NF — removing redundancy'},
-    {id:'DTP-5', lo:'LO5', label:'DDL', detail:'CREATE TABLE, ALTER, DROP, constraints'},
-    {id:'DTP-6', lo:'LO6', label:'DML', detail:'INSERT, UPDATE, DELETE | CT1=92%'},
-    {id:'DTP-7', lo:'LO7', label:'SQL SELECT', detail:'WHERE, ORDER BY, GROUP BY, HAVING | ST1=63%'},
-    {id:'DTP-8', lo:'LO8', label:'SQL Functions', detail:'COUNT, SUM, AVG, MAX, MIN, string/date functions'},
-    {id:'DTP-9', lo:'LO9', label:'Joins', detail:'INNER JOIN, LEFT JOIN, self-join ← ST2 focus'},
-    {id:'DTP-10', lo:'LO10', label:'Subqueries', detail:'Nested SELECT, correlated subqueries, EXISTS ← ST2 focus'},
-  ],
-  CAO: [
-    {id:'CAO-1', lo:'LO1', label:'Number Systems', detail:'Binary, octal, hex conversions, arithmetic'},
-    {id:'CAO-2', lo:'LO2', label:'Boolean Logic', detail:'Gates, truth tables, simplification, Karnaugh maps ← Ch 6'},
-    {id:'CAO-3', lo:'LO3', label:'CPU Architecture', detail:'ALU, control unit, registers, fetch-decode-execute'},
-    {id:'CAO-4', lo:'LO4', label:'Memory Hierarchy', detail:'Cache, RAM, ROM, virtual memory'},
-    {id:'CAO-5', lo:'LO5', label:'Instruction Sets', detail:'RISC vs CISC, addressing modes, assembly basics'},
-    {id:'CAO-6', lo:'LO6', label:'I/O Systems', detail:'I/O interfaces, interrupts, DMA, buses'},
-  ]
-};
-
-let loStatus = {};
-try{ loStatus = JSON.parse(localStorage.getItem('studyhub_lo')||'{}'); }catch(e){}
 
 function saveLO(){ try{localStorage.setItem('studyhub_lo',JSON.stringify(loStatus));}catch(e){} }
 
@@ -1556,7 +1612,7 @@ function generateRecoveryPlan(){
     const m = modules[mp.mod];
     const hasGaps = mp.gapList.length > 0;
     const urgency = mp.st2d<=3?'danger':mp.st2d<=7?'warn':hasGaps?'info':'success';
-    const urgencyLabel = mp.st2d<=3?`🔴 CRITICAL — ST2 in ${mp.st2d} days`:mp.st2d<=7?`🟠 URGENT — ST2 in ${mp.st2d} days`:hasGaps?'🟡 Needs work':'🟢 On track';
+    const urgencyLabel = mp.st2d<=3?'🔴 CRITICAL — ST2 in '+mp.st2d+' days':mp.st2d<=7?'🟠 URGENT — ST2 in '+mp.st2d+' days':hasGaps?'🟡 Needs work':'🟢 On track';
     const tb = timeBlocks[mp.mod];
 
     html += `<div class="card" style="margin-bottom:.75rem;border-color:rgba(${colorRgb(m.color)},.3)">
@@ -1943,13 +1999,14 @@ function buildGlowUp(){
       </div>`;
     }).join('');
 
-    const needed = calcNeeded(k);
+    const examNeededGlow = calcExamNeeded(k, 75);
+    const examDtGlow = EXAM_DATES[k] ? daysUntil(EXAM_DATES[k]) : null;
+    const examDateGlowStr = EXAM_DATES[k] ? EXAM_DATES[k].toLocaleDateString('en-ZA',{day:'numeric',month:'short'}) : '';
     let needHtml='';
-    if(needed!==null&&pred!==null&&pred<75){
-      const col = needed>85?'var(--danger)':needed>75?'var(--warn)':'var(--accent2)';
-      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(79,156,249,.08);border-radius:6px;color:${col}">Need <strong>${needed.toFixed(1)}%</strong> avg in remaining ${m.assessments.filter(a=>a.score===null).length} assessments to reach 75%</div>`;
-    } else if(pred!==null&&pred>=75){
-      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(63,185,80,.1);border-radius:6px;color:var(--accent2)">🔥 On track! Keep this up.</div>`;
+    if(examNeededGlow!==null && pred!==null){
+      const col = examNeededGlow>85?'var(--danger)':examNeededGlow>70?'var(--warn)':'var(--accent2)';
+      const feasMsg = examNeededGlow>100?'⚠ Over 100% needed — aim to pass':'🎯 Distinction target';
+      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(79,156,249,.08);border-radius:6px;color:${col}">${feasMsg}: need <strong>${examNeededGlow.toFixed(0)}%</strong> in exam ${examDateGlowStr?'('+examDateGlowStr+')':''}${examDtGlow!==null&&examDtGlow>0?' — '+examDtGlow+'d away':''}</div>`;
     }
 
     const scores=entered.map(a=>a.score);
@@ -1968,9 +2025,92 @@ function buildGlowUp(){
   el.innerHTML=html||'<div style="color:var(--muted);font-size:13px">Enter marks in the Marks Tracker to see your glow-up graph.</div>';
 }
 
+// ======================== DASHBOARD STAT CARDS ========================
+function buildDashboardStats() {
+  // Days to first exam (CAO 27 May)
+  const daysCAO = daysUntil(EXAM_DATES.CAO);
+  const daysEl = document.getElementById('daysToExam');
+  if(daysEl) daysEl.textContent = Math.max(0, daysCAO);
+
+  // Average predicate
+  const preds = Object.keys(PREDICATE_MARKS).map(k => PREDICATE_MARKS[k]);
+  const avg = (preds.reduce((s,v)=>s+v,0)/preds.length).toFixed(1);
+  const avgEl = document.getElementById('dashAvgPred');
+  if(avgEl) avgEl.textContent = avg + '%';
+  const statusEl = document.getElementById('dashPredStatus');
+  if(statusEl) statusEl.textContent = parseFloat(avg)>=75 ? 'Above target ✓' : parseFloat(avg)>=60 ? 'Good, push for more' : 'Needs attention';
+
+  // Best module
+  const best = Object.entries(PREDICATE_MARKS).sort((a,b)=>b[1]-a[1])[0];
+  const bestEl = document.getElementById('dashBestMod');
+  if(bestEl) bestEl.textContent = best[0];
+  const bestPredEl = document.getElementById('dashBestPred');
+  if(bestPredEl) bestPredEl.textContent = best[1] + '% predicate';
+}
+
+// ======================== EXAM COUNTDOWN CARDS ========================
+function buildExamCountdownCards() {
+  const el = document.getElementById('examCountdownCards');
+  if(!el) return;
+  const exams = [
+    {k:'CAO', label:'CAO', date:EXAM_DATES.CAO, pred:66, need:84, color:'amber', icon:'⚙'},
+    {k:'DTP', label:'DTP', date:EXAM_DATES.DTP, pred:86, need:64, color:'purple', icon:'⊗'},
+    {k:'ADS', label:'ADS', date:EXAM_DATES.ADS, pred:98, need:52, color:'blue', icon:'∑'},
+    {k:'OOP', label:'OOP', date:EXAM_DATES.OOP, pred:63, need:87, color:'green', icon:'{}'},
+  ];
+  el.innerHTML = exams.map(e => {
+    const d = daysUntil(e.date);
+    const dateStr = e.date.toLocaleDateString('en-ZA',{day:'numeric',month:'short'});
+    const urgencyColor = d<=5?'var(--danger)':d<=10?'var(--warn)':'var(--accent)';
+    const feasCol = e.need<=65?'var(--accent2)':e.need<=80?'var(--warn)':'var(--danger)';
+    const statusClass = d<=5?'bad':d<=10?'mid':'good';
+    return `<div class="stat-card" style="border-color:rgba(${colorRgb(e.color)},.3)">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+        <div style="font-size:14px;font-weight:900;color:${colorVar(e.color)}">${e.icon}</div>
+        <div style="font-size:12px;font-weight:700;color:${colorVar(e.color)}">${e.label}</div>
+        <div style="font-size:10px;color:var(--muted);margin-left:auto">${dateStr}</div>
+      </div>
+      <div class="stat-val" style="color:${urgencyColor};font-size:22px">${d>0?d+'d':d===0?'TODAY!':'Done ✓'}</div>
+      <div class="stat-lbl">Pred: <strong style="color:${colorVar(e.color)}">${e.pred}%</strong></div>
+      <div class="stat-sub" style="background:rgba(${colorRgb(e.color)},.12);color:${feasCol}">Need ${e.need}% ✦ Dist</div>
+    </div>`;
+  }).join('');
+}
+
+// ======================== DISTINCTION BANNER ========================
+function buildDistinctionBanner() {
+  const el = document.getElementById('distinctionBanner');
+  if(!el) return;
+  const targets = [
+    {k:'CAO',pred:66,need:84,date:'27 May',icon:'⚙',color:'amber'},
+    {k:'DTP',pred:86,need:64,date:'1 Jun',icon:'⊗',color:'purple'},
+    {k:'ADS',pred:98,need:52,date:'4 Jun',icon:'∑',color:'blue'},
+    {k:'OOP',pred:63,need:87,date:'8 Jun',icon:'{}',color:'green'},
+  ];
+  const allFeasible = targets.every(t=>t.need<=100);
+  el.innerHTML = `<div style="background:linear-gradient(135deg,rgba(79,156,249,.1),rgba(188,140,255,.08),rgba(63,185,80,.07));border:1px solid rgba(79,156,249,.25);border-radius:16px;padding:14px 16px">
+    <div style="font-size:14px;font-weight:800;margin-bottom:10px;background:linear-gradient(135deg,#e6edf3,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">🏆 Your Distinction Roadmap — Goal: 75%+ Final Mark</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      ${targets.map(t=>{
+        const col = t.need<=65?'var(--accent2)':t.need<=80?'var(--warn)':'var(--danger)';
+        return `<div style="flex:1;min-width:100px;background:rgba(0,0,0,.2);border-radius:10px;padding:8px 10px;text-align:center;border:1px solid rgba(${colorRgb(t.color)},.2)">
+          <div style="font-size:11px;color:${colorVar(t.color)};font-weight:700">${t.icon} ${t.k}</div>
+          <div style="font-size:20px;font-weight:800;color:${col}">${t.need}%</div>
+          <div style="font-size:9px;color:var(--muted)">exam needed</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">${t.date} · pred ${t.pred}%</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px">Formula: (predicate + exam mark) ÷ 2 ≥ 75% &nbsp;·&nbsp; ${allFeasible?'🟢 All targets achievable!':'⚠ Some targets need maximum effort'}</div>
+  </div>`;
+}
+
 // ======================== INIT ========================
 loadMarks();
 buildModuleOverview();
+buildDashboardStats();
+buildExamCountdownCards();
+buildDistinctionBanner();
 buildTodayClasses();
 buildTimetable();
 buildMarks();
@@ -1983,34 +2123,36 @@ function buildFocusPriority(){
   const dateEl = document.getElementById('focusPriorityDate');
   const listEl = document.getElementById('focusPriorityList');
   if(!dateEl||!listEl) return;
-  dateEl.textContent = 'Updated for ' + TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'}) + ' — OOP CT3 + ADS WT4 + CAO CT2 all this week!';
+  dateEl.textContent = 'Exam prep — ' + TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'}) + ' | CAO: 27 May · DTP: 1 Jun · ADS: 4 Jun · OOP: 8 Jun';
 
   const items = Object.entries(modules).map(([k,m])=>{
     const pred = calcPredicate(k)||0;
-    const gap = Math.max(0,75-pred);
-    const st2d = ST2[k] ? daysUntil(ST2[k]) : 999;
-    const caoBoost = (k==='CAO' && daysUntil(QUIZ2_CAO)<=7) ? 40 : 0;
-    const oopBoost = (k==='OOP' && daysUntil(OOP_CT3)<=4) ? 35 : 0;
-    const adsBoost = (k==='ADS' && daysUntil(ADS_WT4)<=4) ? 30 : 0;
+    const examDate = EXAM_DATES[k];
+    const examD = examDate ? daysUntil(examDate) : 999;
+    const examNeeded = calcExamNeeded(k, 75) || 0;
     const struggling = (LO_DATA[k]||[]).filter(l=>loStatus[l.id]==='struggle').length;
     let score = 0;
-    if(st2d<=3) score+=60; else if(st2d<=7) score+=40; else if(st2d<=14) score+=20;
-    score += gap*0.6;
-    score += struggling*8;
-    score += caoBoost + oopBoost + adsBoost;
+    // Closer exam = higher priority
+    if(examD<=3) score+=80; else if(examD<=7) score+=60; else if(examD<=14) score+=40; else score+=20;
+    // Higher exam mark needed = more urgent
+    score += examNeeded * 0.5;
+    score += struggling * 10;
     if(m.difficulty==='Hard') score+=10;
-    const urgency = st2d<=3?'CRITICAL':oopBoost||adsBoost||caoBoost?'This week!':st2d<=7?'Urgent':gap>25?'High':struggling>2?'High':'Medium';
-    const urgencyColor = st2d<=3?'var(--danger)':oopBoost||adsBoost||caoBoost?'var(--danger)':st2d<=7?'var(--warn)':gap>25?'var(--warn)':'var(--muted)';
-    return {k,m,score,urgency,urgencyColor,pred,gap,st2d,struggling};
+    const urgency = examD<=3?'CRITICAL — exam soon!':examD<=7?'This week!':examD<=14?`${examD} days`:examD<999?`${examD} days`:'—';
+    const urgencyColor = examD<=3?'var(--danger)':examD<=7?'var(--danger)':examD<=14?'var(--warn)':'var(--muted)';
+    return {k,m,score,urgency,urgencyColor,pred,examD,examNeeded,struggling};
   }).sort((a,b)=>b.score-a.score);
 
   let html = '';
   items.forEach(it=>{
-    const pct = Math.min(100, it.score);
-    html += `<div><div class="flex-between" style="margin-bottom:4px">
-      <span style="font-size:13px">${it.m.icon} ${it.m.name.split(' ')[0]} — ${it.m.name.split('(')[0].trim()}</span>
-      <span style="font-size:12px;color:${it.urgencyColor};font-weight:700">${it.urgency}${it.st2d<999&&it.st2d>0?' ('+it.st2d+'d)':''}</span>
-    </div><div class="pbar-wrap"><div class="pbar ${it.m.color}" style="width:${pct}%"></div></div></div>`;
+    const pct = Math.min(100, it.examD<999 ? Math.max(10, 100-(it.examD*5)) : 20);
+    const examDateStr = EXAM_DATES[it.k] ? EXAM_DATES[it.k].toLocaleDateString('en-ZA',{day:'numeric',month:'short'}) : '';
+    html += `<div style="margin-bottom:8px"><div class="flex-between" style="margin-bottom:4px">
+      <span style="font-size:13px">${it.m.icon} ${it.m.name.split(' ')[0]} — exam ${examDateStr}</span>
+      <span style="font-size:12px;color:${it.urgencyColor};font-weight:700">${it.urgency} · need ${it.examNeeded.toFixed(0)}%</span>
+    </div><div class="pbar-wrap"><div class="pbar ${it.m.color}" style="width:${pct}%"></div></div>
+    <div style="font-size:10px;color:var(--muted);margin-top:2px">Predicate: ${it.pred}% · ${it.struggling>0?it.struggling+' struggling topic(s)':'All LOs covered ✓'}</div>
+    </div>`;
   });
   listEl.innerHTML = html;
 }
@@ -2021,13 +2163,16 @@ function refreshAll(){
   const newToday=new Date(_n.getFullYear(),_n.getMonth(),_n.getDate());
   if(newToday.getTime()!==TODAY.getTime()){location.reload(); return;}
   buildModuleOverview();
+  buildDashboardStats();
+  buildExamCountdownCards();
+  buildDistinctionBanner();
   buildMarks();
   buildAlerts();
   buildGlowUp();
   buildLOChecklist();
   buildFocusPriority();
   timerRenderHistory();
-  document.getElementById('daysToExam').textContent = Math.max(0,daysUntil(EXAM_START));
+  document.getElementById('daysToExam').textContent = Math.max(0,daysUntil(EXAM_DATES.CAO));
   const schedSub = document.getElementById('schedSub');
   if(schedSub) schedSub.textContent = 'From today — '+TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})+' through exam end (12 June 2026)';
   const aiEl = document.getElementById('aiSuggestionResult');
