@@ -183,7 +183,6 @@
   .need-item:last-child { border-bottom: none; }
   .need-pct { font-weight: 800; font-size: 14px; }
 
-  /* SCHEDULE SPECIFIC */
   .week-block { margin-bottom: 1.5rem; }
   .week-header {
     font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
@@ -237,15 +236,15 @@
   .tt-class .module { font-weight: 700; font-size: 12px; }
   .tt-class .lecturer { font-size: 10px; opacity: .75; margin-top: 2px; }
   .tt-class .room { font-size: 10px; opacity: .6; }
-  .ads { background: rgba(79,156,249,.15); border: 1px solid rgba(79,156,249,.35); color: #7eb8ff; }
-  .oop { background: rgba(63,185,80,.15); border: 1px solid rgba(63,185,80,.35); color: #6ee47a; }
-  .dtp { background: rgba(188,140,255,.15); border: 1px solid rgba(188,140,255,.35); color: #d0aaff; }
-  .cao { background: rgba(210,153,34,.15); border: 1px solid rgba(210,153,34,.4); color: #e6c270; }
+  .aop { background: rgba(79,156,249,.15); border: 1px solid rgba(79,156,249,.35); color: #7eb8ff; }
+  .ors { background: rgba(63,185,80,.15); border: 1px solid rgba(63,185,80,.35); color: #6ee47a; }
+  .sef { background: rgba(188,140,255,.15); border: 1px solid rgba(188,140,255,.35); color: #d0aaff; }
+  .isc { background: rgba(210,153,34,.15); border: 1px solid rgba(210,153,34,.4); color: #e6c270; }
   .choir { background: rgba(248,81,73,.12); border: 1px solid rgba(248,81,73,.3); color: #f97583; }
-  .ads:hover { box-shadow: var(--glow-blue); }
-  .oop:hover { box-shadow: var(--glow-green); }
-  .dtp:hover { box-shadow: var(--glow-purple); }
-  .cao:hover { box-shadow: var(--glow-amber); }
+  .aop:hover { box-shadow: var(--glow-blue); }
+  .ors:hover { box-shadow: var(--glow-green); }
+  .sef:hover { box-shadow: var(--glow-purple); }
+  .isc:hover { box-shadow: var(--glow-amber); }
   .choir:hover { box-shadow: var(--glow-red); }
   .empty { background: transparent; border: none; }
 
@@ -327,39 +326,19 @@
 <!-- ========== DASHBOARD ========== -->
 <div id="page-dashboard" class="page active">
   <div class="section-title" id="greeting"></div>
-  <div class="section-sub">Semester 1, 2026 — TUT Soshanguve South Campus</div>
+  <div class="section-sub">Semester 2, 2026 — TUT Soshanguve South Campus</div>
   <div id="currentActivity"></div>
 
   <div id="dashAlerts"></div>
 
-  <div class="grid-4" style="margin-bottom:1rem" id="dashStatCards">
-    <div class="stat-card">
-      <div class="stat-val" style="color:var(--danger)" id="daysToExam">—</div>
-      <div class="stat-lbl">Days to first exam</div>
-      <div class="stat-sub bad" id="firstExamLabel">CAO — 27 May</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" style="color:var(--accent2)">75%</div>
-      <div class="stat-lbl">🏆 Distinction target</div>
-      <div class="stat-sub good">Your goal — go for it!</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" style="color:var(--warn)" id="dashAvgPred">—</div>
-      <div class="stat-lbl">Average predicate</div>
-      <div class="stat-sub mid" id="dashPredStatus">Calculating...</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" style="color:var(--accent)" id="dashBestMod">—</div>
-      <div class="stat-lbl">Strongest module</div>
-      <div class="stat-sub good" id="dashBestPred">Predicate</div>
-    </div>
+  <div class="grid-4" style="margin-bottom:1rem" id="dashStats">
   </div>
 
-  <!-- Exam countdown cards -->
-  <div class="grid-4" style="margin-bottom:1rem" id="examCountdownCards"></div>
-
-  <!-- Distinction banner -->
-  <div id="distinctionBanner" style="margin-bottom:1rem"></div>
+  <!-- Progress Report Card -->
+  <div class="card" style="margin-bottom:1rem; border-color: rgba(79,156,249,.3);">
+    <div style="font-size:15px; font-weight:700; margin-bottom:.75rem;">📊 Progress Report – Marks & Time</div>
+    <div id="progressReport"></div>
+  </div>
 
   <div class="card" style="margin-bottom:1rem">
     <div class="flex-between mb-1">
@@ -385,21 +364,20 @@
 <!-- ========== TIMETABLE ========== -->
 <div id="page-timetable" class="page">
   <div class="section-title">Class timetable</div>
-  <div class="section-sub">Semester 1, 2026 — weekly recurring schedule</div>
+  <div class="section-sub">Semester 2, 2026 — weekly recurring schedule</div>
   <div class="card" style="overflow-x:auto">
     <div class="tt-grid" id="ttGrid" style="min-width:600px"></div>
   </div>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:1rem">
-    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(79,156,249,.4)"></div><span style="font-size:12px;color:var(--muted)">ADS</span></div>
-    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(63,185,80,.4)"></div><span style="font-size:12px;color:var(--muted)">OOP</span></div>
-    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(188,140,255,.4)"></div><span style="font-size:12px;color:var(--muted)">DTP</span></div>
-    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(210,153,34,.4)"></div><span style="font-size:12px;color:var(--muted)">CAO</span></div>
-    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(248,81,73,.3)"></div><span style="font-size:12px;color:var(--muted)">Choir (Mon/Wed 18:30)</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(79,156,249,.4)"></div><span style="font-size:12px;color:var(--muted)">AOP</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(63,185,80,.4)"></div><span style="font-size:12px;color:var(--muted)">ORS</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(188,140,255,.4)"></div><span style="font-size:12px;color:var(--muted)">SEF</span></div>
+    <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(210,153,34,.4)"></div><span style="font-size:12px;color:var(--muted)">ISC</span></div>
   </div>
   <div class="card" style="margin-top:1rem">
     <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">Key dates reminder</div>
     <div style="font-size:12px;color:var(--muted);line-height:1.8">
-      Predicate Day: 18 May 2026 ✓ | CAO Exam: 27 May | DTP Exam: 1 Jun | ADS Exam: 4 Jun | OOP Exam: 8 Jun | Supp Exams: 15–30 Jun
+      Semester Starts: 13 Jul 2026 | Test Week 1: 17–31 Aug 2026 | Recess: 18–27 Sep 2026 | Test Week 2: 28 Sep–12 Oct 2026 | Sick Test: 19–23 Oct 2026 | Predicate Day: 26 Oct 2026 | Exams: 2–20 Nov 2026 | Supp Exams: 23 Nov–4 Dec 2026 | Results: 11 Dec 2026
     </div>
   </div>
 </div>
@@ -415,7 +393,7 @@
 <!-- ========== MARKS TRACKER ========== -->
 <div id="page-marks" class="page">
   <div class="section-title">Marks tracker</div>
-  <div class="section-sub">Predicates locked in — see exactly what exam mark you need for Distinction (75%+ final)</div>
+  <div class="section-sub">Enter your marks — see exactly what you need in remaining assessments to hit 75%</div>
   <div id="marksContent"></div>
 </div>
 
@@ -448,7 +426,9 @@
     </button>
   </div>
 
-  <div id="recoveryPlan"></div>
+  <!-- Progression and Timetable -->
+  <div id="emergencyProgression"></div>
+  <div id="emergencyTimetable"></div>
 </div>
 
 <!-- ========== TIMER ========== -->
@@ -459,10 +439,10 @@
   <div class="card" style="margin-bottom:1rem" id="timerSetupCard">
     <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">1. Pick your module &amp; topic</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
-      <button class="btn" id="tmod-ADS" onclick="timerPickMod('ADS')">∑ ADS</button>
-      <button class="btn" id="tmod-OOP" onclick="timerPickMod('OOP')">{} OOP</button>
-      <button class="btn" id="tmod-DTP" onclick="timerPickMod('DTP')">⊗ DTP</button>
-      <button class="btn" id="tmod-CAO" onclick="timerPickMod('CAO')">⚙ CAO</button>
+      <button class="btn" id="tmod-AOP" onclick="timerPickMod('AOP')">📱 AOP</button>
+      <button class="btn" id="tmod-ORS" onclick="timerPickMod('ORS')">⚙️ ORS</button>
+      <button class="btn" id="tmod-SEF" onclick="timerPickMod('SEF')">🛠️ SEF</button>
+      <button class="btn" id="tmod-ISC" onclick="timerPickMod('ISC')">🔒 ISC</button>
     </div>
     <div id="timerLOPicker" style="margin-bottom:.75rem"></div>
     <div style="font-size:14px;font-weight:700;margin-bottom:.5rem">2. Set duration</div>
@@ -496,7 +476,7 @@
     <div id="timerLogSummary" style="font-size:12px;color:var(--muted);margin-bottom:.75rem"></div>
     <div style="margin-bottom:.75rem">
       <div class="label">What did you cover?</div>
-      <textarea id="timerLogCovered" rows="3" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 10px;outline:none;resize:vertical;font-family:var(--font)" placeholder="e.g. Graphs — adjacency matrix, BFS traversal, spanning trees..."></textarea>
+      <textarea id="timerLogCovered" rows="3" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 10px;outline:none;resize:vertical;font-family:var(--font)" placeholder="e.g. Linux commands — ls, cd, pwd, file management..."></textarea>
     </div>
     <div style="margin-bottom:.75rem">
       <div class="label">How confident do you feel now?</div>
@@ -573,75 +553,39 @@
 <script>
 // ======================== CONFIG ========================
 const _n=new Date(); const TODAY=new Date(_n.getFullYear(),_n.getMonth(),_n.getDate());
-const QUIZ2_CAO = new Date('2026-04-14T00:00:00');
-const CT2_CAO = new Date('2026-04-16T00:00:00');
-const ADS_WT4 = new Date('2026-04-16T00:00:00');
-const OOP_CT3 = new Date('2026-04-16T00:00:00');
-const EXAM_START = new Date('2026-05-27T00:00:00');
-const EXAM_END = new Date('2026-06-12T00:00:00');
-// Individual exam dates
+const EXAM_START = new Date('2026-11-02T00:00:00');
+const EXAM_END = new Date('2026-11-20T00:00:00');
 const EXAM_DATES = {
-  CAO: new Date('2026-05-27T00:00:00'),
-  DTP: new Date('2026-06-01T00:00:00'),
-  ADS: new Date('2026-06-04T00:00:00'),
-  OOP: new Date('2026-06-08T00:00:00'),
+  AOP: new Date('2026-11-02T00:00:00'),
+  ORS: new Date('2026-11-06T00:00:00'),
+  SEF: new Date('2026-11-12T00:00:00'),
+  ISC: new Date('2026-11-18T00:00:00'),
 };
-// Final confirmed predicate marks (entered by Bongiwe)
-const PREDICATE_MARKS = { ADS: 98, CAO: 66, DTP: 86, OOP: 63 };
+const RECESS_START = new Date('2026-09-18T00:00:00');
+const RECESS_END = new Date('2026-09-27T00:00:00');
+const TW1_START = new Date('2026-08-17T00:00:00');
+const TW1_END = new Date('2026-08-31T00:00:00');
+const TW2_START = new Date('2026-09-28T00:00:00');
+const TW2_END = new Date('2026-10-12T00:00:00');
+const SICK_TEST_START = new Date('2026-10-19T00:00:00');
+const SICK_TEST_END = new Date('2026-10-23T00:00:00');
+const PREDICATE_DAY = new Date('2026-10-26T00:00:00');
 
-const RECESS_START = new Date('2026-03-30T00:00:00');
-
-// ======================== EMERGENCY — LO DATA ========================
-const LO_DATA = {
-  ADS: [
-    {id:'ADS-1', lo:'LO1', label:'Sets & Functions', detail:'Set notation, types of functions, relations — Epp Ch 1–2'},
-    {id:'ADS-2', lo:'LO2', label:'Logic Concepts', detail:'Propositional logic, truth tables, logical equivalence — Epp Ch 2'},
-    {id:'ADS-3', lo:'LO3', label:'Proof Techniques', detail:'Direct proof, contradiction, induction — Epp Ch 3–4'},
-    {id:'ADS-4', lo:'LO4', label:'Graphs & Trees', detail:'Graph types, paths, trees, spanning trees — Epp Ch 10 ← Web Test 4 Wednesday!'},
-    {id:'ADS-5', lo:'LO5', label:'Counting', detail:'Permutations, combinations, pigeonhole — Epp Ch 9'},
-    {id:'ADS-6', lo:'LO6', label:'Discrete Probability', detail:'Sample spaces, probability rules — Epp Ch 9'},
-  ],
-  OOP: [
-    {id:'OOP-A1', lo:'A.1', label:'GUIs & Event Handling', detail:'JFrame, JButton, ActionListener, layout managers — Deitel Ch 7 | CT1=67%'},
-    {id:'OOP-B1', lo:'B.1', label:'User-defined Classes', detail:'Fields, constructors, methods, encapsulation | CT1=67%'},
-    {id:'OOP-B2', lo:'B.2', label:'Composition', detail:'Has-a relationship, objects as fields | CT2=50%'},
-    {id:'OOP-B3', lo:'B.3', label:'Inheritance', detail:'extends, super, method overriding, polymorphism ← CT3 Wednesday!'},
-    {id:'OOP-C1', lo:'C.1', label:'Collections', detail:'ArrayList, Iterator, generics | CT2=50%'},
-    {id:'OOP-D1', lo:'D.1', label:'Abstract Classes & Interfaces', detail:'abstract keyword, implements, interface contracts ← CT4 coming'},
-    {id:'OOP-E1', lo:'E.1', label:'Exception Handling', detail:'try/catch/finally, custom exceptions, throws'},
-    {id:'OOP-F1', lo:'F.1', label:'File I/O', detail:'FileReader, BufferedReader, FileWriter, Scanner on files'},
-  ],
-  DTP: [
-    {id:'DTP-1', lo:'LO1', label:'Data Models', detail:'Hierarchical, network, relational model concepts'},
-    {id:'DTP-2', lo:'LO2', label:'Relational Model', detail:'Tables, keys, constraints, integrity rules'},
-    {id:'DTP-3', lo:'LO3', label:'ERD', detail:'Entities, attributes, relationships, cardinality'},
-    {id:'DTP-4', lo:'LO4', label:'Normalisation', detail:'1NF, 2NF, 3NF — removing redundancy'},
-    {id:'DTP-5', lo:'LO5', label:'DDL', detail:'CREATE TABLE, ALTER, DROP, constraints'},
-    {id:'DTP-6', lo:'LO6', label:'DML', detail:'INSERT, UPDATE, DELETE | CT1=92%'},
-    {id:'DTP-7', lo:'LO7', label:'SQL SELECT', detail:'WHERE, ORDER BY, GROUP BY, HAVING | ST1=63%'},
-    {id:'DTP-8', lo:'LO8', label:'SQL Functions', detail:'COUNT, SUM, AVG, MAX, MIN, string/date functions'},
-    {id:'DTP-9', lo:'LO9', label:'Joins', detail:'INNER JOIN, LEFT JOIN, self-join ← ST2 focus'},
-    {id:'DTP-10', lo:'LO10', label:'Subqueries', detail:'Nested SELECT, correlated subqueries, EXISTS ← ST2 focus'},
-  ],
-  CAO: [
-    {id:'CAO-1', lo:'LO1', label:'Number Systems', detail:'Binary, octal, hex conversions, arithmetic'},
-    {id:'CAO-2', lo:'LO2', label:'Boolean Logic', detail:'Gates, truth tables, simplification, Karnaugh maps ← Ch 6'},
-    {id:'CAO-3', lo:'LO3', label:'CPU Architecture', detail:'ALU, control unit, registers, fetch-decode-execute'},
-    {id:'CAO-4', lo:'LO4', label:'Memory Hierarchy', detail:'Cache, RAM, ROM, virtual memory'},
-    {id:'CAO-5', lo:'LO5', label:'Instruction Sets', detail:'RISC vs CISC, addressing modes, assembly basics'},
-    {id:'CAO-6', lo:'LO6', label:'I/O Systems', detail:'I/O interfaces, interrupts, DMA, buses'},
-  ]
+// Semester Test 1 dates (Test Week 1)
+const ST1_DATES = {
+  AOP: new Date('2026-08-17T00:00:00'),
+  ORS: new Date('2026-08-18T00:00:00'),
+  SEF: new Date('2026-08-19T00:00:00'),
+  ISC: new Date('2026-08-20T00:00:00'),
 };
 
-let loStatus = {};
-try{ loStatus = JSON.parse(localStorage.getItem('studyhub_lo')||'{}'); }catch(e){}
-
-
-const RECESS_END = new Date('2026-04-04T00:00:00');
-const TW1_START = new Date('2026-03-18T00:00:00');
-const TW1_END = new Date('2026-03-27T00:00:00');
-const TW2_START = new Date('2026-04-20T00:00:00');
-const TW2_END = new Date('2026-04-30T00:00:00');
+// Semester Test 2 dates (Test Week 2)
+const ST2_DATES = {
+  AOP: new Date('2026-10-05T00:00:00'),
+  ORS: new Date('2026-10-06T00:00:00'),
+  SEF: new Date('2026-10-07T00:00:00'),
+  ISC: new Date('2026-10-08T00:00:00'),
+};
 
 function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate()+n); return r; }
 function formatDate(d) { return d.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
@@ -649,9 +593,9 @@ function fmtShort(d) { return d.toLocaleDateString('en-ZA',{day:'numeric',month:
 function isSameDay(a,b) { return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
 function isWeekend(d) { return d.getDay()===0||d.getDay()===6; }
 function inRange(d,s,e) { return d>=s&&d<=e; }
+function daysUntil(d){ return Math.ceil((d-TODAY)/86400000); }
 
-const examDiff = Math.ceil((EXAM_DATES.CAO-TODAY)/86400000);
-// daysToExam updated by buildDashboardStats()
+const examDiff = Math.ceil((EXAM_START-TODAY)/86400000);
 
 // ======================== NAV ========================
 function show(page) {
@@ -673,7 +617,6 @@ function show(page) {
   const emoji=h<12?'☀️':h<17?'🌤️':h<21?'🌙':'💤';
   document.getElementById('greeting').textContent=`${greet}, Bongiwe ${emoji}`;
 
-  const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const nowMins=h*60+now.getMinutes();
   const toMins=t=>{const[hh,mm]=t.split(':').map(Number);return hh*60+mm;};
   const dailySched=getDaySchedule(TODAY);
@@ -686,108 +629,158 @@ function show(page) {
   document.getElementById('currentActivity').innerHTML=html;
 })();
 
-// ======================== MODULES DATA ========================
+// ======================== MODULES DATA (FULL WITH ASSESSMENT COVERAGE) ========================
 const modules = {
-  ADS: {
-    name:'Advanced Discrete Structures',code:'ADS216D',color:'blue',icon:'∑',
-    lecturer:'L Vlok (Cronjé)',target:75,
-    assessments:[
-      {name:'Class Test 1 (LO1 — Sets & Functions)',weight:10,max:100,score:100},
-      {name:'Class Test 2 (LO2 — Logic Concepts)',weight:10,max:100,score:90},
-      {name:'Class Test 3 (LO3 — Proof Techniques)',weight:10,max:100,score:80},
-      {name:'Class Test 4 (LO4 — Graphs & Trees)',weight:10,max:100,score:null},
-      {name:'Class Test 5 (LO5 — Counting)',weight:10,max:100,score:null},
-      {name:'Class Test 6 (LO6 — Discrete Probability)',weight:10,max:100,score:null},
-      {name:'Semester Test 1 (LO1–LO3)',weight:30,max:100,score:95},
-      {name:'Semester Test 2 (LO4–LO5)',weight:30,max:100,score:null},
+  AOP: {
+    name:'Advanced Object-Oriented Programming', code:'AOP216D', color:'blue', icon:'📱',
+    lecturer:'W Birch', target:75,
+    assessments: [
+      {name:'Class Test 1', weight:10, coverage: ['AOP-A','AOP-B','AOP-C']},
+      {name:'Class Test 2', weight:10, coverage: ['AOP-D','AOP-E','AOP-F']},
+      {name:'Group Assignment', weight:20, coverage: ['AOP-A','AOP-B','AOP-C','AOP-D','AOP-E','AOP-F']},
+      {name:'Semester Test 1', weight:30, coverage: ['AOP-A','AOP-B','AOP-C'], date: ST1_DATES.AOP},
+      {name:'Semester Test 2', weight:30, coverage: ['AOP-D','AOP-E','AOP-F'], date: ST2_DATES.AOP},
     ],
-    note:'Best 4 of 6 class tests count (10% each = 40%). ST1 = 30%, ST2 = 30%. Need 40% predicate to write exam. Final = (Predicate + Exam) ÷ 2.',
-    topics:['Sets, functions & relations','Logic concepts','Proof techniques','Graphs & trees','Counting','Discrete probability'],
-    difficulty:'Manageable'
+    quizzes: [],
+    predicate: null,
+    note:'Class Tests 20%, Assignment 20%, Semester Tests 60%. Need 50% to pass. Exam counts 50% of final mark.',
+    topics:['Java Swing GUIs','File Manipulation','Data Structures & Generics','Database Connectivity (Derby)','Multithreading','Client-Server Applications'],
+    difficulty:'Hard',
+    los:[
+      {id:'AOP-A', name:'Create GUI-based applications', desc:'Java Swing, event handling, layouts', resources:['https://docs.oracle.com/javase/tutorial/uiswing/']},
+      {id:'AOP-B', name:'Manipulate text files in-application', desc:'File I/O, FileReader, BufferedReader', resources:['https://www.geeksforgeeks.org/file-class-in-java/']},
+      {id:'AOP-C', name:'Apply data structures and generics', desc:'Collections, ArrayList, generics', resources:['https://opendatastructures.org/ods-java/']},
+      {id:'AOP-D', name:'Read and write to database using Java', desc:'Derby, JDBC, PreparedStatement', resources:['https://db.apache.org/derby/integrate/plugin_help/derby_app.html']},
+      {id:'AOP-E', name:'Implement multithreading', desc:'Threads, synchronization', resources:['https://cs.franklin.edu/~shaffsti/cs345/week4.htm']},
+      {id:'AOP-F', name:'Write GUI-based client-server applications', desc:'Sockets, datagrams', resources:['https://cs.franklin.edu/~shaffsti/cs345/week4.htm']}
+    ]
   },
-  OOP:{
-    name:'Object-Oriented Programming',code:'OOP216D',color:'green',icon:'{}',
-    lecturer:'Marlo Liebenberg',target:75,
-    assessments:[
-      {name:'Class Test 1 (GUI A.1.1–A.1.6 & User Classes B.1)',weight:8,max:100,score:67},
-      {name:'Class Test 2 (Composition B.2 & Collections C.1)',weight:8,max:100,score:50},
-      {name:'Class Test 3 (Inheritance B.3)',weight:8,max:100,score:null},
-      {name:'Class Test 4 (Abstract Classes & Interfaces D.1)',weight:8,max:100,score:null},
-      {name:'Class Test 5 (GUI advanced, Exception E.1 & File I/O F.1)',weight:8,max:100,score:null},
-      {name:'Assignment (Group)',weight:8,max:100,score:null},
-      {name:'Formative Test 1 (Semester Test 1)',weight:30,max:100,score:null},
-      {name:'Formative Test 2 (Semester Test 2)',weight:30,max:100,score:null},
+  ORS: {
+    name:'Operating Systems', code:'ORS216D', color:'green', icon:'⚙️',
+    lecturer:'Mr. M.J. Mathiane', target:75,
+    assessments: [
+      {name:'Class Test 1 (with Quizzes)', weight:5, coverage: ['ORS-1','ORS-2']},
+      {name:'Class Test 2 (with Quizzes)', weight:5, coverage: ['ORS-3','ORS-4']},
+      {name:'Assignment', weight:10, coverage: ['ORS-1','ORS-2','ORS-3']},
+      {name:'Project', weight:30, coverage: ['ORS-4','ORS-5','ORS-6']},
+      {name:'Semester Test 1', weight:25, coverage: ['ORS-1','ORS-2','ORS-3'], date: ST1_DATES.ORS},
+      {name:'Semester Test 2', weight:25, coverage: ['ORS-4','ORS-5','ORS-6'], date: ST2_DATES.ORS},
     ],
-    note:'Best 4 of 5 class tests = 32%. Assignment = 8%. Formative Test 1 = 30%, Formative Test 2 = 30%. Need 40% predicate. Exam counts 50% of final.',
-    topics:['GUIs & event handling','User-defined classes','Composition','Inheritance','Abstract classes & interfaces','Exception handling','File I/O'],
-    difficulty:'Hard'
+    quizzes: [
+      {name:'Quiz 1 (Unit 1)', weight:0, coverage: ['ORS-1']},
+      {name:'Quiz 2 (Unit 2)', weight:0, coverage: ['ORS-2']},
+      {name:'Quiz 3 (Unit 3)', weight:0, coverage: ['ORS-3']},
+      {name:'Quiz 4 (Unit 4)', weight:0, coverage: ['ORS-4']},
+      {name:'Quiz 5 (Unit 5)', weight:0, coverage: ['ORS-5']},
+      {name:'Quiz 6 (Unit 6)', weight:0, coverage: ['ORS-6']},
+    ],
+    predicate: null,
+    note:'Predicate = CT1(5%) + CT2(5%) + Assignment(10%) + Project(30%) + ST1(25%) + ST2(25%). Need 40% predicate. Exam counts 50% of final.',
+    topics:['Linux Distributions','Command Line Interface','File & Directory Management','Users & Groups','Package Management','File System & Disk Management','Networking'],
+    difficulty:'Medium',
+    los:[
+      {id:'ORS-1', name:'Linux distribution and installation', desc:'Types, licensing, installation', resources:['https://ubuntu.com/download/desktop','https://linuxcommand.org/tlcl.php']},
+      {id:'ORS-2', name:'Manipulating files and directories', desc:'ls, cd, pwd, cp, mv, rm, mkdir, touch', resources:['https://linuxcommand.org/tlcl.php']},
+      {id:'ORS-3', name:'System administration (users, groups, permissions)', desc:'Users, groups, chmod, chown, finger', resources:['https://linuxcommand.org/tlcl.php']},
+      {id:'ORS-4', name:'Application management (packages)', desc:'dpkg, apt-get, rpm, yum', resources:['https://linuxcommand.org/tlcl.php']},
+      {id:'ORS-5', name:'File system and disk management', desc:'fdisk, mkfs, mount, fsck', resources:['https://linuxcommand.org/tlcl.php']},
+      {id:'ORS-6', name:'Networking commands', desc:'ifconfig, ping, netstat, scp', resources:['https://linuxcommand.org/tlcl.php']}
+    ]
   },
-  DTP:{
-    name:'Databases (Database Principles)',code:'DAB215D',color:'purple',icon:'⊗',
-    lecturer:'Mr SK Mogapi',target:75,
-    assessments:[
-      {name:'Assignment 1',weight:10,max:100,score:100},
-      {name:'Assignment 2',weight:10,max:100,score:93},
-      {name:'Class Test 1 (LO5 DDL & LO6 DML)',weight:10,max:100,score:92},
-      {name:'Class Test 2 (LO6 DML, LO7 SELECT & LO8 Functions)',weight:10,max:100,score:null},
-      {name:'Semester Test 1 (LO3–LO7)',weight:30,max:100,score:63},
-      {name:'Semester Test 2 (LO7–LO10)',weight:30,max:100,score:null},
+  SEF: {
+    name:'Software Engineering Fundamentals', code:'SEF216D', color:'purple', icon:'🛠️',
+    lecturer:'K Mogapi', target:75,
+    assessments: [
+      {name:'Class Test 1', weight:10, coverage: ['SEF-1','SEF-2']},
+      {name:'Semester Test 1', weight:30, coverage: ['SEF-1','SEF-2','SEF-3'], date: ST1_DATES.SEF},
+      {name:'Class Test 2', weight:10, coverage: ['SEF-4','SEF-5']},
+      {name:'Semester Test 2', weight:30, coverage: ['SEF-4','SEF-5','SEF-6'], date: ST2_DATES.SEF},
+      {name:'Group Assignment / Project', weight:20, coverage: ['SEF-1','SEF-2','SEF-3','SEF-4','SEF-5','SEF-6']},
     ],
-    note:'Predicate = all above (100%). Exam counts 50% of final. No sub-minimum on exam. Pass = 50% final.',
-    topics:['Data modelling','Relational model','ERD','Normalisation','DDL','DML','SQL SELECT','Functions','Joins','Subqueries'],
-    difficulty:'Medium'
+    quizzes: [
+      {name:'Quiz 1 (Module 1)', weight:0, coverage: ['SEF-1']},
+      {name:'Quiz 2 (Module 2)', weight:0, coverage: ['SEF-2']},
+      {name:'Quiz 3 (Module 3)', weight:0, coverage: ['SEF-3']},
+      {name:'Quiz 4 (Module 4)', weight:0, coverage: ['SEF-4']},
+      {name:'Quiz 5 (Module 5)', weight:0, coverage: ['SEF-5']},
+      {name:'Quiz 6 (Module 6)', weight:0, coverage: ['SEF-6']},
+    ],
+    predicate: null,
+    note:'Class Tests 20%, Semester Tests 60%, Group Project 20%. Need 40% predicate. Exam counts 50% of final.',
+    topics:['Introduction to SE & AI','SDLC in AI Era','Requirements Engineering with AI','UML Modelling','Data Engineering','AI for Project Management'],
+    difficulty:'Medium',
+    los:[
+      {id:'SEF-1', name:'Introduction to Software Engineering and AI', desc:'Evolution, AI, ML, ethics', resources:['https://www.sommerville.com/','https://www.coursera.org/learn/software-engineering']},
+      {id:'SEF-2', name:'AI-enhanced SDLC', desc:'Traditional vs Agile, DevOps, AI in SDLC', resources:['https://www.atlassian.com/agile','https://www.coursera.org/learn/software-processes']},
+      {id:'SEF-3', name:'Requirements elicitation with AI', desc:'User stories, AI-assisted generation', resources:['https://www.visual-paradigm.com/guide/software-engineering/']},
+      {id:'SEF-4', name:'UML modelling with AI tools', desc:'Use case, class, sequence diagrams', resources:['https://www.uml.org/','https://www.lucidchart.com/']},
+      {id:'SEF-5', name:'Data pipelines', desc:'Data preparation, databases', resources:['https://www.datacamp.com/courses/']},
+      {id:'SEF-6', name:'AI for project management', desc:'Estimation, risk, predictive analytics', resources:['https://www.pmi.org/']}
+    ]
   },
-  CAO:{
-    name:'Computer Architecture & Organisation',code:'CAO216D',color:'amber',icon:'⚙',
-    lecturer:'A Mayingi',target:75,
-    assessments:[
-      {name:'SA1 — Semester Test 1 (Theory)',weight:20,max:100,score:57},
-      {name:'SA2 — Semester Test 2 (Theory)',weight:20,max:100,score:null},
-      {name:'Assignment',weight:10,max:100,score:84},
-      {name:'Class Test 1',weight:10,max:100,score:63},
-      {name:'Quiz 2 (Ch 6, 7, 8 — 14 Apr)',weight:5,max:100,score:null},
-      {name:'Class Test 2 (Ch 6, 7, 8 — 16 Apr)',weight:5,max:100,score:null},
-      {name:'Practical Assessment (PA)',weight:30,max:100,score:null},
+  ISC: {
+    name:'Information Security', code:'ISC216D', color:'amber', icon:'🔒',
+    lecturer:'Dr T.M. Tshilongamulenzhe', target:75,
+    assessments: [
+      {name:'Class Tests 1', weight:5, coverage: ['ISC-1','ISC-2']},
+      {name:'Semester Test 1', weight:30, coverage: ['ISC-1','ISC-2','ISC-3'], date: ST1_DATES.ISC},
+      {name:'Class Tests 2', weight:5, coverage: ['ISC-3','ISC-4']},
+      {name:'Semester Test 2', weight:30, coverage: ['ISC-3','ISC-4','ISC-5'], date: ST2_DATES.ISC},
+      {name:'Group Project', weight:30, coverage: ['ISC-1','ISC-2','ISC-3','ISC-4','ISC-5']},
     ],
-    note:'Theory 70% = SA1(20%) + SA2(20%) + Assignment(10%) + CT1(10%) + Quiz2(5%) + CT2(5%). Practical 30%. Predicate = Theory + Practical. Need 40% to write exam.',
-    topics:['Number systems','CPU architecture','Memory hierarchy','Instruction sets','I/O systems','Boolean logic'],
-    difficulty:'Hard'
+    quizzes: [],
+    predicate: null,
+    note:'CT1(5%) + ST1(30%) + CT2(5%) + ST2(30%) + Project(30%). Need 40% predicate. Exam 50% of final.',
+    topics:['Security Principles (CIA)','Risk, Threats & Vulnerabilities','Authentication & Authorization','Access Control','Firewalls & VPN','Intrusion Detection','Ethical Hacking'],
+    difficulty:'Hard',
+    los:[
+      {id:'ISC-1', name:'Basic principles of information security', desc:'CIA triad, security evolution', resources:['https://www.cisco.com/c/en/us/products/security/']},
+      {id:'ISC-2', name:'Risk, threats, vulnerabilities and attack vectors', desc:'Risk management, threats, attacks', resources:['https://www.owasp.org/']},
+      {id:'ISC-3', name:'Authentication, authorization and access control', desc:'Factors, ACL, firewalls categories', resources:['https://www.cisco.com/c/en/us/products/security/']},
+      {id:'ISC-4', name:'Firewalls, VPNs and intrusion detection', desc:'Firewall implementations, VPN, IDS/IPS', resources:['https://www.cisco.com/c/en/us/products/security/']},
+      {id:'ISC-5', name:'Ethical hacking and penetration testing', desc:'Reconnaissance, scanning, exploitation', resources:['https://www.eccouncil.org/','https://www.offensive-security.com/']}
+    ]
   }
 };
+
+// Build LO_DATA from modules for emergency checklist
+const LO_DATA = {};
+for(const [k,m] of Object.entries(modules)) {
+  LO_DATA[k] = m.los.map(l => ({id:l.id, name:l.name, desc:l.desc, resources:l.resources}));
+}
 
 // ======================== DAY SCHEDULE GENERATOR ========================
 function getDaySchedule(date) {
   const dow = date.getDay();
-  const isChoir = (dow===1||dow===3);
   const isTestW1 = inRange(date, TW1_START, TW1_END);
   const isTestW2 = inRange(date, TW2_START, TW2_END);
   const isRecess = inRange(date, RECESS_START, RECESS_END);
   const isExam = inRange(date, EXAM_START, EXAM_END);
-  const isPredDay = isSameDay(date, new Date('2026-05-18T00:00:00'));
+  const isPredDay = isSameDay(date, PREDICATE_DAY);
 
   if(isPredDay) return {type:'predicate',tags:[],items:[
     {s:'08:00',e:'10:00',title:'Predicate Day — marks submitted',desc:'All predicate marks entered on ITS',type:'exam-d'},
-    {s:'10:00',e:'12:00',title:'ADS — full revision',desc:'LO1–LO6 comprehensive review',type:'study'},
+    {s:'10:00',e:'12:00',title:'AOP — full revision',desc:'All LOs: GUI, Files, Data Structures, DB, Threads, Client-Server',type:'study'},
     {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
-    {s:'13:00',e:'15:00',title:'OOP — exam prep',desc:'All learning outcomes A–F',type:'study'},
-    {s:'15:00',e:'17:00',title:'DTP — SQL revision',desc:'All LO1–LO11',type:'study'},
-    {s:'17:00',e:'19:00',title:'CAO — exam revision',desc:'All theory topics',type:'study'},
+    {s:'13:00',e:'15:00',title:'ORS — exam prep',desc:'Linux commands, file management, system admin',type:'study'},
+    {s:'15:00',e:'17:00',title:'SEF — final review',desc:'SDLC, AI in SE, UML, requirements',type:'study'},
+    {s:'17:00',e:'19:00',title:'ISC — security concepts',desc:'CIA, risk, authentication, firewalls',type:'study'},
   ]};
 
   if(isRecess) return {type:'recess',tags:['recess-tag'],items:[
-    {s:'09:00',e:'11:00',title:'Recess — active study: OOP',desc:'Java practice — focus on Inheritance (CT3) & Collections',type:'study'},
-    {s:'11:00',e:'13:00',title:'ADS revision',desc:'LO4 Graphs & Trees — Epp Ch 10 exercises',type:'study'},
+    {s:'09:00',e:'11:00',title:'Recess — active study: AOP',desc:'Java Swing GUIs and file handling practice',type:'study'},
+    {s:'11:00',e:'13:00',title:'ORS revision',desc:'Linux commands and file management',type:'study'},
     {s:'13:00',e:'14:00',title:'Lunch + rest',desc:'',type:'break-s'},
-    {s:'14:00',e:'16:00',title:'DTP SQL practice',desc:'Build queries — normalisation exercises',type:'study'},
-    {s:'16:00',e:'18:00',title:'CAO theory',desc:'Number systems, Boolean logic review',type:'study'},
+    {s:'14:00',e:'16:00',title:'SEF practice',desc:'UML diagrams and requirements with AI',type:'study'},
+    {s:'16:00',e:'18:00',title:'ISC theory',desc:'Security fundamentals and cryptography',type:'study'},
   ]};
 
   if(isExam) {
     const examSchedule = {
-      '2026-05-27':{module:'CAO — Computer Architecture & Organisation',lo:'All theory + practical',color:'amber'},
-      '2026-06-01':{module:'DTP — Databases (Database Principles)',lo:'LO1–LO10 (all)',color:'purple'},
-      '2026-06-04':{module:'ADS — Advanced Discrete Structures',lo:'LO1–LO6 (all)',color:'blue'},
-      '2026-06-08':{module:'OOP — Object-Oriented Programming',lo:'LO A–F (all)',color:'green'},
+      '2026-11-02':{module:'AOP — Advanced OOP',lo:'All LOs (A–F)',color:'blue'},
+      '2026-11-06':{module:'ORS — Operating Systems',lo:'All LOs',color:'green'},
+      '2026-11-12':{module:'SEF — Software Engineering',lo:'All LOs',color:'purple'},
+      '2026-11-18':{module:'ISC — Information Security',lo:'All LOs',color:'amber'},
     };
     const key = date.toISOString().split('T')[0];
     const ex = examSchedule[key];
@@ -810,132 +803,89 @@ function getDaySchedule(date) {
 
   let items = [];
 
-  // ===== EXAM PREP PERIOD SCHEDULE (from 18 May onwards) =====
-  // Exams: CAO 27 May | DTP 1 Jun | ADS 4 Jun | OOP 8 Jun
-  // Struggling topics are factored in via the Emergency tab
-  const examPrepOrder = [
-    {mod:'CAO',date:'2026-05-27',label:'CAO — Computer Architecture',topics:'Number systems, CPU arch, Memory, I/O, Boolean logic, Instruction sets'},
-    {mod:'DTP',date:'2026-06-01',label:'DTP — Databases',topics:'SQL SELECT, Joins, Subqueries, Functions, DDL/DML, Normalisation, ERD'},
-    {mod:'ADS',date:'2026-06-04',label:'ADS — Advanced Discrete Structures',topics:'Sets, Logic, Proofs, Graphs & Trees, Counting, Probability'},
-    {mod:'OOP',date:'2026-06-08',label:'OOP — Object-Oriented Programming',topics:'GUIs, Classes, Composition, Inheritance, Abstract, Exceptions, File I/O'},
-  ];
-
-  // Pick the most urgent exam to focus on (next upcoming)
-  const nowDate = date;
-  const upcomingExams = examPrepOrder.filter(e=>new Date(e.date+'T00:00:00')>=nowDate);
-  const focus1 = upcomingExams[0];
-  const focus2 = upcomingExams[1];
-  const focus3 = upcomingExams[2];
-
-  // Get struggling topics for personalization
-  const _loData = typeof LO_DATA !== 'undefined' ? LO_DATA : {};
-  const _loStatus = typeof loStatus !== 'undefined' ? loStatus : {};
-  const struggling1 = focus1?(_loData[focus1.mod]||[]).filter(l=>_loStatus[l.id]==='struggle').map(l=>l.label).slice(0,2):[];
-  const struggling2 = focus2?(_loData[focus2.mod]||[]).filter(l=>_loStatus[l.id]==='struggle').map(l=>l.label).slice(0,2):[];
-
   if(dow===1) {
     items = [
-      {s:'06:00',e:'07:00',title:`${focus1?focus1.mod+' — Morning warm-up':'Study warm-up'}`,desc:focus1?`Quick review: ${struggling1.length?'Focus: '+struggling1.join(', '):focus1.topics.split(',')[0]}`:' Review yesterdays notes',type:'study'},
-      {s:'07:00',e:'07:30',title:'Breakfast + prepare',desc:'Eat well — your brain needs fuel',type:'break-s'},
-      {s:'08:00',e:'11:00',title:`📚 Deep Study: ${focus1?focus1.label:'Priority exam prep'}`,desc:focus1?`Exam: ${new Date(focus1.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'short'})} — ${struggling1.length?'Target struggling: '+struggling1.join(', '):focus1.topics}`:'Revise all LOs systematically',type:'study'},
-      {s:'11:00',e:'11:30',title:'Break',desc:'Walk, stretch, water',type:'break-s'},
-      {s:'11:30',e:'13:00',title:`📚 Continued: ${focus1?focus1.mod+' practice questions':'Practice questions'}`,desc:'Past exam papers — timed conditions. Mark yourself.',type:'study'},
-      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'14:00',e:'16:30',title:`📗 Deep Study: ${focus2?focus2.label:'Second priority exam'}`,desc:focus2?`Exam: ${new Date(focus2.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'short'})} — ${struggling2.length?'Target: '+struggling2.join(', '):focus2.topics.split(',').slice(0,2).join(', ')}`:' Revise next module',type:'study'},
-      {s:'16:30',e:'17:00',title:'Break',desc:'Rest your eyes',type:'break-s'},
-      {s:'17:00',e:'18:30',title:`📝 ${focus1?focus1.mod+' — Past paper drill':'Exam practice'}`,desc:'Write out answers as if in the actual exam',type:'study'},
-      {s:'18:30',e:'19:00',title:'Dinner',desc:'',type:'break-s'},
-      {s:'19:00',e:'20:30',title:`🔁 Revision & summary notes`,desc:`Summarise key formulas/concepts from todays study`,type:'study'},
+      {s:'07:00',e:'09:00',title:'Morning study — AOP',desc:'Java Swing GUI practice',type:'study'},
+      {s:'09:00',e:'10:00',title:'Prep for ISC',desc:'Review security fundamentals',type:'study'},
+      {s:'10:00',e:'12:00',title:'ISC class — Dr T.M. Tshilongamulenzhe',desc:'Room 14-G95',type:'cls'},
+      {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
+      {s:'13:00',e:'14:00',title:'Prep for ORS',desc:'Linux commands review',type:'study'},
+      {s:'14:00',e:'15:00',title:'ORS class — Mr. M.J. Mathiane',desc:'Room 14-1113',type:'cls'},
+      {s:'15:00',e:'17:00',title:'SEF study',desc:'SDLC models and requirements',type:'study'},
+      {s:'17:00',e:'19:00',title:'Practice coding — AOP',desc:'File handling and data structures',type:'study'},
     ];
   } else if(dow===2) {
     items = [
-      {s:'06:00',e:'07:30',title:`${focus1?focus1.mod+' — Pre-breakfast revision':'Morning revision'}`,desc:focus1?`Review yesterday's work — ${focus1.topics.split(',')[0]}`:' Quick notes review',type:'study'},
-      {s:'07:30',e:'08:00',title:'Breakfast',desc:'',type:'break-s'},
-      {s:'08:00',e:'10:30',title:`📚 Deep Study: ${focus1?focus1.label:'Priority exam'}`,desc:focus1?`Target: ${struggling1.length?struggling1.join(', '):focus1.topics.split(',').slice(0,3).join(', ')}`:' Systematic LO review',type:'study'},
-      {s:'10:30',e:'11:00',title:'Break + snack',desc:'',type:'break-s'},
-      {s:'11:00',e:'13:00',title:`📗 Study: ${focus2?focus2.label:'Second priority'}`,desc:focus2?`${focus2.topics.split(',').slice(0,3).join(', ')}`:' Next exam prep',type:'study'},
-      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'14:00',e:'16:00',title:`📚 ${focus1?focus1.mod+' — Mock exam':' Mock exam'}`,desc:'Time yourself: 2 hours, exam conditions, no notes',type:'study'},
-      {s:'16:00',e:'16:30',title:'Break',desc:'',type:'break-s'},
-      {s:'16:30',e:'18:00',title:`📗 ${focus3?focus3.mod+' — intro revision':'Third priority'}`,desc:focus3?`Light intro: ${focus3.topics.split(',').slice(0,2).join(', ')}`:' Review remaining modules',type:'study'},
-      {s:'18:00',e:'18:30',title:'Dinner',desc:'',type:'break-s'},
-      {s:'18:30',e:'20:00',title:'Review & plan tomorrow',desc:'Mark your mock exam, note gaps, plan tomorrows focus',type:'study'},
+      {s:'06:30',e:'08:00',title:'Morning prep — AOP',desc:'Review previous lecture content',type:'study'},
+      {s:'08:00',e:'10:00',title:'AOP class — W Birch',desc:'Room 10-138',type:'cls'},
+      {s:'10:00',e:'12:00',title:'SEF class — K Mogapi',desc:'Room 14-G108',type:'cls'},
+      {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
+      {s:'13:00',e:'15:00',title:'ORS self-study',desc:'File management and system admin',type:'study'},
+      {s:'15:00',e:'17:00',title:'ISC practice',desc:'Cryptography exercises',type:'study'},
+      {s:'17:00',e:'19:00',title:'AOP lab work',desc:'Java programming practice',type:'study'},
     ];
   } else if(dow===3) {
     items = [
-      {s:'06:00',e:'08:00',title:`${focus1?focus1.mod+' — Morning intensify':'Morning study'}`,desc:focus1?`Exam date ${new Date(focus1.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'short'})} — push today!`:' Push hard today',type:'study'},
-      {s:'08:00',e:'10:00',title:`📚 Past papers: ${focus1?focus1.mod:'Priority module'}`,desc:'Timed practice — write and mark',type:'study'},
-      {s:'10:00',e:'10:30',title:'Break',desc:'',type:'break-s'},
-      {s:'10:30',e:'12:30',title:`📗 ${focus2?focus2.label:'Second module'}`,desc:focus2?`${struggling2.length?'Struggling topics: '+struggling2.join(', '):focus2.topics.split(',').slice(0,3).join(', ')}`:' Systematic revision',type:'study'},
-      {s:'12:30',e:'13:30',title:'Lunch',desc:'',type:'break-s'},
-      {s:'13:30',e:'15:30',title:`📚 ${focus1?focus1.mod+' — Concept consolidation':'Concept consolidation'}`,desc:'Write your own summary notes — explain each LO in your own words',type:'study'},
-      {s:'15:30',e:'16:00',title:'Break',desc:'',type:'break-s'},
-      {s:'16:00',e:'18:00',title:`📗 ${focus2?focus2.mod+' practice':' Practice questions'}`,desc:'Focus on weak areas flagged in Emergency tab',type:'study'},
-      {s:'18:00',e:'18:30',title:'Dinner',desc:'',type:'break-s'},
-      {s:'18:30',e:'20:30',title:'Choir rehearsal',desc:'Mental break — recharge for tomorrow',type:'choir-s'},
+      {s:'06:30',e:'08:00',title:'Morning study — ORS',desc:'Process scheduling algorithms',type:'study'},
+      {s:'08:00',e:'10:00',title:'ORS class — Mr. M.J. Mathiane',desc:'Room 14-1113',type:'cls'},
+      {s:'10:00',e:'12:00',title:'Free time — self study',desc:'Review all modules',type:'study'},
+      {s:'12:00',e:'14:00',title:'AOP class — W Birch',desc:'Room 10-138',type:'cls'},
+      {s:'14:00',e:'15:00',title:'Study break',desc:'',type:'break-s'},
+      {s:'15:00',e:'17:00',title:'SEF class — K Mogapi',desc:'Room 14-G108',type:'cls'},
+      {s:'17:00',e:'19:00',title:'Database practice — AOP',desc:'JDBC and Derby database',type:'study'},
     ];
   } else if(dow===4) {
     items = [
-      {s:'06:00',e:'07:30',title:`${focus1?focus1.mod+' — Early review':'Early review'}`,desc:focus1?`Recap key concepts: ${focus1.topics.split(',').slice(0,2).join(', ')}`:' Review notes',type:'study'},
-      {s:'07:30',e:'08:00',title:'Breakfast',desc:'',type:'break-s'},
-      {s:'08:00',e:'10:30',title:`📚 Full focus: ${focus1?focus1.label:'Priority exam'}`,desc:focus1?`${struggling1.length?'Focus on gaps: '+struggling1.join(', '):focus1.topics.split(',').slice(0,3).join(', ')}`:' Deep study',type:'study'},
-      {s:'10:30',e:'11:00',title:'Break',desc:'',type:'break-s'},
-      {s:'11:00',e:'13:00',title:`📗 ${focus2?focus2.label:'Second module'}`,desc:focus2?`Practice questions — ${focus2.topics.split(',').slice(0,2).join(', ')}`:' Second module',type:'study'},
-      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'14:00',e:'16:00',title:`📚 Mock exam: ${focus1?focus1.mod:'Priority module'}`,desc:'Full past paper under timed conditions',type:'study'},
-      {s:'16:00',e:'16:30',title:'Break',desc:'',type:'break-s'},
-      {s:'16:30',e:'18:30',title:`📗 ${focus3?focus3.mod+' light revision':'Third module'}`,desc:focus3?`Intro revision: ${focus3.topics.split(',').slice(0,2).join(', ')}`:' Cover remaining modules',type:'study'},
-      {s:'18:30',e:'20:00',title:'Dinner + rest',desc:'Prepare for tomorrow',type:'break-s'},
+      {s:'06:30',e:'08:00',title:'Morning study — ISC',desc:'Network security protocols',type:'study'},
+      {s:'08:00',e:'12:00',title:'Self-study session',desc:'Review previous classes',type:'study'},
+      {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
+      {s:'13:00',e:'14:00',title:'Free study time',desc:'Catch up on assignments',type:'study'},
+      {s:'14:00',e:'15:00',title:'SEF class — K Mogapi',desc:'Room 14-G108',type:'cls'},
+      {s:'15:00',e:'17:00',title:'ISC class — Dr T.M. Tshilongamulenzhe',desc:'Room 10-170 Lab',type:'cls'},
+      {s:'17:00',e:'19:00',title:'Threading practice — AOP',desc:'Multithreading in Java',type:'study'},
     ];
   } else if(dow===5) {
     items = [
-      {s:'07:00',e:'09:00',title:`📚 ${focus1?focus1.mod+' — Friday deep push':'Friday deep push'}`,desc:focus1?`${focus1.topics.split(',').slice(0,3).join(', ')}`:' Major revision',type:'study'},
-      {s:'09:00',e:'09:30',title:'Break',desc:'',type:'break-s'},
-      {s:'09:30',e:'11:30',title:`📗 ${focus2?focus2.label:'Second module deep study'}`,desc:focus2?`${focus2.topics.split(',').slice(0,3).join(', ')}`:' Second module',type:'study'},
-      {s:'11:30',e:'12:30',title:'Lunch',desc:'',type:'break-s'},
-      {s:'12:30',e:'14:30',title:`📚 Past paper: ${focus1?focus1.mod:'Priority module'}`,desc:'Timed conditions — simulate the actual exam',type:'study'},
-      {s:'14:30',e:'15:00',title:'Break',desc:'',type:'break-s'},
-      {s:'15:00',e:'17:00',title:'Review weak topics — Emergency tab',desc:'Update your LO checklist and generate recovery plan',type:'study'},
-      {s:'17:00',e:'19:00',title:`📗 ${focus3?focus3.mod+' revision':'Third module'}`,desc:focus3?`${focus3.topics.split(',').slice(0,2).join(', ')}`:' Cover remaining',type:'study'},
-      {s:'19:00',e:'20:00',title:'Dinner + plan weekend',desc:'Weekend = last push before exams. Plan each block.',type:'break-s'},
+      {s:'06:30',e:'08:00',title:'Morning prep',desc:'Review week\'s content',type:'study'},
+      {s:'08:00',e:'10:00',title:'Self-study time',desc:'All modules',type:'study'},
+      {s:'10:00',e:'12:00',title:'SEF revision',desc:'UML and AI in SE',type:'study'},
+      {s:'12:00',e:'13:00',title:'ISC class — Dr T.M. Tshilongamulenzhe',desc:'Room 14-G95',type:'cls'},
+      {s:'13:00',e:'14:00',title:'AOP class — W Birch',desc:'Room 10-138',type:'cls'},
+      {s:'14:00',e:'16:00',title:'ORS class — Mr. M.J. Mathiane',desc:'Room 10-140 Lab',type:'cls'},
+      {s:'16:00',e:'17:00',title:'Weekly revision — all modules',desc:'Review notes, identify weak areas',type:'study'},
+      {s:'17:00',e:'19:00',title:'Weekend prep',desc:'Plan weekend study sessions',type:'study'},
     ];
   } else if(dow===6) {
     items = [
-      {s:'07:00',e:'09:30',title:`📚 ${focus1?focus1.mod+' — Saturday deep dive':'Saturday deep dive'}`,desc:focus1?`Comprehensive revision: ${focus1.topics}`:' All LOs',type:'study'},
-      {s:'09:30',e:'10:00',title:'Break + snack',desc:'',type:'break-s'},
-      {s:'10:00',e:'12:00',title:`📗 ${focus2?focus2.mod+' — deep revision':'Second module'}`,desc:focus2?`${focus2.topics.split(',').slice(0,4).join(', ')}`:' Second module',type:'study'},
+      {s:'08:00',e:'10:00',title:'AOP practice',desc:'Client-server applications',type:'study'},
+      {s:'10:00',e:'12:00',title:'ORS study',desc:'Networking commands',type:'study'},
       {s:'12:00',e:'13:00',title:'Lunch',desc:'',type:'break-s'},
-      {s:'13:00',e:'15:30',title:`📚 Mock exam: ${focus1?focus1.mod:'Priority module'}`,desc:'2.5hr mock — full past paper, no notes',type:'study'},
-      {s:'15:30',e:'16:00',title:'Break',desc:'',type:'break-s'},
-      {s:'16:00',e:'18:00',title:`📗 ${focus3?focus3.mod+' revision':'Third module'}`,desc:focus3?`${focus3.topics.split(',').slice(0,3).join(', ')}`:' Third module',type:'study'},
-      {s:'18:00',e:'19:00',title:'Dinner + rest',desc:'You earned it — eat well',type:'break-s'},
-      {s:'19:00',e:'20:30',title:'Summary notes — all modules',desc:'Write key formulas, diagrams, concepts in one sheet per module',type:'study'},
+      {s:'13:00',e:'15:00',title:'SEF work',desc:'UML diagrams and testing',type:'study'},
+      {s:'15:00',e:'17:00',title:'ISC practice',desc:'Cryptography exercises',type:'study'},
+      {s:'17:00',e:'19:00',title:'Weekly review — all modules',desc:'Comprehensive revision',type:'study'},
+      {s:'19:00',e:'20:00',title:'Rest & personal time',desc:'You\'ve earned it',type:'break-s'},
     ];
   } else {
     items = [
-      {s:'08:00',e:'10:00',title:`📚 ${focus1?focus1.mod+' — Sunday revision':'Sunday revision'}`,desc:focus1?`Week final review: ${focus1.topics.split(',').slice(0,3).join(', ')}`:' All modules',type:'study'},
-      {s:'10:00',e:'10:30',title:'Break',desc:'',type:'break-s'},
-      {s:'10:30',e:'12:30',title:`📗 ${focus2?focus2.mod+' — revision':'Second module'}`,desc:focus2?`${focus2.topics.split(',').slice(0,3).join(', ')}`:' Second module',type:'study'},
-      {s:'12:30',e:'13:30',title:'Lunch',desc:'',type:'break-s'},
-      {s:'13:30',e:'15:30',title:'Timed practice — both modules',desc:'30 min timed questions per module',type:'study'},
-      {s:'15:30',e:'16:00',title:'Break',desc:'',type:'break-s'},
-      {s:'16:00',e:'18:00',title:`📗 ${focus3?focus3.mod+' + remaining modules':'Remaining modules'}`,desc:'Cover all LOs — use your summary notes',type:'study'},
-      {s:'18:00',e:'19:00',title:'Dinner',desc:'',type:'break-s'},
-      {s:'19:00',e:'20:00',title:'Plan the week ahead',desc:'Review exam dates, set daily targets, update Emergency tab topics',type:'study'},
+      {s:'09:00',e:'11:00',title:'Weekly review — all 4 modules',desc:'Identify gaps, adjust the week ahead',type:'study'},
+      {s:'11:00',e:'13:00',title:'AOP deep dive',desc:'Focus on weak areas',type:'study'},
+      {s:'13:00',e:'14:00',title:'Lunch',desc:'',type:'break-s'},
+      {s:'14:00',e:'16:00',title:'ORS comprehensive revision',desc:'All topics covered so far',type:'study'},
+      {s:'16:00',e:'18:00',title:'Assignment work',desc:'Complete pending assignments',type:'study'},
+      {s:'18:00',e:'19:00',title:'Plan next week',desc:'Review schedule, prepare materials',type:'break-s'},
     ];
   }
 
   if(isTestW1||isTestW2) {
     const tw = isTestW1 ? 'Test Week 1' : 'Test Week 2';
     const topics = isTestW1
-      ? 'ADS: LO1–LO3 | OOP: A.1–B.1 | DTP: LO3–LO7'
-      : 'ADS: LO4–LO5 | OOP: B.2–F.1 | DTP: LO7–LO10';
-    items.unshift({s:'',e:'',title:`⚠ ${tw} active — write test this week`,desc:topics,type:'test-w'});
+      ? 'Focus on all modules — prepare for assessments'
+      : 'Continue assessment preparation — review all content';
+    items.unshift({s:'',e:'',title:`⚠ ${tw} active — assessments this period`,desc:topics,type:'test-w'});
   }
 
   const tags=[];
   if(dow>=1&&dow<=5) tags.push('cls-tag');
-  if(isChoir) tags.push('choir-tag');
   if(isTestW1||isTestW2) tags.push('test-tag');
 
   return {type:'normal',tags,items};
@@ -1043,7 +993,7 @@ function getDayType(d) {
   if(inRange(d,TW1_START,TW1_END)) return 'Test Week 1';
   if(inRange(d,TW2_START,TW2_END)) return 'Test Week 2';
   if(inRange(d,RECESS_START,RECESS_END)) return 'Mid-semester recess — study at home';
-  if(isSameDay(d,new Date('2026-05-18T00:00:00'))) return 'Predicate Day';
+  if(isSameDay(d,PREDICATE_DAY)) return 'Predicate Day';
   if(isWeekend(d)) return 'Weekend — self-study';
   return 'Regular class day';
 }
@@ -1055,11 +1005,11 @@ function buildTodayClasses() {
   document.getElementById('todayClassesTitle').textContent = `Today — ${dayName} ${fmtShort(TODAY)}`;
 
   const classMap = {
-    1: [{t:'8:00–10:00',title:'ADS',lecturer:'L Vlok',room:'13-G40',cls:'ads'},{t:'15:00–17:00',title:'DTP',lecturer:'K Magapi',room:'10-140 Lab',cls:'dtp'}],
-    2: [{t:'8:00–10:00',title:'OOP',lecturer:'M Liebenberg',room:'10-120 Lab',cls:'oop'},{t:'13:00–14:00',title:'DTP',lecturer:'K Magapi',room:'10-140 Lab',cls:'dtp'},{t:'14:00–15:00',title:'ADS',lecturer:'L Vlok',room:'13-G40',cls:'ads'},{t:'15:00–17:00',title:'CAO',lecturer:'A Mayingi',room:'10-140 Lab',cls:'cao'}],
-    3: [{t:'12:00–14:00',title:'OOP',lecturer:'M Liebenberg',room:'10-120 Lab — CT3 TODAY',cls:'oop'},{t:'14:00–15:00',title:'CAO',lecturer:'A Mayingi',room:'10-140 Lab',cls:'cao'}],
-    4: [{t:'8:00–10:00',title:'CAO',lecturer:'A Mayingi',room:'10-140 Lab',cls:'cao'},{t:'10:00–11:00',title:'ADS',lecturer:'L Vlok',room:'13-G40',cls:'ads'}],
-    5: [{t:'10:00–11:00',title:'DTP',lecturer:'K Magapi',room:'10-140 Lab',cls:'dtp'},{t:'13:00–14:00',title:'OOP',lecturer:'M Liebenberg',room:'10-120 Lab',cls:'oop'},{t:'14:00–15:00',title:'CAO CT2',lecturer:'A Mayingi',room:'10-140 Lab — Ch 6,7,8',cls:'cao'}],
+    1: [{t:'10:00–12:00',title:'ISC',lecturer:'Dr T.M. Tshilongamulenzhe',room:'14-G95',cls:'isc'},{t:'14:00–15:00',title:'ORS',lecturer:'Mr. M.J. Mathiane',room:'14-1113',cls:'ors'}],
+    2: [{t:'8:00–10:00',title:'AOP',lecturer:'W Birch',room:'10-138',cls:'aop'},{t:'10:00–12:00',title:'SEF',lecturer:'K Mogapi',room:'14-G108',cls:'sef'}],
+    3: [{t:'8:00–10:00',title:'ORS',lecturer:'Mr. M.J. Mathiane',room:'14-1113',cls:'ors'},{t:'12:00–14:00',title:'AOP',lecturer:'W Birch',room:'10-138',cls:'aop'},{t:'15:00–17:00',title:'SEF',lecturer:'K Mogapi',room:'14-G108',cls:'sef'}],
+    4: [{t:'14:00–15:00',title:'SEF',lecturer:'K Mogapi',room:'14-G108',cls:'sef'},{t:'15:00–17:00',title:'ISC',lecturer:'Dr T.M. Tshilongamulenzhe',room:'10-170 Lab',cls:'isc'}],
+    5: [{t:'12:00–13:00',title:'ISC',lecturer:'Dr T.M. Tshilongamulenzhe',room:'14-G95',cls:'isc'},{t:'13:00–14:00',title:'AOP',lecturer:'W Birch',room:'10-138',cls:'aop'},{t:'14:00–16:00',title:'ORS',lecturer:'Mr. M.J. Mathiane',room:'10-140 Lab',cls:'ors'}],
     6: [], 0: []
   };
 
@@ -1079,29 +1029,31 @@ function buildTodayClasses() {
     </div>`).join('');
 }
 
-// ======================== TIMETABLE ========================
+// ======================== TIMETABLE (UPDATED) ========================
 function buildTimetable() {
   const days=['Mon','Tue','Wed','Thu','Fri'];
   const slots=[{t:'8–9'},{t:'9–10'},{t:'10–11'},{t:'11–12'},{t:'12–13'},{t:'13–14'},{t:'14–15'},{t:'15–16'},{t:'16–17'}];
   const classes={
-    'Mon-8–9':{t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
-    'Mon-9–10':{t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
-    'Mon-15–16':{t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
-    'Mon-16–17':{t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
-    'Tue-8–9':{t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
-    'Tue-9–10':{t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
-    'Tue-13–14':{t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
-    'Tue-14–15':{t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
-    'Tue-15–16':{t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
-    'Tue-16–17':{t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
-    'Wed-12–13':{t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
-    'Wed-13–14':{t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
-    'Wed-14–15':{t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
-    'Thu-8–9':{t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
-    'Thu-9–10':{t:'CAO',cls:'cao',l:'A Mayingi',r:'10-140 Lab'},
-    'Thu-10–11':{t:'ADS',cls:'ads',l:'L Vlok',r:'13-G40'},
-    'Fri-10–11':{t:'DTP',cls:'dtp',l:'K Magapi',r:'10-140 Lab'},
-    'Fri-13–14':{t:'OOP',cls:'oop',l:'M Liebenberg',r:'10-120 Lab'},
+    'Mon-10–11':{t:'ISC',cls:'isc',l:'Dr T.M. Tshilongamulenzhe',r:'14-G95'},
+    'Mon-11–12':{t:'ISC',cls:'isc',l:'Dr T.M. Tshilongamulenzhe',r:'14-G95'},
+    'Mon-14–15':{t:'ORS',cls:'ors',l:'Mr. M.J. Mathiane',r:'14-1113'},
+    'Tue-8–9':{t:'AOP',cls:'aop',l:'W Birch',r:'10-138'},
+    'Tue-9–10':{t:'AOP',cls:'aop',l:'W Birch',r:'10-138'},
+    'Tue-10–11':{t:'SEF',cls:'sef',l:'K Mogapi',r:'14-G108'},
+    'Tue-11–12':{t:'SEF',cls:'sef',l:'K Mogapi',r:'14-G108'},
+    'Wed-8–9':{t:'ORS',cls:'ors',l:'Mr. M.J. Mathiane',r:'14-1113'},
+    'Wed-9–10':{t:'ORS',cls:'ors',l:'Mr. M.J. Mathiane',r:'14-1113'},
+    'Wed-12–13':{t:'AOP',cls:'aop',l:'W Birch',r:'10-138'},
+    'Wed-13–14':{t:'AOP',cls:'aop',l:'W Birch',r:'10-138'},
+    'Wed-15–16':{t:'SEF',cls:'sef',l:'K Mogapi',r:'14-G108'},
+    'Wed-16–17':{t:'SEF',cls:'sef',l:'K Mogapi',r:'14-G108'},
+    'Thu-14–15':{t:'SEF',cls:'sef',l:'K Mogapi',r:'14-G108'},
+    'Thu-15–16':{t:'ISC',cls:'isc',l:'Dr T.M. Tshilongamulenzhe',r:'10-170 Lab'},
+    'Thu-16–17':{t:'ISC',cls:'isc',l:'Dr T.M. Tshilongamulenzhe',r:'10-170 Lab'},
+    'Fri-12–13':{t:'ISC',cls:'isc',l:'Dr T.M. Tshilongamulenzhe',r:'14-G95'},
+    'Fri-13–14':{t:'AOP',cls:'aop',l:'W Birch',r:'10-138'},
+    'Fri-14–15':{t:'ORS',cls:'ors',l:'Mr. M.J. Mathiane',r:'10-140 Lab'},
+    'Fri-15–16':{t:'ORS',cls:'ors',l:'Mr. M.J. Mathiane',r:'10-140 Lab'},
   };
   let html='<div class="tt-time"></div>';
   days.forEach(d=>html+=`<div class="tt-head">${d}</div>`);
@@ -1121,65 +1073,52 @@ function buildTimetable() {
 function colorRgb(c){return{blue:'79,156,249',green:'63,185,80',purple:'188,140,255',amber:'210,153,34',red:'248,81,73'}[c]||'255,255,255';}
 function colorVar(c){return{blue:'var(--accent)',green:'var(--accent2)',purple:'var(--purple)',amber:'var(--warn)',red:'var(--danger)'}[c]||'var(--text)';}
 
-// Calculate what exam mark is needed for distinction (75% combined)
-// Final = (predicate + exam) / 2 => exam = 150 - predicate
-function calcExamNeeded(k, targetFinal=75) {
-  const pred = calcPredicate(k);
-  if(pred === null) return null;
-  const needed = targetFinal * 2 - pred;
-  return Math.max(0, Math.min(100, needed));
-}
-
 function calcPredicate(k) {
-  // Use confirmed predicate marks if available
-  if(PREDICATE_MARKS[k] !== undefined && PREDICATE_MARKS[k] !== null) return PREDICATE_MARKS[k];
-  const m=modules[k];
-  if(k==='ADS'){
-    const ctScores=m.assessments.slice(0,6).filter(a=>a.score!==null).map(a=>a.score);
-    ctScores.sort((a,b)=>b-a);
-    const best4=ctScores.slice(0,4);
-    const st1=m.assessments[6].score,st2=m.assessments[7].score;
-    if(best4.length===0&&st1===null&&st2===null) return null;
-    // Compute weighted contribution
-    const earnedContrib=(best4.length>0?(best4.reduce((s,v)=>s+v,0)/best4.length*40/100):0)+(st1!==null?st1*30/100:0)+(st2!==null?st2*30/100:0);
-    const enteredWeight=(best4.length>0?40:0)+(st1!==null?30:0)+(st2!==null?30:0);
-    return enteredWeight>0?(earnedContrib/enteredWeight)*100:null;
+  const m = modules[k];
+  const anyEntered = m.assessments.some(a=>a.score!==null);
+  if(anyEntered) {
+    let wSum=0, scoreSum=0;
+    m.assessments.forEach(a=>{
+      if(a.score!==null && !isNaN(a.score)){
+        scoreSum+=a.score*a.weight/100;
+        wSum+=a.weight;
+      }
+    });
+    return wSum>0 ? (scoreSum/wSum)*100 : null;
   }
-  if(k==='CAO'){
-    const entered=m.assessments.some(a=>a.score!==null); if(!entered) return null;
-    const scores=m.assessments.map(a=>a.score);
-    const weights=[20,20,10,10,5,5,30];
-    let contrib=0,wSum=0;
-    scores.forEach((s,i)=>{if(s!==null){contrib+=s*weights[i]/100;wSum+=weights[i];}});
-    return wSum>0?(contrib/wSum)*100:null;
-  }
-  const entered=m.assessments.filter(a=>a.score!==null); if(entered.length===0) return null;
-  let wSum=0,scoreSum=0;
-  m.assessments.forEach(a=>{if(a.score!==null){scoreSum+=a.score*a.weight/100;wSum+=a.weight;}});
-  return wSum>0?(scoreSum/wSum)*100:null;
+  return m.predicate||null;
 }
 
-// What avg % is needed in remaining assessments to hit target?
+function calcExamNeeded(k, target=75) {
+  const pred = modules[k].predicate || calcPredicate(k);
+  if(pred===null || isNaN(pred)) return null;
+  return Math.max(0, 2*target - pred);
+}
+
 function calcNeeded(k, target=75) {
   const m = modules[k];
-  const enteredContrib = m.assessments.filter(a=>a.score!==null).reduce((s,a)=>s+a.score*a.weight/100,0);
-  const remWeight = m.assessments.filter(a=>a.score===null).reduce((s,a)=>s+a.weight,0);
+  const enteredContrib = m.assessments.filter(a=>a.score!==null && !isNaN(a.score)).reduce((s,a)=>s+a.score*a.weight/100,0);
+  const remWeight = m.assessments.filter(a=>a.score===null || isNaN(a.score)).reduce((s,a)=>s+a.weight,0);
   if(remWeight===0) return null;
   const needed = (target - enteredContrib) / (remWeight/100);
-  return needed;
+  return isNaN(needed) ? null : needed;
 }
 
 function buildModuleOverview(){
   let html='';
   for(const[k,m]of Object.entries(modules)){
     const pred=calcPredicate(k);
-    const predStr=pred!==null?pred.toFixed(1)+'%':'—';
-    const pct=pred!==null?Math.min(pred,100):0;
+    const predStr=pred!==null && !isNaN(pred) ? pred.toFixed(1)+'%' : '—';
+    const pct=pred!==null && !isNaN(pred) ? Math.min(pred,100) : 0;
     const status=pred===null?'No marks yet':pred>=75?'✓ On track':pred>=40?'Needs effort':'At risk!';
     const sc=pred===null?'mid':pred>=75?'good':pred>=40?'mid':'bad';
+    const examNeeded = calcExamNeeded(k);
+    const examStr = examNeeded!==null ? ` · Need <strong>${examNeeded.toFixed(0)}%</strong> in exam for 75% final` : '';
     html+=`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
       <div style="width:32px;height:32px;border-radius:8px;background:rgba(${colorRgb(m.color)},.2);display:flex;align-items:center;justify-content:center;font-size:13px;color:${colorVar(m.color)};font-weight:700">${m.icon}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="margin-top:5px"><div class="pbar-wrap"><div class="pbar ${m.color}" style="width:${pct}%"></div></div></div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">Predicate: <strong style="color:${colorVar(m.color)}">${predStr}</strong>${examStr}</div>
+      <div style="margin-top:5px"><div class="pbar-wrap"><div class="pbar ${m.color}" style="width:${pct}%"></div></div></div></div>
       <div style="text-align:right;min-width:90px">
         <div style="font-size:14px;font-weight:700;color:${colorVar(m.color)}">${predStr}</div>
         <div class="stat-sub ${sc}" style="font-size:10px">${status}</div>
@@ -1193,84 +1132,54 @@ function buildMarks(){
   let html='';
   for(const[k,m]of Object.entries(modules)){
     const pred=calcPredicate(k);
-    const predStr=pred!==null?pred.toFixed(1)+'%':'—';
-    const isGood=pred!==null&&pred>=75;
-    const isLow=pred!==null&&pred<40;
-    const remaining=m.assessments.filter(a=>a.score===null).length;
+    const predStr=pred!==null && !isNaN(pred) ? pred.toFixed(1)+'%' : '—';
+    const isGood=pred!==null && pred>=75;
+    const isLow=pred!==null && pred<40;
+    const remaining=m.assessments.filter(a=>a.score===null || isNaN(a.score)).length;
 
-    // ---- Distinction exam target ----
-    const examNeeded = calcExamNeeded(k, 75);
+    const examNeeded = calcExamNeeded(k);
+    const examColor = examNeeded===null?'var(--muted)':examNeeded<=60?'var(--accent2)':examNeeded<=75?'var(--warn)':'var(--danger)';
+    const examLabel = examNeeded===null?'—':examNeeded<=50?`${examNeeded.toFixed(0)}% — very achievable! 🎉`:examNeeded<=65?`${examNeeded.toFixed(0)}% — manageable, study well`:examNeeded<=75?`${examNeeded.toFixed(0)}% — push hard`:examNeeded<=85?`${examNeeded.toFixed(0)}% — tough but doable`:examNeeded<=100?`${examNeeded.toFixed(0)}% — critical, maximise everything!`:'Cannot reach 75% — aim for max';
+
     const examDate = EXAM_DATES[k];
-    const daysToExam = examDate ? daysUntil(examDate) : null;
+    const examDaysLeft = examDate ? daysUntil(examDate) : null;
     const examDateStr = examDate ? examDate.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : '';
-    const finalIfExam100 = pred !== null ? ((pred + 100) / 2).toFixed(1) : null;
-    const finalIfExam75 = pred !== null ? ((pred + 75) / 2).toFixed(1) : null;
 
-    let advice = '';
-    if(pred===null) advice='Your predicate is confirmed — exam info will show below.';
+    const enteredContrib = m.assessments.filter(a=>a.score!==null && !isNaN(a.score)).reduce((s,a)=>s+a.score*a.weight/100,0);
+    const remWeight = m.assessments.filter(a=>a.score===null || isNaN(a.score)).reduce((s,a)=>s+a.weight,0);
+    const needed = remWeight>0 ? (75 - enteredContrib)/(remWeight/100) : null;
+    const safeNeeded = (needed!==null && !isNaN(needed)) ? needed : null;
+
+    let advice='';
+    if(pred===null) advice='Enter your marks to see your progress towards 75%';
+    else if(pred>=75) advice=`✓ On track for 75%! Maintain performance across ${remaining} remaining assessment${remaining!==1?'s':''}.`;
     else {
-      const examNeedLabel = examNeeded!==null?(examNeeded>85?'Push hard':examNeeded>65?'Achievable':'You got this!'):'?';
-      advice = `Predicate locked at ${pred}%. ${examNeedLabel} — need ${examNeeded !== null ? examNeeded.toFixed(0)+'%' : '?'} in exam for Distinction (75% final).`;
+      if(safeNeeded===null) advice='No remaining assessments — final predicate is locked in.';
+      else if(safeNeeded>100) advice=`⚠ Even with 100% in all remaining work, 75% may not be reachable — maximise every mark!`;
+      else if(safeNeeded<=75) advice=`Need avg ${safeNeeded.toFixed(1)}% across remaining ${remaining} assessment${remaining!==1?'s':''} — very achievable, stay consistent!`;
+      else if(safeNeeded<=85) advice=`Need avg ${safeNeeded.toFixed(1)}% across remaining ${remaining} assessment${remaining!==1?'s':''} — push hard, this is doable!`;
+      else advice=`Need avg ${safeNeeded.toFixed(1)}% across remaining ${remaining} assessment${remaining!==1?'s':''} — critical zone, aim for full marks in everything!`;
     }
 
-    // ---- Distinction box ----
     let needBoxHtml = '';
-    if(pred !== null && examNeeded !== null) {
-      const boxColor = examNeeded > 85 ? 'rgba(248,81,73,.12)' : examNeeded > 75 ? 'rgba(210,153,34,.12)' : 'rgba(63,185,80,.1)';
-      const borderColor = examNeeded > 85 ? 'rgba(248,81,73,.3)' : examNeeded > 75 ? 'rgba(210,153,34,.3)' : 'rgba(63,185,80,.25)';
-      const titleColor = examNeeded > 85 ? 'var(--danger)' : examNeeded > 75 ? 'var(--warn)' : 'var(--accent2)';
-      const feasible = examNeeded <= 100;
-      const innerHtml = feasible ? (
-        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">'
-        + '<div style="background:rgba(0,0,0,.2);border-radius:8px;padding:6px 10px;flex:1;min-width:80px;text-align:center">'
-        + '<div style="font-size:22px;font-weight:800;color:'+titleColor+'">'+examNeeded.toFixed(0)+'%</div>'
-        + '<div style="font-size:10px;color:var(--muted)">Exam needed for Distinction</div></div>'
-        + '<div style="background:rgba(0,0,0,.2);border-radius:8px;padding:6px 10px;flex:1;min-width:80px;text-align:center">'
-        + '<div style="font-size:22px;font-weight:800;color:var(--accent2)">'+finalIfExam100+'%</div>'
-        + '<div style="font-size:10px;color:var(--muted)">Final if exam = 100%</div></div>'
-        + '<div style="background:rgba(0,0,0,.2);border-radius:8px;padding:6px 10px;flex:1;min-width:80px;text-align:center">'
-        + '<div style="font-size:22px;font-weight:800;color:var(--muted)">'+finalIfExam75+'%</div>'
-        + '<div style="font-size:10px;color:var(--muted)">Final if exam = 75%</div></div></div>'
-        + '<div style="font-size:11px;color:var(--muted)">Predicate: <strong style="color:var(--text)">'+pred+'%</strong> &nbsp;|&nbsp; Formula: ('+pred+' + exam) ÷ 2 &nbsp;|&nbsp; Need exam ≥ <strong style="color:'+titleColor+'">'+examNeeded.toFixed(0)+'%</strong> for Distinction</div>'
-      ) : '<div style="font-size:12px;color:var(--danger)">⚠ Predicate '+pred+'% — distinction needs exam > 100%. Aim to pass and maximise every mark!</div>';
-      const dayLabel = daysToExam!==null&&daysToExam>0?' (in '+daysToExam+' days)':daysToExam===0?' (TODAY!)':'';
-      needBoxHtml = '<div style="background:'+boxColor+';border:1px solid '+borderColor+';border-radius:12px;padding:10px 14px;margin-bottom:.75rem">'
-        + '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:'+titleColor+';margin-bottom:8px">🎯 Distinction Target — Exam: '+examDateStr+dayLabel+'</div>'
-        + innerHtml
-        + '</div>';
-    }
-
-    // CAO specific warning
-    let caoWarning='';
-    if(k==='CAO'){
-      caoWarning=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">CAO: Predicate 66% — need 84% in exam for Distinction</div><p>Exam is 27 May. Strong exam performance can still get you distinction. Focus on all theory and practical topics.</p></div></div>`;
-    }
-
-    // OOP specific warning
-    let oopWarning='';
-    if(k==='OOP'){
-      oopWarning=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">OOP: Predicate 63% — need 87% in exam for Distinction</div><p>Exam is 8 June. Work through ALL Java topics: GUIs, Classes, Composition, Inheritance, Abstract, Exceptions, File I/O. Practice past papers!</p></div></div>`;
-    }
-
-    // DTP specific warning
-    let dtpWarning='';
-    if(k==='DTP'){
-      dtpWarning=`<div class="alert info" style="margin-bottom:.5rem"><div class="alert-icon">📌</div><div class="alert-body"><div class="alert-title">DTP: Predicate 86% — need only 64% in exam for Distinction!</div><p>Exam is 1 June. You are in a great position! Just maintain — revise LO7–LO10 (SELECT, Joins, Subqueries, Functions).</p></div></div>`;
-    }
-
-    // ADS specific notice
-    let adsNote='';
-    if(k==='ADS'){
-      const ctScores=m.assessments.slice(0,6).filter(a=>a.score!==null).map(a=>a.score).sort((a,b)=>b-a);
-      const best4=ctScores.slice(0,4);
-      const avg=best4.length>0?(best4.reduce((s,v)=>s+v,0)/best4.length).toFixed(1):0;
-      adsNote=`<div style="font-size:12px;color:var(--accent2);margin-bottom:.5rem;padding:6px 10px;background:rgba(63,185,80,.08);border-radius:8px">🌟 ADS Predicate: 98% — only need 52% in exam for Distinction! Exam: 4 June. Excellent position — stay consistent.</div>`;
-    }
-
-    let droppedIdxs=new Set();
-    if(k==='ADS'){
-      const ctScores2=m.assessments.slice(0,6).map((a,i)=>({i,score:a.score})).filter(x=>x.score!==null);
-      if(ctScores2.length>4){ctScores2.sort((a,b)=>a.score-b.score);ctScores2.slice(0,ctScores2.length-4).forEach(x=>droppedIdxs.add(x.i));}
+    if(pred!==null && pred<75 && safeNeeded!==null && safeNeeded<=100 && remaining>0) {
+      const remAsm = m.assessments.filter(a=>a.score===null || isNaN(a.score));
+      needBoxHtml = `<div class="need-box" style="margin-bottom:.75rem">
+        <div class="need-box-title">🎯 What you need to reach 75%</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Need <strong style="color:var(--text)">${safeNeeded.toFixed(1)}%</strong> average across your ${remaining} remaining assessment${remaining!==1?'s':''}. Breakdown:</div>`;
+      remAsm.forEach(a=>{
+        const col = safeNeeded>85?'var(--danger)':safeNeeded>75?'var(--warn)':'var(--accent2)';
+        needBoxHtml += `<div class="need-item">
+          <span>${a.name.replace(/\(.*\)/,'').trim()}</span>
+          <span class="need-pct" style="color:${col}">${safeNeeded.toFixed(0)}%</span>
+        </div>`;
+      });
+      needBoxHtml += '</div>';
+    } else if(pred!==null && pred>=75) {
+      needBoxHtml = `<div class="need-box" style="margin-bottom:.75rem;background:rgba(63,185,80,.08);border-color:rgba(63,185,80,.25)">
+        <div class="need-box-title" style="color:var(--accent2)">✅ You're on track for 75%!</div>
+        <div style="font-size:12px;color:var(--muted)">Current estimated predicate: <strong style="color:var(--accent2)">${predStr}</strong>. Keep going — maintain this level.</div>
+      </div>`;
     }
 
     html+=`<div class="card" style="margin-bottom:1rem">
@@ -1279,29 +1188,43 @@ function buildMarks(){
         <div><div class="mod-name">${m.name}</div><div class="mod-code">${m.code} — ${m.lecturer}</div></div>
         <div style="margin-left:auto;text-align:right">
           <div style="font-size:22px;font-weight:800;color:${colorVar(m.color)}">${predStr}</div>
-          <div style="font-size:11px;color:var(--muted)">estimated predicate</div>
+          <div style="font-size:11px;color:var(--muted)">confirmed predicate</div>
         </div>
       </div>
-      <div class="pbar-wrap" style="margin-bottom:.75rem"><div class="pbar ${m.color}" style="width:${pred!==null?Math.min(pred,100):0}%"></div></div>
+      <div class="pbar-wrap" style="margin-bottom:.75rem"><div class="pbar ${m.color}" style="width:${pred!==null && !isNaN(pred)?Math.min(pred,100):0}%"></div></div>
+
+      <div class="need-box" style="margin-bottom:.75rem;background:rgba(${colorRgb(m.color)},.06);border-color:rgba(${colorRgb(m.color)},.25)">
+        <div class="need-box-title">🎓 Exam target to achieve 75% final mark</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:12px;color:var(--muted)">Predicate: <strong style="color:${colorVar(m.color)}">${predStr}</strong> · Final = (Predicate + Exam) ÷ 2${examDate?` · Exam: ${examDateStr}${examDaysLeft!==null&&examDaysLeft>=0?' ('+examDaysLeft+' days)':''}`:''}</div>
+          <div style="font-size:20px;font-weight:800;color:${examColor}">${examNeeded!==null?examNeeded.toFixed(0)+'%':'—'}</div>
+        </div>
+        <div style="font-size:12px;margin-top:4px;color:${examColor};font-weight:600">${examLabel}</div>
+      </div>
       <div class="alert ${isGood?'success':isLow?'danger':'warn'}" style="margin-bottom:.75rem">
         <div class="alert-icon">${isGood?'✅':isLow?'🚨':'📌'}</div>
         <div class="alert-body"><div class="alert-title">${advice}</div></div>
       </div>
       ${needBoxHtml}
-      ${caoWarning}${oopWarning}${dtpWarning}${adsNote}
       <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem;line-height:1.6">${m.note}</div>`;
 
     m.assessments.forEach((a,idx)=>{
-      const isDropped=droppedIdxs.has(idx);
-      const dispWeight=(k==='ADS'&&idx<6)?(isDropped?'<span style="color:var(--danger);text-decoration:line-through">10%</span> <span style="font-size:10px;color:var(--danger)">dropped</span>':'10%'):a.weight+'%';
-      html+=`<div class="mark-row" style="${isDropped?'opacity:0.45':''}">
+      html+=`<div class="mark-row">
         <div class="mark-name" style="font-size:13px">${a.name}</div>
-        <div class="mark-weight" style="font-size:11px;color:var(--muted)">${dispWeight}</div>
-        <input class="mark-input" type="number" min="0" max="100" placeholder="—" value="${a.score!==null?a.score:''}"
+        <div class="mark-weight" style="font-size:11px;color:var(--muted)">${a.weight}%</div>
+        <input class="mark-input" type="number" min="0" max="100" placeholder="—" value="${a.score!==null && !isNaN(a.score)?a.score:''}"
           onchange="setMark('${k}',${idx},this.value)" oninput="setMark('${k}',${idx},this.value)">
-        <div class="mark-result" style="color:${isDropped?'var(--danger)':colorVar(m.color)}">${a.score!==null?a.score+'%':'—'}</div>
+        <div class="mark-result" style="color:${colorVar(m.color)}">${a.score!==null && !isNaN(a.score)?a.score+'%':'—'}</div>
       </div>`;
     });
+
+    if(m.quizzes && m.quizzes.length>0){
+      html+=`<div style="margin-top:.75rem"><div class="label">Quizzes (formative)</div>`;
+      m.quizzes.forEach(q=>{
+        html+=`<div style="font-size:12px;color:var(--muted);padding:4px 0;">${q.name} — covers ${q.coverage.join(', ')}</div>`;
+      });
+      html+=`</div>`;
+    }
 
     html+=`<div style="margin-top:.75rem"><div class="label">Topics</div><div>`;
     m.topics.forEach(t=>html+=`<span class="pill ${m.color}">${t}</span>`);
@@ -1319,26 +1242,19 @@ function loadMarks(){
   try{
     const data=JSON.parse(localStorage.getItem('studyhub_marks')||'null');
     if(!data) return;
-    for(const[k,scores]of Object.entries(data)) if(modules[k]) scores.forEach((s,i)=>{if(modules[k].assessments[i])modules[k].assessments[i].score=s;});
+    for(const[k,scores]of Object.entries(data)) if(modules[k]) scores.forEach((s,i)=>{if(modules[k].assessments[i])modules[k].assessments[i].score=(typeof s==='number'&&!isNaN(s))?s:null;});
   }catch(e){}
 }
 function setMark(k,idx,val){
-  const v=val===''?null:Math.min(100,Math.max(0,parseFloat(val)));
-  modules[k].assessments[idx].score=v;
+  const v = (val==='' || isNaN(parseFloat(val))) ? null : Math.min(100, Math.max(0, parseFloat(val)));
+  modules[k].assessments[idx].score = v;
   saveMarks();refreshAll();
 }
 
 // ======================== MODULES PAGE ========================
 function buildModules(){
-  const details={
-    ADS:{book:'Epp: Discrete Mathematics with Applications + Rosen 7th ed.',platform:'myTUTor (D2L)'},
-    OOP:{book:'Java How to Program – Late Objects (Deitel & Deitel)',platform:'MyTutor & EC'},
-    DTP:{book:'Oracle SQL PDF + Database Principles (Rob, Coronel, Morris 12th ed.)',platform:'myTUTor / EC'},
-    CAO:{book:'Lecture notes & past papers',platform:'MyTutor'},
-  };
   let html='';
   for(const[k,m]of Object.entries(modules)){
-    const d=details[k];
     html+=`<div class="card" style="margin-bottom:1rem">
       <div class="mod-header">
         <div class="mod-icon" style="background:rgba(${colorRgb(m.color)},.2);color:${colorVar(m.color)};font-size:14px;font-weight:900">${m.icon}</div>
@@ -1347,82 +1263,52 @@ function buildModules(){
           <div class="mod-code">${m.code} | NQF 6 | 15 Credits | Difficulty: <span style="color:${m.difficulty==='Hard'?'var(--danger)':m.difficulty==='Medium'?'var(--warn)':'var(--accent2)'}">${m.difficulty}</span></div>
         </div>
       </div>
-      <div class="grid-2" style="margin-bottom:.75rem">
-        <div class="card-sm"><div class="label">Prescribed textbook</div><div style="font-size:12px;line-height:1.6">${d.book}</div></div>
-        <div class="card-sm"><div class="label">Platform</div><div style="font-size:12px">${d.platform}</div><div class="label" style="margin-top:.5rem">Lecturer</div><div style="font-size:12px">${m.lecturer}</div></div>
-      </div>
-      <div class="label">Learning outcomes</div>
-      <div style="margin-bottom:.75rem">`;
-    m.topics.forEach((t,i)=>html+=`<span class="pill ${m.color}">LO${i+1}: ${t}</span>`);
-    html+=`</div><div class="label">Assessment breakdown</div><div style="font-size:12px;color:var(--muted);line-height:1.7">${m.note}</div></div>`;
+      <div style="margin-bottom:.75rem"><div class="label">Learning outcomes & resources</div>`;
+    m.los.forEach(lo=>{
+      html+=`<div style="background:var(--surface2);border-radius:8px;padding:8px 10px;margin-bottom:6px;border-left:3px solid ${colorVar(m.color)}">
+        <div style="font-weight:600;font-size:13px;">${lo.id} — ${lo.name}</div>
+        <div style="font-size:12px;color:var(--muted);margin:2px 0;">${lo.desc}</div>
+        <div style="font-size:11px;color:var(--accent);">📚 Resources: ${lo.resources.map(r=>`<a href="${r}" target="_blank" style="color:var(--accent);text-decoration:underline;">${r.replace(/^https?:\/\//,'')}</a>`).join(' | ')}</div>
+      </div>`;
+    });
+    html+=`</div>
+      <div class="label">Assessment breakdown</div><div style="font-size:12px;color:var(--muted);line-height:1.7">${m.note}</div>
+      <div style="margin-top:.5rem"><div class="label">Topics</div><div>`;
+    m.topics.forEach(t=>html+=`<span class="pill ${m.color}">${t}</span>`);
+    html+=`</div></div></div>`;
   }
   document.getElementById('modulesContent').innerHTML=html;
 }
 
-// ======================== ALERTS PAGE ========================
-const ST2 = {
-  DTP: new Date('2026-04-20T00:00:00'),
-  CAO: new Date('2026-04-22T00:00:00'),
-  OOP: new Date('2026-04-24T00:00:00'),
-  ADS: new Date('2026-04-30T00:00:00'),
-};
-
-function daysUntil(d){ return Math.ceil((d-TODAY)/86400000); }
-
+// ======================== ALERTS ========================
 function getActiveAlerts(){
   const alerts=[];
 
-  // ADS Web Test 4 — LO4 Graphs & Trees — Wednesday 16 Apr
-  const adsWT4d = daysUntil(ADS_WT4);
-  if(adsWT4d>=-1&&adsWT4d<=5) alerts.push({level:adsWT4d<=1?'danger':'warn',title:`📐 ADS Web Test 4 — LO4 Graphs & Trees ${adsWT4d<0?'(was yesterday)':adsWT4d===0?'TODAY':adsWT4d===1?'tomorrow':'in '+adsWT4d+' days'}`,body:'Wednesday 16 Apr. Topics: Graph types, adjacency matrix/list, BFS/DFS traversal, spanning trees (Kruskal, Prim). Study Epp Ch 10. Do past examples.',icon:'📐'});
+  if(TODAY<=TW1_END) alerts.push({level:'danger',title:'Test Week 1 — 17–31 Aug 2026',body:'AOP: Java GUIs & File I/O | ORS: Linux basics, file management | SEF: SDLC & AI intro | ISC: Security principles, CIA, threats',icon:'⚠️'});
 
-  // OOP CT3 — Inheritance — Wednesday 16 Apr
-  const oopCT3d = daysUntil(OOP_CT3);
-  if(oopCT3d>=-1&&oopCT3d<=5) alerts.push({level:oopCT3d<=1?'danger':'warn',title:`☕ OOP Class Test 3 — Inheritance ${oopCT3d<0?'(was yesterday)':oopCT3d===0?'TODAY':oopCT3d===1?'tomorrow':'in '+oopCT3d+' days'}`,body:'Wednesday at 10:00 (during OOP class). Topics: extends, super(), method overriding, polymorphism, is-a relationship. CT1=67, CT2=50 — need 80%+ here to recover.',icon:'☕'});
+  if(TODAY<=TW2_END && daysUntil(TW2_START)<=7) alerts.push({level:inRange(TODAY,TW2_START,TW2_END)?'danger':'warn',title:'Test Week 2 — 28 Sep–12 Oct 2026',body:'AOP: Data Structures & DB | ORS: System admin, packages, networking | SEF: Requirements, UML, project management | ISC: Access control, firewalls, ethical hacking',icon:'📅'});
 
-  // Test Week 1
-  if(TODAY<=TW1_END) alerts.push({level:'danger',title:'Test Week 1 — 18–27 March 2026',body:'ADS: LO1–LO3 (Sets, Logic, Proof) | OOP: A.1–B.1 (GUIs, Classes) | DTP: LO3–LO7 (ERD, SQL DDL/DML)',icon:'⚠️'});
-
-  // Test Week 2
-  if(TODAY<=TW2_END && daysUntil(TW2_START)<=7) alerts.push({level:inRange(TODAY,TW2_START,TW2_END)?'danger':'warn',title:'Test Week 2 — 20–30 April 2026',body:'ADS: LO4–LO5 (Graphs, Counting) | OOP: B.2–F.1 (Inheritance, Exceptions, File I/O) | DTP: LO7–LO10',icon:'📅'});
-
-  // ST2 countdowns
-  const st2entries=[['DTP','Databases','purple'],['CAO','Computer Architecture','amber'],['OOP','Object-Oriented Programming','green'],['ADS','Advanced Discrete Structures','blue']];
-  st2entries.forEach(([mod,name,col])=>{
-    const d=daysUntil(ST2[mod]);
-    if(d>=-1&&d<=14){
-      const urgency=d<=3?'danger':'warn';
-      const label=d<0?'was yesterday':d===0?'TODAY':d===1?'tomorrow':'in '+d+' days';
-      alerts.push({level:urgency,title:`ST2 ${mod} — ${name} ${label}`,body:`${ST2[mod].toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}. Focus: ${mod==='ADS'?'LO4–LO5 (Graphs & Trees, Counting) — Epp Ch 9–10':mod==='OOP'?'LO B.2–F.1 (Composition, Inheritance, Collections, Abstract, Exceptions, File I/O)':mod==='DTP'?'LO7–LO10 (Advanced SQL, Functions, Joins, Subqueries)':'All theory — number systems, CPU, memory, I/O, Boolean logic'}`,icon:d<=1?'🚨':'⏰'});
+  const allTests = [...Object.entries(ST1_DATES), ...Object.entries(ST2_DATES)];
+  allTests.forEach(([mod,date])=>{
+    const d = daysUntil(date);
+    if(d>=-1 && d<=14){
+      const urgency = d<=3?'danger':'warn';
+      const label = d<0?'was yesterday':d===0?'TODAY':d===1?'tomorrow':`in ${d} days`;
+      const testName = date === ST1_DATES[mod] ? 'ST1' : 'ST2';
+      alerts.push({level:urgency, title:`${testName} ${mod} — ${modules[mod].name} ${label}`, body:`${date.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})}. Coverage: ${modules[mod].assessments.find(a=>a.date && isSameDay(a.date,date))?.coverage?.join(', ') || 'All LOs'}`, icon:d<=1?'🚨':'⏰'});
     }
   });
 
-  // CAO Quiz 2 & CT2
-  const q2d = daysUntil(QUIZ2_CAO);
-  const ct2d = daysUntil(CT2_CAO);
-  if(q2d>=-1 && q2d<=5) alerts.push({level:q2d<=1?'danger':'warn',title:`⚙ CAO Quiz 2 — Ch 6,7,8 ${q2d<0?'(was yesterday)':q2d===0?'TODAY':q2d===1?'tomorrow':'in '+q2d+' days'}`,body:'14 April 2026. Chapter 6 (Boolean Logic/Simplification), Ch 7 (Combinational Circuits), Ch 8 (Sequential Circuits). Do practice questions from each chapter.',icon:'⚙️'});
-  if(ct2d>=-1 && ct2d<=7) alerts.push({level:ct2d<=2?'danger':ct2d<=5?'warn':'info',title:`📝 CAO Class Test 2 — Ch 6,7,8 ${ct2d<0?'(was yesterday)':ct2d===0?'TODAY':ct2d===1?'tomorrow':'in '+ct2d+' days'}`,body:'16 April 2026. Same scope as Quiz 2. Master Ch 6 & 7 first, then Ch 8 after Tuesday class.',icon:'📚'});
+  if(TODAY>=EXAM_START||daysUntil(EXAM_START)<=14) alerts.push({level:'success',title:'Main exams: 2 Nov – 20 Nov 2026',body:'AOP: 2 Nov | ORS: 6 Nov | SEF: 12 Nov | ISC: 18 Nov. Predicate Day: 26 Oct.',icon:'🎓'});
 
-  // Predicate summary alerts
-  alerts.push({level:'info',title:'🎯 Distinction Plan — Your Exam Targets',body:'ADS (4 Jun): pred 98%, need 52% | DTP (1 Jun): pred 86%, need 64% | CAO (27 May): pred 66%, need 84% | OOP (8 Jun): pred 63%, need 87%',icon:'🏆'});
-  alerts.push({level:'success',title:'ADS: Predicate 98% — Distinction almost guaranteed!',body:'Need only 52% in exam (4 June). Focus revision on LO4 Graphs & Trees, LO5 Counting, LO6 Probability. Stay consistent.',icon:'✅'});
-  alerts.push({level:'success',title:'DTP: Predicate 86% — Strong position!',body:'Need 64% in exam (1 June). Revise LO7–LO10: SQL SELECT, Functions, Joins, Subqueries. You can do this!',icon:'🗄️'});
-  alerts.push({level:'warn',title:'CAO: Predicate 66% — Need 84% in exam (27 May)',body:'CAO exam is FIRST — 27 May! Focus: Number systems, CPU, Memory, I/O, Boolean logic, Instruction sets. Past papers are key.',icon:'⚙️'});
-  alerts.push({level:'warn',title:'OOP: Predicate 63% — Need 87% in exam (8 June)',body:'Highest exam target! Practice all Java topics: GUIs, User Classes, Composition, Inheritance, Abstract, Exceptions, File I/O. Practise coding from scratch.',icon:'☕'});
-
-  // Exam period with individual exam dates
-  if(TODAY>=EXAM_START||daysUntil(EXAM_START)<=14) alerts.push({level:'success',title:'Main exams: 27 May – 8 Jun 2026',body:'CAO: 27 May | DTP: 1 Jun | ADS: 4 Jun | OOP: 8 Jun. Supplementary exams: 15–30 Jun 2026.',icon:'🎓'});
-
-  // Individual exam countdowns
-  const examEntries=[['CAO','Computer Architecture','amber','2026-05-27',66,84],['DTP','Databases','purple','2026-06-01',86,64],['ADS','Advanced Discrete Structures','blue','2026-06-04',98,52],['OOP','Object-Oriented Programming','green','2026-06-08',63,87]];
-  examEntries.forEach(([mod,name,col,dateStr,pred,examNeed])=>{
-    const d=daysUntil(new Date(dateStr+'T00:00:00'));
-    if(d>=0&&d<=14){
-      const urgency=d<=3?'danger':d<=7?'warn':'info';
-      const label=d===0?'TODAY':d===1?'tomorrow':'in '+d+' days';
-      const feasibility=examNeed<=70?'🟢 In great shape!':examNeed<=80?'🟡 Achievable':'🔴 Push hard!';
-      alerts.push({level:urgency,title:`📝 ${mod} EXAM — ${name} (${label})`,body:`${new Date(dateStr+'T00:00:00').toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})}. Predicate: ${pred}%. Need ${examNeed}% in exam for Distinction. ${feasibility}`,icon:d<=3?'🚨':'📝'});
-    }
+  Object.entries(EXAM_DATES).forEach(([mod,date])=>{
+    const d = daysUntil(date);
+    const pred = modules[mod]?.predicate;
+    const examNeeded = pred ? (2*75-pred).toFixed(0) : '?';
+    if(d>=0&&d<=21) alerts.push({level:d<=3?'danger':d<=7?'warn':'info',
+      title:`📝 ${mod} Exam — ${d===0?'TODAY':d===1?'tomorrow':`in ${d} days`} (${date.toLocaleDateString('en-ZA',{day:'numeric',month:'short'})})`,
+      body:`Predicate: ${pred||'?'}% · Need ${examNeeded}% in exam to reach 75% final. Final = (${pred||'?'} + Exam) ÷ 2.`,
+      icon:d<=3?'🚨':'📅'});
   });
 
   return alerts;
@@ -1441,16 +1327,28 @@ function buildAlerts(){
   });
   html+=`<div class="card" style="margin-top:1rem"><div style="font-size:15px;font-weight:700;margin-bottom:.75rem">All key dates</div>
     ${[
-      ['18 May 2026','Predicate Day — marks locked in ✓','info'],
-      ['27 May 2026','🎯 CAO EXAM — Computer Architecture (pred 66%, need 84%)','danger'],
-      ['1 Jun 2026','🎯 DTP EXAM — Databases (pred 86%, need 64%)','warn'],
-      ['4 Jun 2026','🎯 ADS EXAM — Advanced Discrete Structures (pred 98%, need 52%)','warn'],
-      ['8 Jun 2026','🎯 OOP EXAM — Object-Oriented Programming (pred 63%, need 87%)','warn'],
-      ['12 Jun 2026','Exam period ends','info'],
-      ['15–30 Jun 2026','Supplementary exams (if needed)','warn'],
+      ['17 Aug 2026','Test Week 1 starts','warn'],
+      ['31 Aug 2026','Test Week 1 ends','warn'],
+      ['18 Sep 2026','Mid-semester recess starts','info'],
+      ['27 Sep 2026','Recess ends','info'],
+      ['28 Sep 2026','Test Week 2 starts','warn'],
+      ['12 Oct 2026','Test Week 2 ends','warn'],
+      ['10 Oct 2026','ST2: AOP','warn'],
+      ['12 Oct 2026','ST2: ORS','warn'],
+      ['14 Oct 2026','ST2: SEF','warn'],
+      ['16 Oct 2026','ST2: ISC','warn'],
+      ['19 Oct 2026','Sick Test Week starts','info'],
+      ['23 Oct 2026','Sick Test Week ends','info'],
+      ['26 Oct 2026','Predicate Day','danger'],
+      ['2 Nov 2026','AOP Exam','danger'],
+      ['6 Nov 2026','ORS Exam','danger'],
+      ['12 Nov 2026','SEF Exam','danger'],
+      ['18 Nov 2026','ISC Exam','danger'],
+      ['23 Nov – 4 Dec 2026','Supplementary exams','warn'],
+      ['11 Dec 2026','Results','info'],
     ].map(([d,e,l])=>{
-      const dateStr=d.split(' – ')[0].replace(/–.*/,'').trim();
-      const isPast=new Date(dateStr+' 2026')<TODAY;
+      const dateStr=d.split(' – ')[0].split('–')[0].trim();
+      const isPast=new Date(dateStr)<TODAY;
       return `<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center;${isPast?'opacity:0.4':''}">
         <div style="font-size:12px;font-weight:700;min-width:130px;color:${l==='danger'?'var(--danger)':l==='warn'?'var(--warn)':'var(--accent)'}">${d}${isPast?' ✓':''}</div>
         <div style="font-size:13px">${e}</div>
@@ -1469,28 +1367,31 @@ function runAISuggestion(){
   el.innerHTML='<div style="text-align:center;padding:1rem;color:var(--muted);font-size:13px">🧠 Analysing your marks, upcoming tests and schedule...</div>';
   setTimeout(()=>{
     const now=new Date(); const h=now.getHours();
-    // Exam-focused scoring
-    const examOrder=[
-      {k:'CAO',date:'2026-05-27',pred:66,examNeed:84,topics:'Number systems, CPU architecture, Memory hierarchy, I/O, Boolean logic, Instruction sets'},
-      {k:'DTP',date:'2026-06-01',pred:86,examNeed:64,topics:'SQL SELECT, Functions, Joins, Subqueries, DDL/DML, Normalisation, ERD'},
-      {k:'ADS',date:'2026-06-04',pred:98,examNeed:52,topics:'Sets, Logic, Proofs, Graphs & Trees, Counting, Discrete Probability'},
-      {k:'OOP',date:'2026-06-08',pred:63,examNeed:87,topics:'GUIs, User Classes, Composition, Inheritance, Abstract & Interfaces, Exceptions, File I/O'},
-    ];
-    const upcoming=examOrder.filter(e=>daysUntil(new Date(e.date+'T00:00:00'))>=0).sort((a,b)=>daysUntil(new Date(a.date+'T00:00:00'))-daysUntil(new Date(b.date+'T00:00:00')));
-    const top=upcoming[0];
-    const second=upcoming[1];
+    const scored=Object.entries(modules).map(([k,m])=>{
+      const pred=calcPredicate(k);
+      let score=0;
+      const st1d = daysUntil(ST1_DATES[k]);
+      const st2d = daysUntil(ST2_DATES[k]);
+      const nearest = Math.min(st1d, st2d);
+      if(nearest<=3) score+=50; else if(nearest<=7) score+=30; else if(nearest<=14) score+=15;
+      if(pred!==null && !isNaN(pred) && pred<75) score+=Math.round((75-pred)*0.8);
+      if(pred===null) score+=20;
+      if(m.difficulty==='Hard') score+=10;
+      return {k,m,pred,nearest,score};
+    }).sort((a,b)=>b.score-a.score);
+
+    const top=scored[0];
+    const second=scored[1];
 
     let primary,reason,topics,urgency='info';
-    if(top){
-      const td=daysUntil(new Date(top.date+'T00:00:00'));
-      const m=modules[top.k];
-      primary=m.name; 
-      const struggling=(LO_DATA[top.k]||[]).filter(l=>loStatus[l.id]==='struggle').map(l=>l.label);
-      urgency=td<=3?'danger':td<=7?'warn':'info';
-      reason=`Exam ${td===0?'TODAY!':td===1?'tomorrow!':'in '+td+' days'} (${new Date(top.date+'T00:00:00').toLocaleDateString('en-ZA',{day:'numeric',month:'long'})}). Predicate: ${top.pred}% — need ${top.examNeed}% for Distinction!`;
-      topics=struggling.length>0?`⚠ Struggling: ${struggling.slice(0,3).join(', ')} — focus here first! Then: ${top.topics.split(',').slice(0,2).join(', ')}`:top.topics;
+
+    if(top.nearest<=3){
+      primary=top.m.name; reason=`Upcoming test in ${top.nearest} day${top.nearest===1?'':'s'}!`;
+      topics=top.m.topics.slice(0,3).join(', ');
+      urgency='danger';
     } else {
-      primary='All done!'; reason='All exams completed.'; topics=''; urgency='success';
+      primary=top.m.name; reason=top.nearest<999?`Next test in ${top.nearest} days — stay ahead`:'Highest priority right now';
+      topics=top.m.topics.slice(0,3).join(', ');
     }
 
     const timeTip=h<9?'Morning brain is sharp — tackle hard theory now 🌅':h<12?'Peak focus window — do active problem solving 💪':h<14?'Post-lunch: lighter revision or flashcards 🍽️':h<17?'Afternoon: good for practice exercises 📝':h<20?'Evening: review notes, summarise the day 🌙':'Late night: keep it light — no new content 💤';
@@ -1500,20 +1401,151 @@ function runAISuggestion(){
       <div class="alert-body">
         <div class="alert-title">Focus on: ${primary}</div>
         <p>${reason}</p>
-        ${topics?`<p style="margin-top:4px">📚 Topics: ${topics}</p>`:''}
+        <p style="margin-top:4px">📚 Topics: ${topics}</p>
       </div>
     </div>`;
-    if(second){
-      const sd=daysUntil(new Date(second.date+'T00:00:00'));
-      const sm=modules[second.k];
-      html+=`<div class="alert info" style="margin-bottom:.5rem"><div class="alert-icon">📖</div><div class="alert-body"><div class="alert-title">After that: ${sm.name} (${sd} days)</div><p>Predicate: ${second.pred}% — need ${second.examNeed}% for Distinction. Start light revision now!</p></div></div>`;
+    if(second&&second.nearest<=7){
+      html+=`<div class="alert warn" style="margin-bottom:.5rem"><div class="alert-icon">⏰</div><div class="alert-body"><div class="alert-title">Also coming up: ${second.m.name}</div><p>Test in ${second.nearest} days — don't neglect it</p></div></div>`;
     }
-    // Distinction summary
-    html+=`<div class="alert success" style="margin-bottom:.5rem"><div class="alert-icon">🏆</div><div class="alert-body"><div class="alert-title">Your Distinction Targets</div><p>CAO: 84% · DTP: 64% · ADS: 52% · OOP: 87%</p></div></div>`;
     html+=`<div class="alert info"><div class="alert-icon">🕐</div><div class="alert-body"><div class="alert-title">${timeTip}</div></div></div>`;
     el.innerHTML=html;
   },600);
 }
+
+// ======================== EMERGENCY: PROGRESSION & TIMETABLE ========================
+function buildEmergencyProgression() {
+  const progEl = document.getElementById('emergencyProgression');
+  const timeEl = document.getElementById('emergencyTimetable');
+  let progHtml = '';
+  let timeHtml = '';
+
+  for (const [modKey, mod] of Object.entries(modules)) {
+    const los = mod.los;
+    const known = los.filter(l => loStatus[l.id] === 'know').length;
+    const total = los.length;
+    const pct = Math.round(known/total*100);
+    progHtml += `<div class="card" style="margin-bottom:1rem;border-color:rgba(${colorRgb(mod.color)},.3);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.5rem;">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(${colorRgb(mod.color)},.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:${colorVar(mod.color)}">${mod.icon}</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;">${mod.name}</div>
+          <div style="font-size:12px;color:var(--muted);">${known}/${total} topics known</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:${pct>=75?'var(--accent2)':pct>=50?'var(--warn)':'var(--danger)'};">${pct}%</div>
+      </div>
+      <div class="pbar-wrap" style="margin-bottom:.5rem;"><div class="pbar ${mod.color}" style="width:${pct}%;"></div></div>
+      <div><div class="label" style="font-size:10px;">Assessments & coverage</div>`;
+    mod.assessments.forEach(ass => {
+      if (!ass.coverage || ass.coverage.length === 0) return;
+      const coveredLos = ass.coverage.map(id => {
+        const lo = los.find(l => l.id === id);
+        const status = loStatus[id];
+        return { id, name: lo ? lo.name : id, status };
+      });
+      const knownCount = coveredLos.filter(l => l.status === 'know').length;
+      const totalCount = coveredLos.length;
+      progHtml += `<div style="background:var(--surface2);border-radius:8px;padding:8px 10px;margin-bottom:6px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
+          <span>${ass.name}</span>
+          <span>${knownCount}/${totalCount} known</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">`;
+      coveredLos.forEach(l => {
+        const color = l.status === 'know' ? 'var(--accent2)' : l.status === 'struggle' ? 'var(--danger)' : 'var(--muted)';
+        const label = l.status === 'know' ? '✅' : l.status === 'struggle' ? '❌' : '❓';
+        progHtml += `<span style="font-size:10px;background:rgba(255,255,255,.05);padding:2px 6px;border-radius:4px;color:${color};">${label} ${l.id}</span>`;
+      });
+      progHtml += `</div></div>`;
+    });
+    progHtml += `</div></div>`;
+  }
+
+  const upcoming = [];
+  for (const [modKey, mod] of Object.entries(modules)) {
+    mod.assessments.forEach(ass => {
+      if (ass.score !== null && !isNaN(ass.score)) return;
+      if (!ass.coverage || ass.coverage.length === 0) return;
+      const date = ass.date || null;
+      upcoming.push({
+        modKey,
+        mod,
+        ass,
+        date,
+        days: date ? daysUntil(date) : 999,
+        coverage: ass.coverage
+      });
+    });
+  }
+  upcoming.sort((a,b) => a.days - b.days);
+
+  if (upcoming.length === 0) {
+    timeHtml = `<div class="alert success"><div class="alert-icon">✅</div><div class="alert-body"><div class="alert-title">All assessments completed!</div><p>Great job – you have no upcoming tests.</p></div></div>`;
+  } else {
+    timeHtml = `<div style="font-size:14px;font-weight:700;margin-bottom:.75rem;">📅 Emergency Timetable – Upcoming Tests</div>`;
+    upcoming.forEach(item => {
+      const { modKey, mod, ass, date, days, coverage } = item;
+      const urgent = days <= 3;
+      const statusLabel = days <= 0 ? '⚠️ TODAY' : days <= 3 ? '🔴 URGENT' : days <= 7 ? '🟠 SOON' : '🟢 COMING';
+      const color = mod.color;
+      const coveredLos = coverage.map(id => {
+        const lo = mod.los.find(l => l.id === id);
+        const status = loStatus[id];
+        return { id, name: lo ? lo.name : id, status };
+      });
+      const knownCount = coveredLos.filter(l => l.status === 'know').length;
+      const totalCount = coveredLos.length;
+      const struggleList = coveredLos.filter(l => l.status === 'struggle').map(l => l.id);
+
+      timeHtml += `<div class="card" style="margin-bottom:.75rem;border-color:rgba(${colorRgb(color)},.3);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:.5rem;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(${colorRgb(color)},.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:${colorVar(color)};">${mod.icon}</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;">${modKey} — ${ass.name}</div>
+            <div style="font-size:12px;color:var(--muted);">${date ? date.toLocaleDateString('en-ZA',{weekday:'short',day:'numeric',month:'short'}) : 'Date TBA'} (${days < 999 ? days+' days' : 'soon'})</div>
+          </div>
+          <div style="font-size:14px;font-weight:800;color:${urgent?'var(--danger)':'var(--warn)'};">${statusLabel}</div>
+        </div>
+        <div style="margin-bottom:.5rem;">
+          <div class="label" style="font-size:10px;">Coverage (${knownCount}/${totalCount} known)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">`;
+      coveredLos.forEach(l => {
+        const color2 = l.status === 'know' ? 'var(--accent2)' : l.status === 'struggle' ? 'var(--danger)' : 'var(--muted)';
+        const label = l.status === 'know' ? '✅' : l.status === 'struggle' ? '❌' : '❓';
+        timeHtml += `<span style="font-size:10px;background:rgba(255,255,255,.05);padding:2px 6px;border-radius:4px;color:${color2};">${label} ${l.id}</span>`;
+      });
+      timeHtml += `</div></div>`;
+      if (struggleList.length > 0) {
+        timeHtml += `<div style="background:rgba(248,81,73,.08);border-radius:8px;padding:6px 10px;border-left:3px solid var(--danger);margin-bottom:.5rem;">
+          <span style="font-size:11px;font-weight:700;color:var(--danger);">⚠️ Struggling topics: ${struggleList.join(', ')} — focus here!</span>
+        </div>`;
+      } else {
+        timeHtml += `<div style="background:rgba(63,185,80,.08);border-radius:8px;padding:6px 10px;border-left:3px solid var(--accent2);margin-bottom:.5rem;">
+          <span style="font-size:11px;font-weight:700;color:var(--accent2);">✅ All topics known – review lightly.</span>
+        </div>`;
+      }
+      const studyTime = urgent ? '3+ hours today' : days <= 7 ? '2 hours daily' : '1 hour daily';
+      timeHtml += `<div style="font-size:11px;color:var(--muted);">📖 Recommended: ${studyTime}</div>`;
+      timeHtml += `</div>`;
+    });
+  }
+
+  progEl.innerHTML = `<div style="font-size:16px;font-weight:700;margin-bottom:.75rem;">📊 Topic Progression</div>` + progHtml;
+  timeEl.innerHTML = `<div style="font-size:16px;font-weight:700;margin-bottom:.75rem;margin-top:1rem;">⏳ Emergency Timetable</div>` + timeHtml;
+}
+
+function generateRecoveryPlan(){
+  document.getElementById('emergencyTimetable').scrollIntoView({behavior:'smooth'});
+  buildEmergencyProgression();
+}
+
+function initEmergencyPage(){
+  buildLOChecklist();
+  buildEmergencyProgression();
+}
+
+// ======================== LO CHECKLIST ========================
+let loStatus = {};
+try{ loStatus = JSON.parse(localStorage.getItem('studyhub_lo')||'{}'); }catch(e){}
 
 function saveLO(){ try{localStorage.setItem('studyhub_lo',JSON.stringify(loStatus));}catch(e){} }
 
@@ -1525,10 +1557,10 @@ function setLO(id, val){
 
 function buildLOChecklist(){
   const modInfo = {
-    ADS:{color:'blue',icon:'∑',name:'Advanced Discrete Structures'},
-    OOP:{color:'green',icon:'{}',name:'Object-Oriented Programming'},
-    DTP:{color:'purple',icon:'⊗',name:'Databases'},
-    CAO:{color:'amber',icon:'⚙',name:'Computer Architecture & Organisation'}
+    AOP:{color:'blue',icon:'📱',name:'Advanced Object-Oriented Programming'},
+    ORS:{color:'green',icon:'⚙️',name:'Operating Systems'},
+    SEF:{color:'purple',icon:'🛠️',name:'Software Engineering Fundamentals'},
+    ISC:{color:'amber',icon:'🔒',name:'Information Security'}
   };
   let html = '';
   for(const [mod, los] of Object.entries(LO_DATA)){
@@ -1553,8 +1585,8 @@ function buildLOChecklist(){
         s==='know'?'rgba(63,185,80,.08)':s==='struggle'?'rgba(248,81,73,.08)':'var(--surface2)'
       };border:1px solid ${s==='know'?'rgba(63,185,80,.25)':s==='struggle'?'rgba(248,81,73,.25)':'var(--border)'}">
         <div style="flex:1">
-          <div style="font-size:12px;font-weight:700">${l.lo} — ${l.label}</div>
-          <div style="font-size:10px;color:var(--muted)">${l.detail}</div>
+          <div style="font-size:12px;font-weight:700">${l.id} — ${l.name}</div>
+          <div style="font-size:10px;color:var(--muted)">${l.desc}</div>
         </div>
         <button onclick="setLO('${l.id}','know')" style="border:none;cursor:pointer;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;background:${s==='know'?'rgba(63,185,80,.3)':'rgba(63,185,80,.1)'};color:${s==='know'?'var(--accent2)':'var(--muted)'};transition:all .15s">✓ Know</button>
         <button onclick="setLO('${l.id}','struggle')" style="border:none;cursor:pointer;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;background:${s==='struggle'?'rgba(248,81,73,.3)':'rgba(248,81,73,.1)'};color:${s==='struggle'?'var(--danger)':'var(--muted)'};transition:all .15s">✗ Struggling</button>
@@ -1565,175 +1597,9 @@ function buildLOChecklist(){
   document.getElementById('loChecklist').innerHTML = html;
 }
 
-function generateRecoveryPlan(){
-  const el = document.getElementById('recoveryPlan');
-  const gaps = {};
-  const strong = {};
-  for(const [mod, los] of Object.entries(LO_DATA)){
-    gaps[mod] = los.filter(l=>loStatus[l.id]==='struggle');
-    strong[mod] = los.filter(l=>loStatus[l.id]==='know');
-  }
-  const totalGaps = Object.values(gaps).reduce((s,a)=>s+a.length,0);
-  const totalAnswered = Object.values(loStatus).filter(v=>v!==null).length;
-  if(totalAnswered < 4){
-    el.innerHTML = '<div class="alert warn"><div class="alert-icon">⚠️</div><div class="alert-body"><div class="alert-title">Please rate your LOs first</div><p>Tap ✓ Know or ✗ Struggling for at least a few topics above, then generate your plan.</p></div></div>';
-    return;
-  }
-  const modPriority = Object.entries(gaps).map(([mod, gapList])=>{
-    const st2d = ST2[mod] ? daysUntil(ST2[mod]) : 999;
-    const gapScore = gapList.length * 10;
-    const timeScore = st2d<=3?50:st2d<=7?30:st2d<=14?15:0;
-    const pred = calcPredicate(mod)||0;
-    const markScore = Math.max(0, 75-pred);
-    const immBoost = (mod==='OOP'&&daysUntil(OOP_CT3)<=4)?35:(mod==='ADS'&&daysUntil(ADS_WT4)<=4)?30:0;
-    return {mod, gapList, strong:strong[mod], st2d, score:gapScore+timeScore+markScore+immBoost, pred};
-  }).sort((a,b)=>b.score-a.score);
-
-  const timeBlocks = {
-    ADS: {study:'19:00–21:00', quick:'17:00–18:00'},
-    OOP: {study:'17:00–19:00', quick:'06:30–07:30'},
-    DTP: {study:'13:00–15:00', quick:'10:00–11:00'},
-    CAO: {study:'15:00–17:00', quick:'07:00–07:30'},
-  };
-
-  let html = '';
-  const safeMods = modPriority.filter(m=>m.gapList.length===0);
-  html += `<div class="alert ${totalGaps>5?'danger':totalGaps>2?'warn':'success'}" style="margin-bottom:1rem">
-    <div class="alert-icon">${totalGaps>5?'🚨':totalGaps>2?'⚠️':'✅'}</div>
-    <div class="alert-body">
-      <div class="alert-title">${totalGaps>5?'You are significantly behind — emergency mode activated':totalGaps>2?'Some gaps detected — targeted recovery plan ready':'Looking good! Minor gaps to patch'}</div>
-      <p>${totalGaps} struggling LO${totalGaps!==1?'s':''} across ${Object.values(gaps).filter(g=>g.length>0).length} module${Object.values(gaps).filter(g=>g.length>0).length!==1?'s':''}${safeMods.length?` · ${safeMods.map(m=>m.mod).join(', ')} fully covered ✓`:''}</p>
-    </div>
-  </div>`;
-
-  html += '<div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📋 Your personalised recovery plan</div>';
-
-  modPriority.forEach((mp, rank)=>{
-    const m = modules[mp.mod];
-    const hasGaps = mp.gapList.length > 0;
-    const urgency = mp.st2d<=3?'danger':mp.st2d<=7?'warn':hasGaps?'info':'success';
-    const urgencyLabel = mp.st2d<=3?'🔴 CRITICAL — ST2 in '+mp.st2d+' days':mp.st2d<=7?'🟠 URGENT — ST2 in '+mp.st2d+' days':hasGaps?'🟡 Needs work':'🟢 On track';
-    const tb = timeBlocks[mp.mod];
-
-    html += `<div class="card" style="margin-bottom:.75rem;border-color:rgba(${colorRgb(m.color)},.3)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(${colorRgb(m.color)},.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:${colorVar(m.color)}">${m.icon}</div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:700">${['1️⃣','2️⃣','3️⃣','4️⃣'][rank]} ${m.name}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:1px">${urgencyLabel}</div>
-        </div>
-        <div style="font-size:13px;font-weight:800;color:${colorVar(m.color)}">${mp.pred>0?mp.pred.toFixed(0)+'%':'—'}</div>
-      </div>`;
-
-    if(hasGaps){
-      html += `<div style="margin-bottom:.6rem"><div class="label" style="color:var(--danger)">⚠ Struggling — needs dedicated study time</div>`;
-      mp.gapList.forEach(l=>{
-        html += `<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(248,81,73,.07);border-radius:6px;margin-bottom:3px;border-left:2px solid var(--danger)">
-          <div style="font-size:11px;font-weight:700;color:var(--danger);min-width:36px">${l.lo}</div>
-          <div><div style="font-size:12px;font-weight:600">${l.label}</div><div style="font-size:10px;color:var(--muted)">${l.detail}</div></div>
-        </div>`;
-      });
-      html += '</div>';
-      html += `<div style="background:rgba(248,81,73,.08);border-radius:8px;padding:8px 10px;margin-bottom:.6rem">
-        <div style="font-size:11px;font-weight:700;color:var(--danger);margin-bottom:3px">📅 Recommended daily block</div>
-        <div style="font-size:12px">${tb.study} — Deep study: focus only on struggling LOs above</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">Do past questions, write notes, explain concepts out loud</div>
-      </div>`;
-    }
-
-    if(mp.strong.length>0){
-      html += `<div style="margin-bottom:.6rem">
-        <div class="label" style="color:var(--accent2)">✓ You know these — quick review only</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px">`;
-      mp.strong.forEach(l=>html+=`<span style="background:rgba(63,185,80,.1);color:var(--accent2);font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px">${l.lo}: ${l.label}</span>`);
-      html += `</div><div style="font-size:11px;color:var(--muted);margin-top:4px">${tb.quick} — 30 min light review to keep it fresh</div></div>`;
-    }
-
-    if(!hasGaps && mp.strong.length>0){
-      html += `<div class="alert success" style="margin-top:.25rem"><div class="alert-icon">✅</div><div class="alert-body"><div class="alert-title">Solid! Just maintain with ${tb.quick} light review daily.</div></div></div>`;
-    }
-    html += '</div>';
-  });
-
-  const todayGaps = modPriority.filter(m=>m.gapList.length>0);
-  if(todayGaps.length>0){
-    html += `<div class="card" style="border-color:rgba(248,81,73,.25)">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🗓️ Today's adjusted study schedule</div>`;
-    const slots = [
-      {time:'06:30–07:30', mod: todayGaps[0]?.mod, type:'quick', label:'Morning warm-up'},
-      {time:'10:00–12:00', mod: todayGaps[0]?.mod, type:'deep', label:'Deep focus — #1 priority'},
-      {time:'13:00–15:00', mod: todayGaps[1]?.mod||todayGaps[0]?.mod, type:'deep', label:'Deep focus — #2 priority'},
-      {time:'15:00–17:00', mod: todayGaps[2]?.mod||todayGaps[0]?.mod, type:'deep', label:'Deep focus — #3 priority'},
-      {time:'17:00–18:00', mod: modPriority.find(m=>m.strong.length>0)?.mod, type:'quick', label:'Quick review — strong module'},
-      {time:'19:00–21:00', mod: todayGaps[0]?.mod, type:'deep', label:'Evening deep study — biggest gap'},
-    ];
-    slots.forEach(sl=>{
-      if(!sl.mod) return;
-      const m = modules[sl.mod];
-      const gapLabels = gaps[sl.mod].slice(0,2).map(l=>l.label).join(', ');
-      const desc = sl.type==='deep'&&gapLabels ? `Focus: ${gapLabels}` : 'Light review — keep it fresh';
-      html += `<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:center">
-        <div style="font-size:11px;color:var(--muted);min-width:110px">${sl.time}</div>
-        <div style="width:3px;height:32px;border-radius:2px;background:${colorVar(m.color)};flex-shrink:0"></div>
-        <div>
-          <div style="font-size:12px;font-weight:700">${sl.label} — ${m.name}</div>
-          <div style="font-size:11px;color:var(--muted)">${desc}</div>
-        </div>
-      </div>`;
-    });
-    html += '</div>';
-  }
-
-  el.innerHTML = html;
-  el.scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-function initEmergencyPage(){
-  buildLOChecklist();
-  document.getElementById('recoveryPlan').innerHTML = '';
-}
-
 // ======================== FOCUS TIMER ========================
-const TIMER_LOS = {
-  ADS:[
-    {id:'ADS-1',label:'LO1 — Sets & Functions'},
-    {id:'ADS-2',label:'LO2 — Logic Concepts'},
-    {id:'ADS-3',label:'LO3 — Proof Techniques'},
-    {id:'ADS-4',label:'LO4 — Graphs & Trees ← Web Test 4 Wed!'},
-    {id:'ADS-5',label:'LO5 — Counting'},
-    {id:'ADS-6',label:'LO6 — Discrete Probability'},
-  ],
-  OOP:[
-    {id:'OOP-A1',label:'A.1 — GUIs & Event Handling'},
-    {id:'OOP-B1',label:'B.1 — User-defined Classes'},
-    {id:'OOP-B2',label:'B.2 — Composition'},
-    {id:'OOP-B3',label:'B.3 — Inheritance ← CT3 Wed!'},
-    {id:'OOP-C1',label:'C.1 — Collections'},
-    {id:'OOP-D1',label:'D.1 — Abstract & Interfaces'},
-    {id:'OOP-E1',label:'E.1 — Exception Handling'},
-    {id:'OOP-F1',label:'F.1 — File I/O'},
-  ],
-  DTP:[
-    {id:'DTP-1',label:'LO1 — Data Models'},
-    {id:'DTP-2',label:'LO2 — Relational Model'},
-    {id:'DTP-3',label:'LO3 — ERD'},
-    {id:'DTP-4',label:'LO4 — Normalisation'},
-    {id:'DTP-5',label:'LO5 — DDL'},
-    {id:'DTP-6',label:'LO6 — DML'},
-    {id:'DTP-7',label:'LO7 — SQL SELECT'},
-    {id:'DTP-8',label:'LO8 — SQL Functions'},
-    {id:'DTP-9',label:'LO9 — Joins'},
-    {id:'DTP-10',label:'LO10 — Subqueries'},
-  ],
-  CAO:[
-    {id:'CAO-1',label:'LO1 — Number Systems'},
-    {id:'CAO-2',label:'LO2 — Boolean Logic ← Ch6 Quiz/CT2'},
-    {id:'CAO-3',label:'LO3 — CPU Architecture'},
-    {id:'CAO-4',label:'LO4 — Memory Hierarchy'},
-    {id:'CAO-5',label:'LO5 — Instruction Sets'},
-    {id:'CAO-6',label:'LO6 — I/O Systems'},
-  ]
-};
+const LO_DATA_FOR_TIMER = {};
+for(const [k,m] of Object.entries(modules)) LO_DATA_FOR_TIMER[k] = m.los.map(l=>({id:l.id, label:l.id+' — '+l.name}));
 
 let timerState = {mod:null,lo:null,durMins:25,running:false,paused:false,elapsed:0,startTs:null,conf:null};
 let timerInterval = null;
@@ -1744,11 +1610,11 @@ function timerSaveLogs(){ try{localStorage.setItem('studyhub_timer',JSON.stringi
 
 function timerPickMod(mod){
   timerState.mod = mod; timerState.lo = null;
-  ['ADS','OOP','DTP','CAO'].forEach(m=>{
+  ['AOP','ORS','SEF','ISC'].forEach(m=>{
     const b = document.getElementById('tmod-'+m);
     if(b) b.style.borderColor = m===mod ? colorVar(modules[mod]?.color||'blue') : '';
   });
-  const los = TIMER_LOS[mod]||[];
+  const los = LO_DATA_FOR_TIMER[mod]||[];
   let html = `<div class="label">Pick a topic</div><div style="display:flex;gap:6px;flex-wrap:wrap">`;
   los.forEach(l=>html+=`<button class="btn" id="tlo-${l.id}" onclick="timerPickLO('${l.id}','${l.label}')" style="font-size:11px;padding:5px 10px">${l.label}</button>`);
   html += '</div>';
@@ -1758,7 +1624,7 @@ function timerPickMod(mod){
 
 function timerPickLO(id, label){
   timerState.lo = {id, label};
-  const los = TIMER_LOS[timerState.mod]||[];
+  const los = LO_DATA_FOR_TIMER[timerState.mod]||[];
   los.forEach(l=>{
     const b = document.getElementById('tlo-'+l.id);
     if(b) b.style.background = l.id===id ? 'rgba(79,156,249,.2)' : '';
@@ -1981,7 +1847,7 @@ function buildGlowUp(){
   let html='';
   for(const[k,m]of Object.entries(modules)){
     const pred=calcPredicate(k);
-    const entered=m.assessments.filter(a=>a.score!==null);
+    const entered=m.assessments.filter(a=>a.score!==null && !isNaN(a.score));
     if(entered.length===0){
       html+=`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:13px;font-weight:600;margin-bottom:6px">${m.icon} ${m.name}</div><div style="font-size:12px;color:var(--muted)">No marks entered yet</div></div>`;
       continue;
@@ -1999,24 +1865,23 @@ function buildGlowUp(){
       </div>`;
     }).join('');
 
-    const examNeededGlow = calcExamNeeded(k, 75);
-    const examDtGlow = EXAM_DATES[k] ? daysUntil(EXAM_DATES[k]) : null;
-    const examDateGlowStr = EXAM_DATES[k] ? EXAM_DATES[k].toLocaleDateString('en-ZA',{day:'numeric',month:'short'}) : '';
+    const needed = calcNeeded(k);
+    const safeNeeded = (needed!==null && !isNaN(needed)) ? needed : null;
     let needHtml='';
-    if(examNeededGlow!==null && pred!==null){
-      const col = examNeededGlow>85?'var(--danger)':examNeededGlow>70?'var(--warn)':'var(--accent2)';
-      const feasMsg = examNeededGlow>100?'⚠ Over 100% needed — aim to pass':'🎯 Distinction target';
-      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(79,156,249,.08);border-radius:6px;color:${col}">${feasMsg}: need <strong>${examNeededGlow.toFixed(0)}%</strong> in exam ${examDateGlowStr?'('+examDateGlowStr+')':''}${examDtGlow!==null&&examDtGlow>0?' — '+examDtGlow+'d away':''}</div>`;
+    if(safeNeeded!==null && pred!==null && !isNaN(pred) && pred<75){
+      const col = safeNeeded>85?'var(--danger)':safeNeeded>75?'var(--warn)':'var(--accent2)';
+      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(79,156,249,.08);border-radius:6px;color:${col}">Need <strong>${safeNeeded.toFixed(1)}%</strong> avg in remaining ${m.assessments.filter(a=>a.score===null || isNaN(a.score)).length} assessments to reach 75%</div>`;
+    } else if(pred!==null && !isNaN(pred) && pred>=75){
+      needHtml=`<div style="font-size:11px;margin-top:6px;padding:5px 8px;background:rgba(63,185,80,.1);border-radius:6px;color:var(--accent2)">🔥 On track! Keep this up.</div>`;
     }
 
     const scores=entered.map(a=>a.score);
     const trend=scores.length>=2?(scores[scores.length-1]-scores[scores.length-2]):0;
-    const trendHtml=scores.length>=2?`<span style="font-size:12px;margin-left:8px;color:${trend>0?'var(--accent2)':trend<0?'var(--danger)':'var(--muted)'}">${trend>0?'↑ +'+trend+'%':trend<0?'↓ '+trend+'%':'→ stable'}</span>`:''
-
+    const trendHtml=scores.length>=2?`<span style="font-size:12px;margin-left:8px;color:${trend>0?'var(--accent2)':trend<0?'var(--danger)':'var(--muted)'}">${trend>0?'↑ +'+trend+'%':trend<0?'↓ '+trend+'%':'→ stable'}</span>`:'';
     html+=`<div style="padding:12px 0;border-bottom:1px solid var(--border)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div style="font-size:13px;font-weight:700">${m.icon} ${m.name}${trendHtml}</div>
-        <div style="font-size:14px;font-weight:800;color:${colorVar(m.color)}">${pred!==null?pred.toFixed(1)+'%':'—'}</div>
+        <div style="font-size:14px;font-weight:800;color:${colorVar(m.color)}">${pred!==null && !isNaN(pred)?pred.toFixed(1)+'%':'—'}</div>
       </div>
       <div style="display:flex;gap:6px;align-items:flex-end">${bars}</div>
       ${needHtml}
@@ -2025,134 +1890,101 @@ function buildGlowUp(){
   el.innerHTML=html||'<div style="color:var(--muted);font-size:13px">Enter marks in the Marks Tracker to see your glow-up graph.</div>';
 }
 
-// ======================== DASHBOARD STAT CARDS ========================
-function buildDashboardStats() {
-  // Days to first exam (CAO 27 May)
-  const daysCAO = daysUntil(EXAM_DATES.CAO);
-  const daysEl = document.getElementById('daysToExam');
-  if(daysEl) daysEl.textContent = Math.max(0, daysCAO);
-
-  // Average predicate
-  const preds = Object.keys(PREDICATE_MARKS).map(k => PREDICATE_MARKS[k]);
-  const avg = (preds.reduce((s,v)=>s+v,0)/preds.length).toFixed(1);
-  const avgEl = document.getElementById('dashAvgPred');
-  if(avgEl) avgEl.textContent = avg + '%';
-  const statusEl = document.getElementById('dashPredStatus');
-  if(statusEl) statusEl.textContent = parseFloat(avg)>=75 ? 'Above target ✓' : parseFloat(avg)>=60 ? 'Good, push for more' : 'Needs attention';
-
-  // Best module
-  const best = Object.entries(PREDICATE_MARKS).sort((a,b)=>b[1]-a[1])[0];
-  const bestEl = document.getElementById('dashBestMod');
-  if(bestEl) bestEl.textContent = best[0];
-  const bestPredEl = document.getElementById('dashBestPred');
-  if(bestPredEl) bestPredEl.textContent = best[1] + '% predicate';
-}
-
-// ======================== EXAM COUNTDOWN CARDS ========================
-function buildExamCountdownCards() {
-  const el = document.getElementById('examCountdownCards');
-  if(!el) return;
-  const exams = [
-    {k:'CAO', label:'CAO', date:EXAM_DATES.CAO, pred:66, need:84, color:'amber', icon:'⚙'},
-    {k:'DTP', label:'DTP', date:EXAM_DATES.DTP, pred:86, need:64, color:'purple', icon:'⊗'},
-    {k:'ADS', label:'ADS', date:EXAM_DATES.ADS, pred:98, need:52, color:'blue', icon:'∑'},
-    {k:'OOP', label:'OOP', date:EXAM_DATES.OOP, pred:63, need:87, color:'green', icon:'{}'},
-  ];
-  el.innerHTML = exams.map(e => {
-    const d = daysUntil(e.date);
-    const dateStr = e.date.toLocaleDateString('en-ZA',{day:'numeric',month:'short'});
-    const urgencyColor = d<=5?'var(--danger)':d<=10?'var(--warn)':'var(--accent)';
-    const feasCol = e.need<=65?'var(--accent2)':e.need<=80?'var(--warn)':'var(--danger)';
-    const statusClass = d<=5?'bad':d<=10?'mid':'good';
-    return `<div class="stat-card" style="border-color:rgba(${colorRgb(e.color)},.3)">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-        <div style="font-size:14px;font-weight:900;color:${colorVar(e.color)}">${e.icon}</div>
-        <div style="font-size:12px;font-weight:700;color:${colorVar(e.color)}">${e.label}</div>
-        <div style="font-size:10px;color:var(--muted);margin-left:auto">${dateStr}</div>
+// ======================== PROGRESS REPORT ========================
+function buildProgressReport(){
+  const el = document.getElementById('progressReport');
+  const timePerModule = {};
+  timerLogs.forEach(log=>{
+    const mod = log.mod;
+    timePerModule[mod] = (timePerModule[mod]||0) + log.mins;
+  });
+  let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">';
+  for(const [k,m] of Object.entries(modules)){
+    const pred = calcPredicate(k);
+    const predStr = pred!==null && !isNaN(pred) ? pred.toFixed(1)+'%' : '—';
+    const spent = timePerModule[k]||0;
+    const hours = (spent/60).toFixed(1);
+    const needed = pred!==null && !isNaN(pred) && pred<75 ? calcNeeded(k) : null;
+    const safeNeeded = (needed!==null && !isNaN(needed)) ? needed : null;
+    const alertMsg = pred!==null && !isNaN(pred) && pred<40 ? '⚠️ Low predicate — urgent focus!' : pred!==null && !isNaN(pred) && pred<60 ? '📌 Needs improvement' : '✅ On track';
+    const color = pred!==null && !isNaN(pred) && pred<40 ? 'var(--danger)' : pred!==null && !isNaN(pred) && pred<60 ? 'var(--warn)' : 'var(--accent2)';
+    html += `<div class="card-sm" style="border-left:3px solid ${colorVar(m.color)};">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:700;">${m.icon} ${m.name}</span>
+        <span style="font-size:14px;font-weight:800;color:${color};">${predStr}</span>
       </div>
-      <div class="stat-val" style="color:${urgencyColor};font-size:22px">${d>0?d+'d':d===0?'TODAY!':'Done ✓'}</div>
-      <div class="stat-lbl">Pred: <strong style="color:${colorVar(e.color)}">${e.pred}%</strong></div>
-      <div class="stat-sub" style="background:rgba(${colorRgb(e.color)},.12);color:${feasCol}">Need ${e.need}% ✦ Dist</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;">⏱ ${hours}h studied</div>
+      <div style="font-size:11px;color:${color};">${alertMsg}</div>
+      ${safeNeeded!==null?`<div style="font-size:10px;color:var(--muted);">Need ${safeNeeded.toFixed(0)}% on remaining work</div>`:''}
     </div>`;
-  }).join('');
+  }
+  html += '</div>';
+  el.innerHTML = html;
 }
 
-// ======================== DISTINCTION BANNER ========================
-function buildDistinctionBanner() {
-  const el = document.getElementById('distinctionBanner');
+// ======================== DASHBOARD STATS ========================
+function buildDashStats(){
+  const nextExam = Object.entries(EXAM_DATES).map(([mod,date])=>({mod,date,d:daysUntil(date)})).filter(x=>x.d>=0).sort((a,b)=>a.d-b.d)[0];
+  const nextExamStr = nextExam ? `${nextExam.mod} in ${nextExam.d}d` : 'Done!';
+  const nextExamColor = nextExam&&nextExam.d<=7?'var(--danger)':nextExam&&nextExam.d<=21?'var(--warn)':'var(--accent2)';
+  const worst = Object.entries(modules).map(([k,m])=>({k,m,pred:m.predicate||0})).sort((a,b)=>a.pred-b.pred)[0];
+  const worstExamNeeded = worst ? calcExamNeeded(worst.k) : null;
+  const totalStruggling = Object.values(LO_DATA).flat().filter(l=>loStatus[l.id]==='struggle').length;
+  const el = document.getElementById('dashStats');
   if(!el) return;
-  const targets = [
-    {k:'CAO',pred:66,need:84,date:'27 May',icon:'⚙',color:'amber'},
-    {k:'DTP',pred:86,need:64,date:'1 Jun',icon:'⊗',color:'purple'},
-    {k:'ADS',pred:98,need:52,date:'4 Jun',icon:'∑',color:'blue'},
-    {k:'OOP',pred:63,need:87,date:'8 Jun',icon:'{}',color:'green'},
-  ];
-  const allFeasible = targets.every(t=>t.need<=100);
-  el.innerHTML = `<div style="background:linear-gradient(135deg,rgba(79,156,249,.1),rgba(188,140,255,.08),rgba(63,185,80,.07));border:1px solid rgba(79,156,249,.25);border-radius:16px;padding:14px 16px">
-    <div style="font-size:14px;font-weight:800;margin-bottom:10px;background:linear-gradient(135deg,#e6edf3,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">🏆 Your Distinction Roadmap — Goal: 75%+ Final Mark</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      ${targets.map(t=>{
-        const col = t.need<=65?'var(--accent2)':t.need<=80?'var(--warn)':'var(--danger)';
-        return `<div style="flex:1;min-width:100px;background:rgba(0,0,0,.2);border-radius:10px;padding:8px 10px;text-align:center;border:1px solid rgba(${colorRgb(t.color)},.2)">
-          <div style="font-size:11px;color:${colorVar(t.color)};font-weight:700">${t.icon} ${t.k}</div>
-          <div style="font-size:20px;font-weight:800;color:${col}">${t.need}%</div>
-          <div style="font-size:9px;color:var(--muted)">exam needed</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">${t.date} · pred ${t.pred}%</div>
-        </div>`;
-      }).join('')}
+  el.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-val" style="color:${nextExamColor}">${nextExam?nextExam.d:'—'}</div>
+      <div class="stat-lbl">Days to ${nextExam?nextExam.mod+' exam':'next exam'}</div>
+      <div class="stat-sub ${nextExam&&nextExam.d<=7?'bad':nextExam&&nextExam.d<=21?'mid':'good'}">${nextExamStr}</div>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:10px">Formula: (predicate + exam mark) ÷ 2 ≥ 75% &nbsp;·&nbsp; ${allFeasible?'🟢 All targets achievable!':'⚠ Some targets need maximum effort'}</div>
-  </div>`;
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--danger)">${worst?worstExamNeeded!==null?worstExamNeeded.toFixed(0)+'%':'—':'—'}</div>
+      <div class="stat-lbl">${worst?worst.m.name.split(' ')[0]+' exam needed':''}</div>
+      <div class="stat-sub ${worstExamNeeded!==null&&worstExamNeeded>80?'bad':worstExamNeeded!==null&&worstExamNeeded>65?'mid':'good'}">${worst?'Predicate: '+worst.pred+'%':''}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--warn)" id="daysToExam">${Math.max(0,daysUntil(EXAM_START))}</div>
+      <div class="stat-lbl">Days to first exam</div>
+      <div class="stat-sub mid">AOP — 2 Nov 2026</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:${totalStruggling>5?'var(--danger)':totalStruggling>2?'var(--warn)':'var(--accent2)'}">${totalStruggling}</div>
+      <div class="stat-lbl">Struggling LOs</div>
+      <div class="stat-sub ${totalStruggling>5?'bad':totalStruggling>2?'mid':'good'}">${totalStruggling===0?'All good!':totalStruggling+' need work'}</div>
+    </div>`;
 }
 
-// ======================== INIT ========================
-loadMarks();
-buildModuleOverview();
-buildDashboardStats();
-buildExamCountdownCards();
-buildDistinctionBanner();
-buildTodayClasses();
-buildTimetable();
-buildMarks();
-buildModules();
-buildAlerts();
-buildFullSchedule();
-
-// ======================== FOCUS PRIORITY (DASHBOARD) ========================
 function buildFocusPriority(){
   const dateEl = document.getElementById('focusPriorityDate');
   const listEl = document.getElementById('focusPriorityList');
   if(!dateEl||!listEl) return;
-  dateEl.textContent = 'Exam prep — ' + TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'}) + ' | CAO: 27 May · DTP: 1 Jun · ADS: 4 Jun · OOP: 8 Jun';
+  dateEl.textContent = 'Updated for ' + TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'});
 
   const items = Object.entries(modules).map(([k,m])=>{
     const pred = calcPredicate(k)||0;
-    const examDate = EXAM_DATES[k];
-    const examD = examDate ? daysUntil(examDate) : 999;
-    const examNeeded = calcExamNeeded(k, 75) || 0;
+    const gap = Math.max(0,75-pred);
+    const st1d = daysUntil(ST1_DATES[k]);
+    const st2d = daysUntil(ST2_DATES[k]);
+    const nearest = Math.min(st1d, st2d);
     const struggling = (LO_DATA[k]||[]).filter(l=>loStatus[l.id]==='struggle').length;
     let score = 0;
-    // Closer exam = higher priority
-    if(examD<=3) score+=80; else if(examD<=7) score+=60; else if(examD<=14) score+=40; else score+=20;
-    // Higher exam mark needed = more urgent
-    score += examNeeded * 0.5;
-    score += struggling * 10;
+    if(nearest<=3) score+=60; else if(nearest<=7) score+=40; else if(nearest<=14) score+=20;
+    score += gap*0.6;
+    score += struggling*8;
     if(m.difficulty==='Hard') score+=10;
-    const urgency = examD<=3?'CRITICAL — exam soon!':examD<=7?'This week!':examD<=14?`${examD} days`:examD<999?`${examD} days`:'—';
-    const urgencyColor = examD<=3?'var(--danger)':examD<=7?'var(--danger)':examD<=14?'var(--warn)':'var(--muted)';
-    return {k,m,score,urgency,urgencyColor,pred,examD,examNeeded,struggling};
+    const urgency = nearest<=3?'CRITICAL':nearest<=7?'Urgent':gap>25?'High':struggling>2?'High':'Medium';
+    const urgencyColor = nearest<=3?'var(--danger)':nearest<=7?'var(--warn)':gap>25?'var(--warn)':'var(--muted)';
+    return {k,m,score,urgency,urgencyColor,pred,gap,nearest,struggling};
   }).sort((a,b)=>b.score-a.score);
 
   let html = '';
   items.forEach(it=>{
-    const pct = Math.min(100, it.examD<999 ? Math.max(10, 100-(it.examD*5)) : 20);
-    const examDateStr = EXAM_DATES[it.k] ? EXAM_DATES[it.k].toLocaleDateString('en-ZA',{day:'numeric',month:'short'}) : '';
-    html += `<div style="margin-bottom:8px"><div class="flex-between" style="margin-bottom:4px">
-      <span style="font-size:13px">${it.m.icon} ${it.m.name.split(' ')[0]} — exam ${examDateStr}</span>
-      <span style="font-size:12px;color:${it.urgencyColor};font-weight:700">${it.urgency} · need ${it.examNeeded.toFixed(0)}%</span>
-    </div><div class="pbar-wrap"><div class="pbar ${it.m.color}" style="width:${pct}%"></div></div>
-    <div style="font-size:10px;color:var(--muted);margin-top:2px">Predicate: ${it.pred}% · ${it.struggling>0?it.struggling+' struggling topic(s)':'All LOs covered ✓'}</div>
-    </div>`;
+    const pct = Math.min(100, it.score);
+    html += `<div><div class="flex-between" style="margin-bottom:4px">
+      <span style="font-size:13px">${it.m.icon} ${it.m.name.split(' ')[0]} — ${it.m.name.split('(')[0].trim()}</span>
+      <span style="font-size:12px;color:${it.urgencyColor};font-weight:700">${it.urgency}${it.nearest<999?' ('+it.nearest+'d)':''}</span>
+    </div><div class="pbar-wrap"><div class="pbar ${it.m.color}" style="width:${pct}%"></div></div></div>`;
   });
   listEl.innerHTML = html;
 }
@@ -2163,18 +1995,18 @@ function refreshAll(){
   const newToday=new Date(_n.getFullYear(),_n.getMonth(),_n.getDate());
   if(newToday.getTime()!==TODAY.getTime()){location.reload(); return;}
   buildModuleOverview();
-  buildDashboardStats();
-  buildExamCountdownCards();
-  buildDistinctionBanner();
   buildMarks();
   buildAlerts();
   buildGlowUp();
   buildLOChecklist();
   buildFocusPriority();
+  buildDashStats();
+  buildProgressReport();
+  buildEmergencyProgression();
   timerRenderHistory();
-  document.getElementById('daysToExam').textContent = Math.max(0,daysUntil(EXAM_DATES.CAO));
+  document.getElementById('daysToExam').textContent = Math.max(0,daysUntil(EXAM_START));
   const schedSub = document.getElementById('schedSub');
-  if(schedSub) schedSub.textContent = 'From today — '+TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})+' through exam end (12 June 2026)';
+  if(schedSub) schedSub.textContent = 'From today — '+TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})+' through exam end (20 Nov 2026)';
   const aiEl = document.getElementById('aiSuggestionResult');
   if(aiEl && aiEl.innerHTML.trim()) runAISuggestion();
 }
@@ -2186,13 +2018,26 @@ function refreshAll(){
   setTimeout(()=>location.reload(), msToMidnight);
 })();
 
-buildGlowUp();
+// ======================== INIT ========================
+loadMarks();
+buildModuleOverview();
+buildTodayClasses();
+buildTimetable();
+buildMarks();
+buildModules();
+buildAlerts();
+buildFullSchedule();
+buildProgressReport();
+buildEmergencyProgression();
+buildFocusPriority();
+buildDashStats();
 initEmergencyPage();
 initTimerPage();
-buildFocusPriority();
+buildGlowUp();
+
 (function(){
   const schedSub=document.getElementById('schedSub');
-  if(schedSub) schedSub.textContent='From today — '+TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})+' through exam end (12 June 2026)';
+  if(schedSub) schedSub.textContent='From today — '+TODAY.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})+' through exam end (20 Nov 2026)';
 })();
 if(Notification.permission==='default') Notification.requestPermission();
 
