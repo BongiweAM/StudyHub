@@ -60,6 +60,11 @@
 
         /* ===== NAV ===== */
         nav {
+            display: flex;
+              align-items: center;
+              gap: 6px;
+              height: 54px;
+              overflow-x: auto;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -94,6 +99,22 @@
         }
         .nav-brand span {
             color: var(--text);
+        }
+
+        .nav-tabs {
+          display: flex;
+          gap: 0;
+          height: 100%;
+          overflow-x: auto;
+          overflow-y: visible;
+          flex: 1;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+          align-items: center;
+          padding: 0 2px;
+          flex-shrink: 1;
+          min-width: 0;
+          flex-wrap: nowrap;   /* ← ADD THIS LINE */
         }
 
         /* Section switcher */
@@ -1372,6 +1393,9 @@
                 gap: 2px;
                 margin-right: 4px;
             }
+            .nav-tabs {
+                flex-wrap: nowrap;   /* ← ADD THIS LINE */
+              }
             .nav-tab {
                 font-size: 10px;
                 padding: 0 6px;
@@ -1507,6 +1531,20 @@
                 font-size: 9px;
                 padding: 3px 8px;
                 min-height: 28px;
+            }
+            .nav-brand {
+              font-size: 12px;      /* smaller */
+              margin-right: 2px;
+            }
+            .section-btn {
+              font-size: 9px;
+              padding: 3px 6px;
+              min-height: 24px;
+            }
+            .nav-tab {
+              font-size: 9px;
+              padding: 0 5px;
+              min-height: 34px;
             }
         }
 
