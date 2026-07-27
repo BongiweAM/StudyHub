@@ -1,438 +1,1982 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>StudyHub — TUT 2026</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>StudyHub — TUT 2026</title>
+    <style>
+        :root {
+            --bg: #0b0f17;
+            --surface: #131a26;
+            --surface2: #1a2332;
+            --border: #243044;
+            --text: #e2e8f0;
+            --muted: #8899b4;
+            --accent: #4f9cf9;
+            --accent2: #3fb950;
+            --danger: #f85149;
+            --warn: #d29922;
+            --purple: #bc8cff;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        #app {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* NAV */
+        nav {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            padding: 0.85rem 1rem;
+            background: var(--surface);
+            border-radius: 14px;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 8px;
+            z-index: 10;
+            backdrop-filter: blur(12px);
+        }
+        .nav-brand {
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+            margin-right: 0.75rem;
+            white-space: nowrap;
+        }
+        .nav-brand span {
+            color: var(--accent);
+        }
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        .nav-tab {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--muted);
+            padding: 0.45rem 0.7rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font);
+        }
+        .nav-tab:hover {
+            color: var(--text);
+            background: var(--surface2);
+        }
+        .nav-tab.active {
+            background: rgba(79, 156, 249, 0.15);
+            border-color: rgba(79, 156, 249, 0.4);
+            color: #fff;
+            font-weight: 600;
+        }
+        .nav-tab .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent2);
+        }
+        .nav-tab .dot.warn {
+            background: var(--warn);
+        }
+        .nav-tab .dot.danger {
+            background: var(--danger);
+        }
+        .badge {
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 6px 4px;
+            display: none;
+            backdrop-filter: blur(12px);
+        }
+        .bottom-nav-inner {
+            display: flex;
+            overflow-x: auto;
+            gap: 2px;
+            padding: 0 4px;
+            justify-content: space-around;
+        }
+        .bnav-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 0.6rem;
+            cursor: pointer;
+            padding: 6px 4px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            min-width: 44px;
+            font-family: var(--font);
+            transition: all 0.2s;
+        }
+        .bnav-btn.active {
+            color: var(--accent);
+            background: rgba(79, 156, 249, 0.1);
+        }
+        .bnav-icon {
+            font-size: 1.1rem;
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .section-sub {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-family: var(--font);
+            white-space: nowrap;
+        }
+        .btn:hover {
+            border-color: rgba(79, 156, 249, 0.5);
+            background: rgba(79, 156, 249, 0.08);
+        }
+        .btn.active {
+            background: rgba(79, 156, 249, 0.2);
+            border-color: rgba(79, 156, 249, 0.5);
+            color: #fff;
+            font-weight: 600;
+        }
+        .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .mb-1 {
+            margin-bottom: 0.75rem;
+        }
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .split-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .split-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+        }
+        .split-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .split-section .todo-item-dash {
+            padding: 0.4rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .split-section .todo-item-dash:hover {
+            background: var(--surface2);
+        }
+        .split-section .todo-item-dash.done {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        .split-section .todo-item-dash .category-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .split-section .todo-empty {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.78rem;
+            padding: 1rem 0;
+        }
+        .todo-item-dash .deadline-sm {
+            font-size: 0.65rem;
+            color: var(--muted);
+            margin-left: auto;
+        }
+        .todo-item-dash .deadline-sm.overdue {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .stat-card {
+            background: var(--surface2);
+            border-radius: 12px;
+            padding: 0.7rem 0.85rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-card .stat-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .stat-card .stat-label {
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .tt-grid {
+            display: grid;
+            grid-template-columns: 60px repeat(5, 1fr);
+            gap: 2px;
+            font-size: 0.7rem;
+        }
+        .tt-grid>div {
+            padding: 0.4rem 0.3rem;
+            text-align: center;
+            border-radius: 4px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        .tt-header {
+            font-weight: 700;
+            color: var(--muted);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+        }
+        .tt-slot {
+            background: var(--surface2);
+            font-size: 0.68rem;
+            border-radius: 6px;
+            margin: 1px;
+        }
+        .tt-slot.aop {
+            background: rgba(79, 156, 249, 0.25);
+            border-left: 3px solid var(--accent);
+        }
+        .tt-slot.ors {
+            background: rgba(63, 185, 80, 0.2);
+            border-left: 3px solid var(--accent2);
+        }
+        .tt-slot.sef {
+            background: rgba(188, 140, 255, 0.2);
+            border-left: 3px solid var(--purple);
+        }
+        .tt-slot.isc {
+            background: rgba(210, 153, 34, 0.2);
+            border-left: 3px solid var(--warn);
+        }
+        .resource-link {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.78rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .resource-link:hover {
+            border-color: var(--accent);
+            background: rgba(79, 156, 249, 0.08);
+        }
+        .company-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.85rem;
+        }
+        .company-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        .toggle-all-btn {
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            user-select: none;
+        }
+        .schedule-day {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+        .schedule-day-header {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        .schedule-day-body {
+            padding: 0 1rem 0.7rem;
+            display: none;
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        .schedule-day-body.open {
+            display: block;
+        }
+        .lo-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 0.5rem;
+            border-radius: 6px;
+            margin-bottom: 2px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            transition: background 0.15s;
+        }
+        .lo-item:hover {
+            background: var(--surface2);
+        }
+        .lo-item.know {
+            border-left: 3px solid var(--accent2);
+        }
+        .lo-item.struggle {
+            border-left: 3px solid var(--danger);
+        }
+        .lo-badge {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .lo-badge.know {
+            background: rgba(63, 185, 80, 0.2);
+            color: var(--accent2);
+        }
+        .lo-badge.struggle {
+            background: rgba(248, 81, 73, 0.2);
+            color: var(--danger);
+        }
+        .progress-bar-wrap {
+            background: var(--surface2);
+            border-radius: 6px;
+            height: 8px;
+            margin: 4px 0 8px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.4s;
+        }
+        .progress-bar-fill.good {
+            background: var(--accent2);
+        }
+        .progress-bar-fill.warn {
+            background: var(--warn);
+        }
+        .progress-bar-fill.danger {
+            background: var(--danger);
+        }
+        .todo-input {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .todo-input input,
+        .todo-input select {
+            flex: 1;
+            min-width: 100px;
+        }
+        textarea,
+        input[type="text"],
+        input[type="date"],
+        select {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.8rem;
+            padding: 8px;
+            outline: none;
+            font-family: var(--font);
+        }
+        textarea:focus,
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+        }
+        @media (max-width: 768px) {
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .split-dashboard {
+                grid-template-columns: 1fr;
+            }
+            .nav-tabs {
+                display: none;
+            }
+            .bottom-nav {
+                display: block;
+            }
+            .nav-brand {
+                font-size: 1.1rem;
+            }
+            nav {
+                justify-content: center;
+                padding: 0.6rem;
+            }
+            .section-title {
+                font-size: 1.2rem;
+            }
+            .tt-grid {
+                font-size: 0.6rem;
+                grid-template-columns: 40px repeat(5, 1fr);
+            }
+            .todo-input {
+                flex-direction: column;
+            }
+            .todo-input input,
+            .todo-input select {
+                width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            #app {
+                padding: 0.5rem;
+            }
+            .card {
+                padding: 0.75rem;
+            }
+            .split-section {
+                padding: 0.65rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<canvas id="particles"></canvas>
-<div id="app">
+    <canvas id="particles"></canvas>
+    <div id="app">
 
-  <!-- ========== NAVIGATION ========== -->
-  <nav>
-    <div class="nav-brand">Study<span>Hub</span></div>
-    <div class="nav-tabs">
-      <button class="nav-tab active" onclick="show('dashboard')"><div class="dot"></div> Dashboard</button>
-      <button class="nav-tab" onclick="show('timetable')">Timetable</button>
-      <button class="nav-tab" onclick="show('schedule')">Daily Schedule</button>
-      <button class="nav-tab" onclick="show('marks')"><div class="dot warn"></div> Marks Tracker</button>
-      <button class="nav-tab" onclick="show('modules')">Modules</button>
-      <button class="nav-tab" onclick="show('alerts')"><div class="dot danger"></div> Alerts <span class="badge">4</span></button>
-      <button class="nav-tab" onclick="show('todo')">📋 To-Do</button>
-      <button class="nav-tab" onclick="show('aws')">☁️ AWS</button>
-      <button class="nav-tab" onclick="show('books')">📚 Books</button>
-      <button class="nav-tab" onclick="show('internship')">💼 Internship</button>
-      <button class="nav-tab" onclick="show('focus')">⚡ Focus</button>
-      <button class="nav-tab" onclick="show('emergency')">🆘 Emergency</button>
-      <button class="nav-tab" onclick="show('timer')">🍅 Timer</button>
-    </div>
-  </nav>
+        <!-- ========== NAVIGATION ========== -->
+        <nav>
+            <div class="nav-brand">Study<span>Hub</span></div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="show('dashboard')"><div class="dot"></div> Dashboard</button>
+                <button class="nav-tab" onclick="show('timetable')">Timetable</button>
+                <button class="nav-tab" onclick="show('schedule')">Daily Schedule</button>
+                <button class="nav-tab" onclick="show('marks')"><div class="dot warn"></div> Marks Tracker</button>
+                <button class="nav-tab" onclick="show('modules')">Modules</button>
+                <button class="nav-tab" onclick="show('alerts')"><div class="dot danger"></div> Alerts <span class="badge" id="alertBadge">4</span></button>
+                <button class="nav-tab" onclick="show('todo')">📋 To-Do</button>
+                <button class="nav-tab" onclick="show('aws')">☁️ AWS</button>
+                <button class="nav-tab" onclick="show('books')">📚 Books</button>
+                <button class="nav-tab" onclick="show('internship')">💼 Internship</button>
+                <button class="nav-tab" onclick="show('focus')">⚡ Focus</button>
+                <button class="nav-tab" onclick="show('emergency')">🆘 Emergency</button>
+                <button class="nav-tab" onclick="show('timer')">🍅 Timer</button>
+            </div>
+        </nav>
 
-  <!-- ========== DASHBOARD ========== -->
-  <div id="page-dashboard" class="page active">
-    <div class="section-title" id="greeting"></div>
-    <div class="section-sub">Semester 2, 2026 — TUT Soshanguve South Campus</div>
+        <!-- ========== DASHBOARD ========== -->
+        <div id="page-dashboard" class="page active">
+            <div class="section-title" id="greeting"></div>
+            <div class="section-sub">Semester 2, 2026 — TUT Soshanguve South Campus</div>
 
-    <!-- Split Dashboard: School vs Work -->
-    <div class="split-dashboard">
-      <div class="split-section">
-        <h3>🎓 School Focus</h3>
-        <div id="schoolTodoList"></div>
-        <button class="btn" onclick="show('todo')" style="width:100%;justify-content:center;margin-top:0.75rem">
-          View All School Tasks →
-        </button>
-      </div>
-      <div class="split-section">
-        <h3>💼 Work & Personal</h3>
-        <div id="workTodoList"></div>
-        <button class="btn" onclick="show('todo')" style="width:100%;justify-content:center;margin-top:0.75rem">
-          View All Work Tasks →
-        </button>
-      </div>
-    </div>
+            <!-- Split Dashboard: School vs Work -->
+            <div class="split-dashboard">
+                <div class="split-section">
+                    <h3>🎓 School Focus</h3>
+                    <div id="schoolTodoList"></div>
+                    <button class="btn" onclick="show('todo')" style="width:100%;justify-content:center;margin-top:0.75rem">
+                        View All School Tasks →
+                    </button>
+                </div>
+                <div class="split-section">
+                    <h3>💼 Work & Personal</h3>
+                    <div id="workTodoList"></div>
+                    <button class="btn" onclick="show('todo')" style="width:100%;justify-content:center;margin-top:0.75rem">
+                        View All Work Tasks →
+                    </button>
+                </div>
+            </div>
 
-    <div id="currentActivity"></div>
-    <div id="dashAlerts"></div>
-    <div class="grid-4" style="margin-bottom:1rem" id="dashStats"></div>
+            <div id="currentActivity"></div>
+            <div id="dashAlerts"></div>
+            <div class="grid-4" style="margin-bottom:1rem" id="dashStats"></div>
 
-    <div class="card" style="margin-bottom:1rem; border-color: rgba(79,156,249,.3);">
-      <div style="font-size:15px; font-weight:700; margin-bottom:.75rem;">📊 Progress Report – Marks & Time</div>
-      <div id="progressReport"></div>
-    </div>
+            <div class="card" style="margin-bottom:1rem; border-color: rgba(79,156,249,.3);">
+                <div style="font-size:15px; font-weight:700; margin-bottom:.75rem;">📊 Progress Report – Marks & Time</div>
+                <div id="progressReport"></div>
+            </div>
 
-    <div class="card" style="margin-bottom:1rem">
-      <div class="flex-between mb-1">
-        <div style="font-size:15px;font-weight:700">Module overview</div>
-        <button class="btn" style="font-size:11px" onclick="show('marks')">View marks →</button>
-      </div>
-      <div id="moduleOverview"></div>
-    </div>
+            <div class="card" style="margin-bottom:1rem">
+                <div class="flex-between mb-1">
+                    <div style="font-size:15px;font-weight:700">Module overview</div>
+                    <button class="btn" style="font-size:11px" onclick="show('marks')">View marks →</button>
+                </div>
+                <div id="moduleOverview"></div>
+            </div>
 
-    <div class="grid-2">
-      <div class="card today-card">
-        <div style="font-size:15px;font-weight:700;margin-bottom:.75rem" id="todayClassesTitle">Today's classes</div>
-        <div id="todayClasses"></div>
-      </div>
-      <div class="card">
-        <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">Focus priority this week</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem" id="focusPriorityDate"></div>
-        <div style="display:flex;flex-direction:column;gap:8px" id="focusPriorityList"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== TIMETABLE ========== -->
-  <div id="page-timetable" class="page">
-    <div class="section-title">Class timetable</div>
-    <div class="section-sub">Semester 2, 2026 — weekly recurring schedule</div>
-    <div class="card" style="overflow-x:auto">
-      <div class="tt-grid" id="ttGrid" style="min-width:600px"></div>
-    </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:1rem">
-      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(79,156,249,.4)"></div><span style="font-size:12px;color:var(--muted)">AOP</span></div>
-      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(63,185,80,.4)"></div><span style="font-size:12px;color:var(--muted)">ORS</span></div>
-      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(188,140,255,.4)"></div><span style="font-size:12px;color:var(--muted)">SEF</span></div>
-      <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(210,153,34,.4)"></div><span style="font-size:12px;color:var(--muted)">ISC</span></div>
-    </div>
-    <div class="card" style="margin-top:1rem">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">Key dates reminder</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.8">
-        Semester Starts: 13 Jul 2026 | Test Week 1: 17–31 Aug 2026 | Recess: 18–27 Sep 2026 | Test Week 2: 28 Sep–12 Oct 2026 | Sick Test: 19–23 Oct 2026 | Predicate Day: 26 Oct 2026 | Exams: 2–23 Nov 2026
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== DAILY SCHEDULE ========== -->
-  <div id="page-schedule" class="page">
-    <div class="section-title">Daily schedule</div>
-    <div class="section-sub" id="schedSub"></div>
-    <div class="toggle-all-btn" onclick="toggleAll()">▼ Expand all days</div>
-    <div id="fullSchedule"></div>
-  </div>
-
-  <!-- ========== MARKS TRACKER ========== -->
-  <div id="page-marks" class="page">
-    <div class="section-title">Marks tracker</div>
-    <div class="section-sub">Enter your marks — see exactly what you need in remaining assessments to hit 75%</div>
-    <div id="marksContent"></div>
-  </div>
-
-  <!-- ========== MODULES ========== -->
-  <div id="page-modules" class="page">
-    <div class="section-title">Module details</div>
-    <div class="section-sub">Study guides, learning outcomes &amp; assessment breakdown</div>
-    <div id="modulesContent"></div>
-  </div>
-
-  <!-- ========== ALERTS ========== -->
-  <div id="page-alerts" class="page">
-    <div class="section-title">Alerts &amp; reminders</div>
-    <div class="section-sub">Test weeks, key deadlines, and topics to focus on</div>
-    <div id="alertsContent"></div>
-  </div>
-
-  <!-- ========== TO-DO LIST ========== -->
-  <div id="page-todo" class="page">
-    <div class="section-title">📋 Task Manager</div>
-    <div class="section-sub">Stay on top of schoolwork, AWS tasks, and personal goals</div>
-    
-    <div class="card" style="margin-bottom:1rem">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">➕ Add New Task</div>
-      <div class="todo-input">
-        <input type="text" id="newTaskTitle" placeholder="What needs to be done?" style="flex:2">
-        <select id="newTaskCategory" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
-          <option value="school">🎓 School</option>
-          <option value="work">💼 Work/Personal</option>
-          <option value="aws">☁️ AWS</option>
-          <option value="internship">💼 Internship</option>
-        </select>
-        <input type="date" id="newTaskDeadline" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
-        <button class="btn" onclick="addTodo()" style="background:var(--accent);color:white;border-color:var(--accent)">Add</button>
-      </div>
-    </div>
-    
-    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
-      <button class="btn active" id="filterAll" onclick="filterTodos('all')">All</button>
-      <button class="btn" id="filterSchool" onclick="filterTodos('school')">🎓 School</button>
-      <button class="btn" id="filterWork" onclick="filterTodos('work')">💼 Work</button>
-      <button class="btn" id="filterAWS" onclick="filterTodos('aws')">☁️ AWS</button>
-      <button class="btn" id="filterInternship" onclick="filterTodos('internship')">💼 Internship</button>
-      <button class="btn" id="filterOverdue" onclick="filterTodos('overdue')">⚠️ Overdue</button>
-    </div>
-    
-    <div id="todoList"></div>
-  </div>
-
-  <!-- ========== AWS STUDENT BUILDER ========== -->
-  <div id="page-aws" class="page">
-    <div class="section-title">☁️ AWS Student Builder @ TUT</div>
-    <div class="section-sub">Resources, notes, and tasks for the AWS Student Builder group</div>
-    
-    <div class="card" style="margin-bottom:1rem;border-color:rgba(255,153,0,.3)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
-        <div style="font-size:32px">☁️</div>
-        <div>
-          <div style="font-size:16px;font-weight:700">TUT AWS Student Builder Group</div>
-          <div style="font-size:12px;color:var(--muted)">Computer Science Department</div>
+            <div class="grid-2">
+                <div class="card today-card">
+                    <div style="font-size:15px;font-weight:700;margin-bottom:.75rem" id="todayClassesTitle">Today's classes</div>
+                    <div id="todayClasses"></div>
+                </div>
+                <div class="card">
+                    <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">Focus priority this week</div>
+                    <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem" id="focusPriorityDate"></div>
+                    <div style="display:flex;flex-direction:column;gap:8px" id="focusPriorityList"></div>
+                </div>
+            </div>
         </div>
-      </div>
-      
-      <div style="margin-bottom:1rem">
-        <div class="label">Quick Links</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <a href="https://aws.amazon.com/education/awseducate/" target="_blank" class="resource-link">🎓 AWS Educate</a>
-          <a href="https://aws.amazon.com/training/" target="_blank" class="resource-link">📚 AWS Training</a>
-          <a href="https://aws.amazon.com/certification/" target="_blank" class="resource-link">🏆 AWS Certifications</a>
-          <a href="https://aws.amazon.com/free/" target="_blank" class="resource-link">🆓 AWS Free Tier</a>
-          <a href="https://aws.amazon.com/developer/community/students/" target="_blank" class="resource-link">👥 Student Community</a>
+
+        <!-- ========== TIMETABLE ========== -->
+        <div id="page-timetable" class="page">
+            <div class="section-title">Class timetable</div>
+            <div class="section-sub">Semester 2, 2026 — weekly recurring schedule</div>
+            <div class="card" style="overflow-x:auto">
+                <div class="tt-grid" id="ttGrid" style="min-width:600px"></div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:1rem">
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(79,156,249,.4)"></div><span style="font-size:12px;color:var(--muted)">AOP</span></div>
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(63,185,80,.4)"></div><span style="font-size:12px;color:var(--muted)">ORS</span></div>
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(188,140,255,.4)"></div><span style="font-size:12px;color:var(--muted)">SEF</span></div>
+                <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:rgba(210,153,34,.4)"></div><span style="font-size:12px;color:var(--muted)">ISC</span></div>
+            </div>
+            <div class="card" style="margin-top:1rem">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">Key dates reminder</div>
+                <div style="font-size:12px;color:var(--muted);line-height:1.8">
+                    Semester Starts: 13 Jul 2026 | Test Week 1: 17–31 Aug 2026 | Recess: 18–27 Sep 2026 | Test Week 2: 28 Sep–12 Oct 2026 | Sick Test: 19–23 Oct 2026 | Predicate Day: 26 Oct 2026 | Exams: 2–23 Nov 2026
+                </div>
+            </div>
         </div>
-      </div>
-      
-      <div style="margin-bottom:1rem">
-        <div class="label">Group Notes</div>
-        <textarea id="awsNotes" rows="6" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:10px;outline:none;resize:vertical"></textarea>
-        <button class="btn" onclick="saveAWSNote()" style="margin-top:0.5rem">💾 Save Notes</button>
-      </div>
-      
-      <div>
-        <div class="label">Learning Path (Cloud Practitioner → Solutions Architect)</div>
-        <div style="display:flex;flex-direction:column;gap:8px" id="awsLearningPath"></div>
-      </div>
+
+        <!-- ========== DAILY SCHEDULE ========== -->
+        <div id="page-schedule" class="page">
+            <div class="section-title">Daily schedule</div>
+            <div class="section-sub" id="schedSub"></div>
+            <div class="toggle-all-btn" onclick="toggleAll()">▼ Expand all days</div>
+            <div id="fullSchedule"></div>
+        </div>
+
+        <!-- ========== MARKS TRACKER ========== -->
+        <div id="page-marks" class="page">
+            <div class="section-title">Marks tracker</div>
+            <div class="section-sub">Enter your marks — see exactly what you need in remaining assessments to hit 75%</div>
+            <div id="marksContent"></div>
+        </div>
+
+        <!-- ========== MODULES ========== -->
+        <div id="page-modules" class="page">
+            <div class="section-title">Module details</div>
+            <div class="section-sub">Study guides, learning outcomes &amp; assessment breakdown</div>
+            <div id="modulesContent"></div>
+        </div>
+
+        <!-- ========== ALERTS ========== -->
+        <div id="page-alerts" class="page">
+            <div class="section-title">Alerts &amp; reminders</div>
+            <div class="section-sub">Test weeks, key deadlines, and topics to focus on</div>
+            <div id="alertsContent"></div>
+        </div>
+
+        <!-- ========== TO-DO LIST ========== -->
+        <div id="page-todo" class="page">
+            <div class="section-title">📋 Task Manager</div>
+            <div class="section-sub">Stay on top of schoolwork, AWS tasks, and personal goals</div>
+
+            <div class="card" style="margin-bottom:1rem">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">➕ Add New Task</div>
+                <div class="todo-input">
+                    <input type="text" id="newTaskTitle" placeholder="What needs to be done?" style="flex:2">
+                    <select id="newTaskCategory" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
+                        <option value="school">🎓 School</option>
+                        <option value="work">💼 Work/Personal</option>
+                        <option value="aws">☁️ AWS</option>
+                        <option value="internship">💼 Internship</option>
+                    </select>
+                    <input type="date" id="newTaskDeadline" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
+                    <button class="btn" onclick="addTodo()" style="background:var(--accent);color:white;border-color:var(--accent)">Add</button>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+                <button class="btn active" id="filterAll" onclick="filterTodos('all')">All</button>
+                <button class="btn" id="filterSchool" onclick="filterTodos('school')">🎓 School</button>
+                <button class="btn" id="filterWork" onclick="filterTodos('work')">💼 Work</button>
+                <button class="btn" id="filterAWS" onclick="filterTodos('aws')">☁️ AWS</button>
+                <button class="btn" id="filterInternship" onclick="filterTodos('internship')">💼 Internship</button>
+                <button class="btn" id="filterOverdue" onclick="filterTodos('overdue')">⚠️ Overdue</button>
+            </div>
+
+            <div id="todoList"></div>
+        </div>
+
+        <!-- ========== AWS STUDENT BUILDER ========== -->
+        <div id="page-aws" class="page">
+            <div class="section-title">☁️ AWS Student Builder @ TUT</div>
+            <div class="section-sub">Resources, notes, and tasks for the AWS Student Builder group</div>
+
+            <div class="card" style="margin-bottom:1rem;border-color:rgba(255,153,0,.3)">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+                    <div style="font-size:32px">☁️</div>
+                    <div>
+                        <div style="font-size:16px;font-weight:700">TUT AWS Student Builder Group</div>
+                        <div style="font-size:12px;color:var(--muted)">Computer Science Department</div>
+                    </div>
+                </div>
+                <div style="margin-bottom:1rem">
+                    <div class="label">Quick Links</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                        <a href="https://aws.amazon.com/education/awseducate/" target="_blank" class="resource-link">🎓 AWS Educate</a>
+                        <a href="https://aws.amazon.com/training/" target="_blank" class="resource-link">📚 AWS Training</a>
+                        <a href="https://aws.amazon.com/certification/" target="_blank" class="resource-link">🏆 AWS Certifications</a>
+                        <a href="https://aws.amazon.com/free/" target="_blank" class="resource-link">🆓 AWS Free Tier</a>
+                        <a href="https://aws.amazon.com/developer/community/students/" target="_blank" class="resource-link">👥 Student Community</a>
+                    </div>
+                </div>
+                <div style="margin-bottom:1rem">
+                    <div class="label">Group Notes</div>
+                    <textarea id="awsNotes" rows="6" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:10px;outline:none;resize:vertical"></textarea>
+                    <button class="btn" onclick="saveAWSNote()" style="margin-top:0.5rem">💾 Save Notes</button>
+                </div>
+                <div>
+                    <div class="label">Learning Path (Cloud Practitioner → Solutions Architect)</div>
+                    <div style="display:flex;flex-direction:column;gap:8px" id="awsLearningPath"></div>
+                </div>
+            </div>
+            <div class="card" style="margin-bottom:1rem">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📋 AWS To-Do List</div>
+                <div id="awsTodoList"></div>
+            </div>
+        </div>
+
+        <!-- ========== BOOKS ========== -->
+        <div id="page-books" class="page">
+            <div class="section-title">📚 Reading Tracker</div>
+            <div class="section-sub">Track books you've read and time to completion</div>
+            <div class="card" style="margin-bottom:1rem">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">➕ Add Book</div>
+                <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end">
+                    <div><div class="label">Book Title</div><input type="text" id="bookTitle" placeholder="Enter book title" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px"></div>
+                    <div><div class="label">Author</div><input type="text" id="bookAuthor" placeholder="Author name" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px"></div>
+                    <div><div class="label">Category</div><select id="bookCategory" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none"><option>Technical</option><option>Self-Help</option><option>Fiction</option><option>Biography</option><option>Academic</option><option>Other</option></select></div>
+                    <button class="btn" onclick="addBook()" style="background:var(--accent);color:white;border-color:var(--accent);height:40px">Add</button>
+                </div>
+            </div>
+            <div class="grid-3" style="margin-bottom:1rem" id="bookStats"></div>
+            <div id="bookList"></div>
+        </div>
+
+        <!-- ========== INTERNSHIP PREP ========== -->
+        <div id="page-internship" class="page">
+            <div class="section-title">💼 Internship Preparation</div>
+            <div class="section-sub">Technical interview prep, company tracking, and readiness assessment</div>
+            <div class="card" style="margin-bottom:1rem">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🎯 Technical Interview Prep Platforms</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+                    <div class="company-card"><h4>📊 LeetCode</h4><p style="font-size:12px;color:var(--muted);margin-bottom:8px">Practice coding problems, algorithms & data structures</p><a href="https://leetcode.com/" target="_blank" class="resource-link">Start Practicing →</a></div>
+                    <div class="company-card"><h4>💻 HackerRank</h4><p style="font-size:12px;color:var(--muted);margin-bottom:8px">Coding challenges & interview preparation kit</p><a href="https://www.hackerrank.com/" target="_blank" class="resource-link">Start Practicing →</a></div>
+                    <div class="company-card"><h4>🎓 AlgoExpert</h4><p style="font-size:12px;color:var(--muted);margin-bottom:8px">Curated coding interview questions with video solutions</p><a href="https://www.algoexpert.io/" target="_blank" class="resource-link">Start Practicing →</a></div>
+                    <div class="company-card"><h4>📚 System Design Primer</h4><p style="font-size:12px;color:var(--muted);margin-bottom:8px">Learn large-scale system design for interviews</p><a href="https://github.com/donnemartin/system-design-primer" target="_blank" class="resource-link">Start Learning →</a></div>
+                    <div class="company-card"><h4>🤖 Pramp</h4><p style="font-size:12px;color:var(--muted);margin-bottom:8px">Free mock interviews with peers</p><a href="https://www.pramp.com/" target="_blank" class="resource-link">Start Mock Interviews →</a></div>
+                    <div class="company-card"><h4>📖 Cracking the Coding Interview</h4><p style="font-size:12px;color:var(--muted);margin-bottom:8px">Essential book for technical interviews</p><a href="https://www.crackingthecodinginterview.com/" target="_blank" class="resource-link">Get the Book →</a></div>
+                </div>
+            </div>
+            <div class="card" style="margin-bottom:1rem">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🏢 Company Applications Tracker</div>
+                <div style="margin-bottom:1rem"><button class="btn" onclick="addCompany()" style="background:var(--accent);color:white;border-color:var(--accent)">➕ Add Company</button></div>
+                <div id="companyList"></div>
+            </div>
+        </div>
+
+        <!-- ========== EMERGENCY RECOVERY ========== -->
+        <div id="page-emergency" class="page">
+            <div class="section-title">🆘 Emergency Recovery</div>
+            <div class="section-sub">Tell me what you know and what you don't — I'll rebuild your study schedule around your gaps</div>
+            <div class="card" style="margin-bottom:1rem;border-color:rgba(248,81,73,.3)">
+                <div style="font-size:13px;color:var(--muted);margin-bottom:1rem;line-height:1.7">
+                    For each Learning Outcome below, tap <span style="color:var(--accent2);font-weight:700">✓ I know this</span> or <span style="color:var(--danger);font-weight:700">✗ I'm struggling</span>. Be honest—this helps us create a smarter recovery plan.
+                </div>
+                <div id="loChecklist"></div>
+                <button class="btn" onclick="generateRecoveryPlan()" style="width:100%;justify-content:center;margin-top:1rem;background:rgba(248,81,73,.15);border-color:rgba(248,81,73,.4);color:var(--danger);font-weight:700">
+                    🆘 Generate my recovery schedule
+                </button>
+            </div>
+            <div id="emergencyProgression"></div>
+            <div id="emergencyTimetable"></div>
+        </div>
+
+        <!-- ========== TIMER ========== -->
+        <div id="page-timer" class="page">
+            <div class="section-title">🍅 Focus Timer</div>
+            <div class="section-sub">Start a session for a specific module &amp; LO — when you stop, log what you covered</div>
+            <div class="card" style="margin-bottom:1rem" id="timerSetupCard">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">1. Pick your module &amp; topic</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
+                    <button class="btn" id="tmod-AOP" onclick="timerPickMod('AOP')">📱 AOP</button>
+                    <button class="btn" id="tmod-ORS" onclick="timerPickMod('ORS')">⚙️ ORS</button>
+                    <button class="btn" id="tmod-SEF" onclick="timerPickMod('SEF')">🛠️ SEF</button>
+                    <button class="btn" id="tmod-ISC" onclick="timerPickMod('ISC')">🔒 ISC</button>
+                </div>
+                <div id="timerLOPicker" style="margin-bottom:.75rem"></div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:.5rem">2. Set duration</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
+                    <button class="btn" onclick="timerSetDur(25)" id="tdur-25">25 min</button>
+                    <button class="btn" onclick="timerSetDur(45)" id="tdur-45">45 min</button>
+                    <button class="btn" onclick="timerSetDur(60)" id="tdur-60">60 min</button>
+                    <button class="btn" onclick="timerSetDur(90)" id="tdur-90">90 min</button>
+                </div>
+                <button class="btn" id="timerStartBtn" onclick="timerStart()" style="width:100%;justify-content:center;font-size:14px;padding:12px;background:linear-gradient(135deg,rgba(79,156,249,.2),rgba(63,185,80,.15));border-color:rgba(79,156,249,.3)">
+                    ▶ Start session
+                </button>
+            </div>
+            <div class="card" style="margin-bottom:1rem;display:none;border-color:rgba(79,156,249,.4)" id="timerActiveCard">
+                <div style="text-align:center">
+                    <div id="timerModLabel" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px"></div>
+                    <div id="timerLOLabel" style="font-size:13px;font-weight:600;margin-bottom:8px"></div>
+                    <div id="timerDisplay" style="font-size:64px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;text-shadow:0 0 30px rgba(79,156,249,.6);line-height:1">00:00</div>
+                    <div id="timerStatus" style="font-size:12px;color:var(--muted);margin:6px 0 16px">Session running...</div>
+                    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+                        <button class="btn" id="timerPauseBtn" onclick="timerPause()">⏸ Pause</button>
+                        <button class="btn" id="timerResumeBtn" onclick="timerResume()" style="display:none">▶ Resume</button>
+                        <button class="btn" onclick="timerStop()" style="background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.35);color:var(--danger)">⏹ Stop &amp; log</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="margin-bottom:1rem;display:none;border-color:rgba(63,185,80,.3)" id="timerLogCard">
+                <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📝 How did that session go?</div>
+                <div id="timerLogSummary" style="font-size:12px;color:var(--muted);margin-bottom:.75rem"></div>
+                <div style="margin-bottom:.75rem"><div class="label">What did you cover?</div><textarea id="timerLogCovered" rows="3" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 10px;outline:none;resize:vertical"></textarea></div>
+                <div style="margin-bottom:.75rem"><div class="label">How confident do you feel now?</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                        <button class="btn" id="conf-1" onclick="timerSetConf(1)" style="font-size:12px">😰 Lost</button>
+                        <button class="btn" id="conf-2" onclick="timerSetConf(2)" style="font-size:12px">😕 Shaky</button>
+                        <button class="btn" id="conf-3" onclick="timerSetConf(3)" style="font-size:12px">😐 Getting it</button>
+                        <button class="btn" id="conf-4" onclick="timerSetConf(4)" style="font-size:12px">😊 Solid</button>
+                        <button class="btn" id="conf-5" onclick="timerSetConf(5)" style="font-size:12px">🔥 Nailed it</button>
+                    </div>
+                </div>
+                <div id="timerLogAnalysis" style="margin-bottom:.75rem"></div>
+                <button class="btn" onclick="timerSaveLog()" style="width:100%;justify-content:center;background:rgba(63,185,80,.15);border-color:rgba(63,185,80,.35);color:var(--accent2);font-size:14px;padding:10px">✓ Save session</button>
+            </div>
+            <div class="card">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+                    <div style="font-size:14px;font-weight:700">📊 Session history</div>
+                    <button class="btn" style="font-size:11px;padding:4px 10px" onclick="timerClearLog()">Clear all</button>
+                </div>
+                <div id="timerHistory"></div>
+            </div>
+        </div>
+
+        <!-- ========== FOCUS HUB ========== -->
+        <div id="page-focus" class="page">
+            <div class="section-title">⚡ Focus Hub</div>
+            <div class="section-sub">AI study suggestion · Emergency mode · Progress glow-up</div>
+            <div class="card" style="margin-bottom:1rem;border-color:rgba(79,156,249,.3)">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+                    <div style="font-size:24px">🤖</div>
+                    <div><div style="font-size:15px;font-weight:700">What should I study RIGHT NOW?</div><div style="font-size:12px;color:var(--muted)">Based on your marks, upcoming tests &amp; time of day</div></div>
+                </div>
+                <button class="btn" style="width:100%;justify-content:center;background:linear-gradient(135deg,rgba(79,156,249,.2),rgba(188,140,255,.15));border-color:rgba(79,156,249,.4);font-size:14px;padding:12px" onclick="getAISuggestion()">🧠 Tell me what to study</button>
+                <div id="aiSuggestionResult" style="margin-top:.75rem"></div>
+            </div>
+            <div class="card">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+                    <div style="font-size:24px">📈</div>
+                    <div><div style="font-size:15px;font-weight:700">Glow Up — Progress Graph</div><div style="font-size:12px;color:var(--muted)">Your marks journey &amp; what you need to reach 75%</div></div>
+                </div>
+                <div id="glowUpGraph"></div>
+            </div>
+        </div>
+
     </div>
-    
-    <div class="card" style="margin-bottom:1rem">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📋 AWS To-Do List</div>
-      <div id="awsTodoList"></div>
-    </div>
-  </div>
 
-  <!-- ========== BOOKS ========== -->
-  <div id="page-books" class="page">
-    <div class="section-title">📚 Reading Tracker</div>
-    <div class="section-sub">Track books you've read and time to completion</div>
-    
-    <div class="card" style="margin-bottom:1rem">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">➕ Add Book</div>
-      <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end">
-        <div>
-          <div class="label">Book Title</div>
-          <input type="text" id="bookTitle" placeholder="Enter book title" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px">
+    <!-- ========== BOTTOM NAVIGATION (Mobile) ========== -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <button class="bnav-btn active" onclick="show('dashboard')"><span class="bnav-icon">🏠</span>Home</button>
+            <button class="bnav-btn" onclick="show('timetable')"><span class="bnav-icon">📅</span>Classes</button>
+            <button class="bnav-btn" onclick="show('schedule')"><span class="bnav-icon">🗓️</span>Schedule</button>
+            <button class="bnav-btn" onclick="show('marks')"><span class="bnav-icon">📊</span>Marks</button>
+            <button class="bnav-btn" onclick="show('modules')"><span class="bnav-icon">📚</span>Modules</button>
+            <button class="bnav-btn" onclick="show('alerts')"><span class="bnav-icon">🔔</span>Alerts</button>
+            <button class="bnav-btn" onclick="show('focus')"><span class="bnav-icon">⚡</span>Focus</button>
+            <button class="bnav-btn" onclick="show('emergency')"><span class="bnav-icon">🆘</span>SOS</button>
+            <button class="bnav-btn" onclick="show('timer')"><span class="bnav-icon">🍅</span>Timer</button>
         </div>
-        <div>
-          <div class="label">Author</div>
-          <input type="text" id="bookAuthor" placeholder="Author name" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px">
-        </div>
-        <div>
-          <div class="label">Category</div>
-          <select id="bookCategory" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
-            <option>Technical</option>
-            <option>Self-Help</option>
-            <option>Fiction</option>
-            <option>Biography</option>
-            <option>Academic</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <button class="btn" onclick="addBook()" style="background:var(--accent);color:white;border-color:var(--accent);height:40px">Add</button>
-      </div>
-    </div>
-    
-    <div class="grid-3" style="margin-bottom:1rem" id="bookStats"></div>
-    <div id="bookList"></div>
-  </div>
+    </nav>
 
-  <!-- ========== INTERNSHIP PREP ========== -->
-  <div id="page-internship" class="page">
-    <div class="section-title">💼 Internship Preparation</div>
-    <div class="section-sub">Technical interview prep, company tracking, and readiness assessment</div>
-    
-    <div class="card" style="margin-bottom:1rem">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🎯 Technical Interview Prep Platforms</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
-        <div class="company-card">
-          <h4>📊 LeetCode</h4>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Practice coding problems, algorithms & data structures</p>
-          <a href="https://leetcode.com/" target="_blank" class="resource-link">Start Practicing →</a>
-        </div>
-        <div class="company-card">
-          <h4>💻 HackerRank</h4>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Coding challenges & interview preparation kit</p>
-          <a href="https://www.hackerrank.com/" target="_blank" class="resource-link">Start Practicing →</a>
-        </div>
-        <div class="company-card">
-          <h4>🎓 AlgoExpert</h4>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Curated coding interview questions with video solutions</p>
-          <a href="https://www.algoexpert.io/" target="_blank" class="resource-link">Start Practicing →</a>
-        </div>
-        <div class="company-card">
-          <h4>📚 System Design Primer</h4>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Learn large-scale system design for interviews</p>
-          <a href="https://github.com/donnemartin/system-design-primer" target="_blank" class="resource-link">Start Learning →</a>
-        </div>
-        <div class="company-card">
-          <h4>🤖 Pramp</h4>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Free mock interviews with peers</p>
-          <a href="https://www.pramp.com/" target="_blank" class="resource-link">Start Mock Interviews →</a>
-        </div>
-        <div class="company-card">
-          <h4>📖 Cracking the Coding Interview</h4>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Essential book for technical interviews</p>
-          <a href="https://www.crackingthecodinginterview.com/" target="_blank" class="resource-link">Get the Book →</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="card" style="margin-bottom:1rem">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🏢 Company Applications Tracker</div>
-      <div style="margin-bottom:1rem">
-        <button class="btn" onclick="addCompany()" style="background:var(--accent);color:white;border-color:var(--accent)">➕ Add Company</button>
-      </div>
-      <div id="companyList"></div>
-    </div>
-  </div>
+    <script>
+        // ==================== APP STATE ====================
+        const todos = [
+            { id: 1, title: 'AOP Test 1 revision', category: 'school', deadline: '2026-08-17', done: false },
+            { id: 2, title: 'ORS Practical assignment', category: 'school', deadline: '2026-08-24', done: false },
+            { id: 3, title: 'SEF Group project submission', category: 'school', deadline: '2026-09-05', done: false },
+            { id: 4, title: 'ISC Chapter 4 exercises', category: 'school', deadline: '2026-08-20', done: true },
+            { id: 5, title: 'Update LinkedIn profile', category: 'work', deadline: '2026-08-15', done: false },
+            { id: 6, title: 'Prepare CV for internship apps', category: 'work', deadline: '2026-08-22', done: false },
+            { id: 7, title: 'Review AWS Cloud Practitioner notes', category: 'aws', deadline: '2026-08-30', done: false },
+            { id: 8, title: 'Complete LeetCode daily challenge', category: 'internship', deadline: '2026-08-14', done: false },
+            { id: 9, title: 'Pay residence fees', category: 'work', deadline: '2026-08-10', done: true },
+            { id: 10, title: 'Buy stationery for semester', category: 'work', deadline: '2026-08-12', done: false },
+            { id: 11, title: 'Schedule mock interview with peer', category: 'internship', deadline: '2026-08-28', done: false },
+            { id: 12, title: 'Read AWS Well-Architected Framework', category: 'aws', deadline: '2026-09-01', done: false },
+        ];
 
-  <!-- ========== EMERGENCY RECOVERY ========== -->
-  <div id="page-emergency" class="page">
-    <div class="section-title">🆘 Emergency Recovery</div>
-    <div class="section-sub">Tell me what you know and what you don't — I'll rebuild your study schedule around your gaps</div>
+        const books = [
+            { id: 1, title: 'Clean Code', author: 'Robert C. Martin', category: 'Technical', startDate: '2026-07-20',
+                endDate: '2026-08-10', done: true },
+            { id: 2, title: 'Atomic Habits', author: 'James Clear', category: 'Self-Help', startDate: '2026-08-01',
+                endDate: null, done: false },
+        ];
 
-    <div class="card" style="margin-bottom:1rem;border-color:rgba(248,81,73,.3)">
-      <div style="font-size:13px;color:var(--muted);margin-bottom:1rem;line-height:1.7">
-        For each Learning Outcome below, tap <span style="color:var(--accent2);font-weight:700">✓ I know this</span> or <span style="color:var(--danger);font-weight:700">✗ I'm struggling</span>. Be honest—this helps us create a smarter recovery plan.
-      </div>
-      <div id="loChecklist"></div>
-      <button class="btn" onclick="generateRecoveryPlan()" style="width:100%;justify-content:center;margin-top:1rem;background:rgba(248,81,73,.15);border-color:rgba(248,81,73,.4);color:var(--danger);font-weight:700">
-        🆘 Generate my recovery schedule
-      </button>
-    </div>
+        const companies = [
+            { id: 1, name: 'Amazon', role: 'SDE Intern', status: 'Applied', date: '2026-08-05' },
+            { id: 2, name: 'Google', role: 'STEP Intern', status: 'Researching', date: '2026-08-10' },
+        ];
 
-    <div id="emergencyProgression"></div>
-    <div id="emergencyTimetable"></div>
-  </div>
+        let todoIdCounter = 13;
+        let bookIdCounter = 3;
+        let companyIdCounter = 3;
+        let currentTodoFilter = 'all';
+        let timerMod = 'AOP';
+        let timerLO = null;
+        let timerDuration = 25;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let timerIsPaused = false;
+        let timerConfidence = 3;
+        let timerSessionStart = null;
+        let timerElapsedBeforeStop = 0;
 
-  <!-- ========== TIMER ========== -->
-  <div id="page-timer" class="page">
-    <div class="section-title">🍅 Focus Timer</div>
-    <div class="section-sub">Start a session for a specific module &amp; LO — when you stop, log what you covered</div>
+        const moduleLOs = {
+            'AOP': ['LO1: Android UI Components', 'LO2: Intents & Activities', 'LO3: Data Persistence',
+                'LO4: Networking & APIs', 'LO5: Firebase Integration'
+            ],
+            'ORS': ['LO1: Linear Programming', 'LO2: Simplex Method', 'LO3: Duality Theory',
+                'LO4: Transportation Models', 'LO5: Network Analysis'
+            ],
+            'SEF': ['LO1: Requirements Engineering', 'LO2: Software Architecture', 'LO3: Design Patterns',
+                'LO4: Testing Strategies', 'LO5: Agile & Scrum'
+            ],
+            'ISC': ['LO1: Symmetric Encryption', 'LO2: Asymmetric Encryption', 'LO3: Hash Functions',
+                'LO4: Network Security', 'LO5: Security Policies'
+            ],
+        };
 
-    <div class="card" style="margin-bottom:1rem" id="timerSetupCard">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">1. Pick your module &amp; topic</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
-        <button class="btn" id="tmod-AOP" onclick="timerPickMod('AOP')">📱 AOP</button>
-        <button class="btn" id="tmod-ORS" onclick="timerPickMod('ORS')">⚙️ ORS</button>
-        <button class="btn" id="tmod-SEF" onclick="timerPickMod('SEF')">🛠️ SEF</button>
-        <button class="btn" id="tmod-ISC" onclick="timerPickMod('ISC')">🔒 ISC</button>
-      </div>
-      <div id="timerLOPicker" style="margin-bottom:.75rem"></div>
-      <div style="font-size:14px;font-weight:700;margin-bottom:.5rem">2. Set duration</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
-        <button class="btn" onclick="timerSetDur(25)" id="tdur-25">25 min</button>
-        <button class="btn" onclick="timerSetDur(45)" id="tdur-45">45 min</button>
-        <button class="btn" onclick="timerSetDur(60)" id="tdur-60">60 min</button>
-        <button class="btn" onclick="timerSetDur(90)" id="tdur-90">90 min</button>
-      </div>
-      <button class="btn" id="timerStartBtn" onclick="timerStart()" style="width:100%;justify-content:center;font-size:14px;padding:12px;background:linear-gradient(135deg,rgba(79,156,249,.2),rgba(63,185,80,.15));border-color:rgba(79,156,249,.3)">
-        ▶ Start session
-      </button>
-    </div>
+        const loStatus = {};
+        Object.keys(moduleLOs).forEach(mod => {
+            moduleLOs[mod].forEach(lo => {
+                loStatus[mod + '|' + lo] = null; // null = unset, 'know' or 'struggle'
+            });
+        });
 
-    <div class="card" style="margin-bottom:1rem;display:none;border-color:rgba(79,156,249,.4)" id="timerActiveCard">
-      <div style="text-align:center">
-        <div id="timerModLabel" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px"></div>
-        <div id="timerLOLabel" style="font-size:13px;font-weight:600;margin-bottom:8px"></div>
-        <div id="timerDisplay" style="font-size:64px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;text-shadow:0 0 30px rgba(79,156,249,.6);line-height:1">00:00</div>
-        <div id="timerStatus" style="font-size:12px;color:var(--muted);margin:6px 0 16px">Session running...</div>
-        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-          <button class="btn" id="timerPauseBtn" onclick="timerPause()">⏸ Pause</button>
-          <button class="btn" id="timerResumeBtn" onclick="timerResume()" style="display:none">▶ Resume</button>
-          <button class="btn" onclick="timerStop()" style="background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.35);color:var(--danger)">⏹ Stop &amp; log</button>
-        </div>
-      </div>
-    </div>
+        // ==================== PARTICLES ====================
+        (function() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const maxParticles = 50;
 
-    <div class="card" style="margin-bottom:1rem;display:none;border-color:rgba(63,185,80,.3)" id="timerLogCard">
-      <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📝 How did that session go?</div>
-      <div id="timerLogSummary" style="font-size:12px;color:var(--muted);margin-bottom:.75rem"></div>
-      <div style="margin-bottom:.75rem">
-        <div class="label">What did you cover?</div>
-        <textarea id="timerLogCovered" rows="3" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px 10px;outline:none;resize:vertical"></textarea>
-      </div>
-      <div style="margin-bottom:.75rem">
-        <div class="label">How confident do you feel now?</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn" id="conf-1" onclick="timerSetConf(1)" style="font-size:12px">😰 Lost</button>
-          <button class="btn" id="conf-2" onclick="timerSetConf(2)" style="font-size:12px">😕 Shaky</button>
-          <button class="btn" id="conf-3" onclick="timerSetConf(3)" style="font-size:12px">😐 Getting it</button>
-          <button class="btn" id="conf-4" onclick="timerSetConf(4)" style="font-size:12px">😊 Solid</button>
-          <button class="btn" id="conf-5" onclick="timerSetConf(5)" style="font-size:12px">🔥 Nailed it</button>
-        </div>
-      </div>
-      <div id="timerLogAnalysis" style="margin-bottom:.75rem"></div>
-      <button class="btn" onclick="timerSaveLog()" style="width:100%;justify-content:center;background:rgba(63,185,80,.15);border-color:rgba(63,185,80,.35);color:var(--accent2);font-size:14px;padding:10px">
-        ✓ Save session
-      </button>
-    </div>
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
 
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <div style="font-size:14px;font-weight:700">📊 Session history</div>
-        <button class="btn" style="font-size:11px;padding:4px 10px" onclick="timerClearLog()">Clear all</button>
-      </div>
-      <div id="timerHistory"></div>
-    </div>
-  </div>
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 2 + 0.5,
+                    dx: (Math.random() - 0.5) * 0.5,
+                    dy: (Math.random() - 0.5) * 0.5,
+                    alpha: Math.random() * 0.5 + 0.2,
+                });
+            }
 
-  <!-- ========== FOCUS HUB ========== -->
-  <div id="page-focus" class="page">
-    <div class="section-title">⚡ Focus Hub</div>
-    <div class="section-sub">AI study suggestion · Emergency mode · Progress glow-up</div>
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.dx;
+                    p.y += p.dy;
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(79,156,249,${p.alpha})`;
+                    ctx.fill();
+                });
+                // connect nearby
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(79,156,249,${0.08 * (1 - dist/120)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
 
-    <div class="card" style="margin-bottom:1rem;border-color:rgba(79,156,249,.3)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
-        <div style="font-size:24px">🤖</div>
-        <div>
-          <div style="font-size:15px;font-weight:700">What should I study RIGHT NOW?</div>
-          <div style="font-size:12px;color:var(--muted)">Based on your marks, upcoming tests &amp; time of day</div>
-        </div>
-      </div>
-      <button class="btn" style="width:100%;justify-content:center;background:linear-gradient(135deg,rgba(79,156,249,.2),rgba(188,140,255,.15));border-color:rgba(79,156,249,.4);font-size:14px;padding:12px" onclick="getAISuggestion()">
-        🧠 Tell me what to study
-      </button>
-      <div id="aiSuggestionResult" style="margin-top:.75rem"></div>
-    </div>
+        // ==================== NAVIGATION ====================
+        function show(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const pageEl = document.getElementById('page-' + pageName);
+            if (pageEl) pageEl.classList.add('active');
 
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
-        <div style="font-size:24px">📈</div>
-        <div>
-          <div style="font-size:15px;font-weight:700">Glow Up — Progress Graph</div>
-          <div style="font-size:12px;color:var(--muted)">Your marks journey &amp; what you need to reach 75%</div>
-        </div>
-      </div>
-      <div id="glowUpGraph"></div>
-    </div>
-  </div>
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
 
-</div>
+            const navTab = document.querySelector(`.nav-tab[onclick="show('${pageName}')"]`);
+            if (navTab) navTab.classList.add('active');
+            const bnavBtn = document.querySelector(`.bnav-btn[onclick="show('${pageName}')"]`);
+            if (bnavBtn) bnavBtn.classList.add('active');
 
-<!-- ========== BOTTOM NAVIGATION (Mobile) ========== -->
-<nav class="bottom-nav">
-  <div class="bottom-nav-inner">
-    <button class="bnav-btn active" onclick="show('dashboard')"><span class="bnav-icon">🏠</span>Home</button>
-    <button class="bnav-btn" onclick="show('timetable')"><span class="bnav-icon">📅</span>Classes</button>
-    <button class="bnav-btn" onclick="show('schedule')"><span class="bnav-icon">🗓️</span>Schedule</button>
-    <button class="bnav-btn" onclick="show('marks')"><span class="bnav-icon">📊</span>Marks</button>
-    <button class="bnav-btn" onclick="show('modules')"><span class="bnav-icon">📚</span>Modules</button>
-    <button class="bnav-btn" onclick="show('alerts')"><span class="bnav-icon">🔔</span>Alerts</button>
-    <button class="bnav-btn" onclick="show('focus')"><span class="bnav-icon">⚡</span>Focus</button>
-    <button class="bnav-btn" onclick="show('emergency')"><span class="bnav-icon">🆘</span>SOS</button>
-    <button class="bnav-btn" onclick="show('timer')"><span class="bnav-icon">🍅</span>Timer</button>
-  </div>
-</nav>
+            // Render page-specific content
+            if (pageName === 'dashboard') renderDashboard();
+            if (pageName === 'timetable') renderTimetable();
+            if (pageName === 'schedule') renderSchedule();
+            if (pageName === 'marks') renderMarks();
+            if (pageName === 'modules') renderModules();
+            if (pageName === 'alerts') renderAlerts();
+            if (pageName === 'todo') renderTodoList();
+            if (pageName === 'aws') renderAWSPage();
+            if (pageName === 'books') renderBooks();
+            if (pageName === 'internship') renderInternship();
+            if (pageName === 'emergency') renderEmergency();
+            if (pageName === 'focus') renderFocus();
+            if (pageName === 'timer') renderTimerPage();
 
-<script src="app.js"></script>
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==================== DASHBOARD ====================
+        function renderDashboard() {
+            const now = new Date();
+            const hour = now.getHours();
+            let greet = 'Good ';
+            if (hour < 12) greet += 'morning';
+            else if (hour < 17) greet += 'afternoon';
+            else greet += 'evening';
+            document.getElementById('greeting').textContent = greet + '! 👋';
+
+            // School todos
+            const schoolTodos = todos.filter(t => t.category === 'school' && !t.done).slice(0, 5);
+            const schoolHtml = schoolTodos.length === 0 ?
+                '<div class="todo-empty">No pending school tasks 🎉</div>' :
+                schoolTodos.map(t => {
+                    const dl = new Date(t.deadline);
+                    const isOverdue = dl < new Date() && !t.done;
+                    return `
+                <div class="todo-item-dash ${t.done ? 'done' : ''}" onclick="toggleTodo(${t.id});renderDashboard();">
+                  <span class="category-dot" style="background:var(--accent)"></span>
+                  <span>${t.title}</span>
+                  <span class="deadline-sm ${isOverdue ? 'overdue' : ''}">${formatDate(t.deadline)}</span>
+                </div>`;
+                }).join('');
+            document.getElementById('schoolTodoList').innerHTML = schoolHtml;
+
+            // WORK TODOS — THIS IS THE KEY FIX
+            const workTodos = todos.filter(t => (t.category === 'work' || t.category === 'internship' || t
+                .category === 'aws') && !t.done).slice(0, 5);
+            const workHtml = workTodos.length === 0 ?
+                '<div class="todo-empty">No pending work tasks 🎉</div>' :
+                workTodos.map(t => {
+                    const dl = new Date(t.deadline);
+                    const isOverdue = dl < new Date() && !t.done;
+                    const catColors = { work: 'var(--warn)', internship: 'var(--purple)', aws: '#ff9900' };
+                    const catColor = catColors[t.category] || 'var(--muted)';
+                    return `
+                <div class="todo-item-dash ${t.done ? 'done' : ''}" onclick="toggleTodo(${t.id});renderDashboard();">
+                  <span class="category-dot" style="background:${catColor}"></span>
+                  <span>${t.title}</span>
+                  <span class="deadline-sm ${isOverdue ? 'overdue' : ''}">${formatDate(t.deadline)}</span>
+                </div>`;
+                }).join('');
+            document.getElementById('workTodoList').innerHTML = workHtml;
+
+            // Stats
+            const totalTodos = todos.filter(t => !t.done).length;
+            const overdueCount = todos.filter(t => !t.done && new Date(t.deadline) < new Date()).length;
+            const completedToday = todos.filter(t => t.done).length;
+            const totalBooks = books.filter(b => b.done).length;
+            document.getElementById('dashStats').innerHTML = `
+            <div class="stat-card"><div class="stat-val" style="color:var(--accent)">${totalTodos}</div><div class="stat-label">Open Tasks</div></div>
+            <div class="stat-card"><div class="stat-val" style="color:var(--danger)">${overdueCount}</div><div class="stat-label">Overdue</div></div>
+            <div class="stat-card"><div class="stat-val" style="color:var(--accent2)">${completedToday}</div><div class="stat-label">Completed</div></div>
+            <div class="stat-card"><div class="stat-val" style="color:var(--purple)">${totalBooks}</div><div class="stat-label">Books Read</div></div>
+          `;
+
+            // Progress report
+            document.getElementById('progressReport').innerHTML = `
+            <div style="font-size:13px;color:var(--muted);line-height:1.8">
+              📅 <strong>Week 5</strong> of Semester 2 · <strong>${totalTodos} tasks</strong> pending · <strong>${overdueCount} overdue</strong><br>
+              📚 <strong>${totalBooks} books</strong> completed this semester · ⏱️ <strong>${getTotalFocusMinutes()}</strong> min focused study logged
+            </div>`;
+
+            // Module overview
+            document.getElementById('moduleOverview').innerHTML = ['AOP', 'ORS', 'SEF', 'ISC'].map(mod => {
+                const pct = getModuleProgress(mod);
+                const cls = pct >= 70 ? 'good' : pct >= 40 ? 'warn' : 'danger';
+                return `
+              <div style="margin-bottom:10px">
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px">
+                  <span><strong>${mod}</strong></span><span>${pct}%</span>
+                </div>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill ${cls}" style="width:${pct}%"></div></div>
+              </div>`;
+            }).join('');
+
+            // Today's classes
+            const today = now.getDay();
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('todayClassesTitle').textContent = `Today's classes — ${dayNames[today]}`;
+            const todaySlots = getTimetableForDay(today);
+            document.getElementById('todayClasses').innerHTML = todaySlots.length === 0 ?
+                '<div style="color:var(--muted);font-size:13px">No classes today 🎉</div>' :
+                todaySlots.map(s =>
+                    `<div style="padding:6px 8px;background:var(--surface2);border-radius:6px;margin-bottom:4px;font-size:13px;border-left:3px solid ${getModColor(s.mod)}"><strong>${s.time}</strong> — ${s.mod} (${s.venue})</div>`
+                    ).join('');
+
+            // Focus priority
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay() + 1);
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            document.getElementById('focusPriorityDate').textContent =
+                `Week of ${formatDateShort(weekStart)} – ${formatDateShort(weekEnd)}`;
+            document.getElementById('focusPriorityList').innerHTML = [
+                { mod: 'AOP', reason: 'Test Week 1 starts 17 Aug', urgency: 'high' },
+                { mod: 'ORS', reason: 'Practical assignment due soon', urgency: 'medium' },
+                { mod: 'SEF', reason: 'Group project milestone', urgency: 'medium' },
+            ].map(p => `
+            <div style="padding:8px 10px;background:var(--surface2);border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px">
+              <span style="width:8px;height:8px;border-radius:50%;background:${p.urgency==='high'?'var(--danger)':'var(--warn)'};flex-shrink:0"></span>
+              <span><strong>${p.mod}</strong> — ${p.reason}</span>
+            </div>`).join('');
+
+            // Current activity
+            const upcomingTask = todos.filter(t => !t.done).sort((a, b) => new Date(a.deadline) - new Date(b.deadline))[
+                0];
+            document.getElementById('currentActivity').innerHTML = upcomingTask ? `
+            <div class="card" style="border-color:rgba(79,156,249,.3);margin-bottom:0.75rem">
+              <div style="font-size:13px;color:var(--muted)">⏰ Next deadline</div>
+              <div style="font-size:15px;font-weight:700">${upcomingTask.title}</div>
+              <div style="font-size:12px;color:var(--muted)">Due: ${formatDate(upcomingTask.deadline)} · ${getCategoryLabel(upcomingTask.category)}</div>
+            </div>` : '';
+
+            // Alerts summary
+            const urgentAlerts = todos.filter(t => !t.done && new Date(t.deadline) < new Date(Date.now() + 7 * 86400000))
+                .slice(0, 3);
+            document.getElementById('dashAlerts').innerHTML = urgentAlerts.length > 0 ? `
+            <div class="card" style="border-color:rgba(248,81,73,.25);margin-bottom:0.75rem">
+              <div style="font-size:13px;font-weight:700;margin-bottom:6px">⚠️ Upcoming deadlines</div>
+              ${urgentAlerts.map(t => `<div style="font-size:12px;color:var(--muted);padding:2px 0">• ${t.title} — <span style="color:var(--danger)">${formatDate(t.deadline)}</span></div>`).join('')}
+            </div>` : '';
+        }
+
+        function getCategoryLabel(cat) {
+            const map = { school: '🎓 School', work: '💼 Work', aws: '☁️ AWS', internship: '💼 Internship' };
+            return map[cat] || cat;
+        }
+
+        function getModColor(mod) {
+            const map = { 'AOP': 'var(--accent)', 'ORS': 'var(--accent2)', 'SEF': 'var(--purple)', 'ISC': 'var(--warn)' };
+            return map[mod] || 'var(--muted)';
+        }
+
+        function getModuleProgress(mod) {
+            const modLOs = moduleLOs[mod] || [];
+            if (modLOs.length === 0) return 0;
+            const known = modLOs.filter(lo => loStatus[mod + '|' + lo] === 'know').length;
+            return Math.round((known / modLOs.length) * 100);
+        }
+
+        function getTotalFocusMinutes() {
+            const stored = localStorage.getItem('timerSessions');
+            if (!stored) return 0;
+            try {
+                const sessions = JSON.parse(stored);
+                return sessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+            } catch (e) { return 0; }
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function formatDateShort(d) {
+            return d.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.done = !todo.done;
+                saveTodos();
+                renderDashboard();
+                renderTodoList();
+            }
+        }
+
+        function saveTodos() {
+            localStorage.setItem('studyhub_todos', JSON.stringify(todos));
+        }
+
+        function loadTodos() {
+            const stored = localStorage.getItem('studyhub_todos');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    todos.length = 0;
+                    parsed.forEach(t => todos.push(t));
+                    todoIdCounter = Math.max(...todos.map(t => t.id), 12) + 1;
+                } catch (e) {}
+            }
+        }
+
+        // ==================== TIMETABLE ====================
+        function getTimetableForDay(day) {
+            const schedule = {
+                1: [{ time: '08:00–10:00', mod: 'AOP', venue: 'G1-15' }, { time: '12:00–14:00', mod: 'ORS',
+                    venue: 'Online' }],
+                2: [{ time: '10:00–12:00', mod: 'SEF', venue: 'G2-08' }, { time: '14:00–16:00', mod: 'ISC',
+                    venue: 'Lab 3' }],
+                3: [{ time: '08:00–10:00', mod: 'ORS', venue: 'G1-12' }, { time: '11:00–13:00', mod: 'AOP',
+                    venue: 'Lab 1' }],
+                4: [{ time: '09:00–11:00', mod: 'ISC', venue: 'G2-05' }, { time: '13:00–15:00', mod: 'SEF',
+                    venue: 'Online' }],
+                5: [{ time: '08:00–10:00', mod: 'AOP', venue: 'G1-15' }],
+            };
+            return schedule[day] || [];
+        }
+
+        function renderTimetable() {
+            const days = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            const timeSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
+            let html = '<div>' + days.map(d => `<div class="tt-header">${d}</div>`).join('') + '</div>';
+
+            timeSlots.forEach(time => {
+                html += `<div style="font-size:0.65rem;color:var(--muted);display:flex;align-items:center;justify-content:center">${time}</div>`;
+                for (let d = 1; d <= 5; d++) {
+                    const slots = getTimetableForDay(d);
+                    const slot = slots.find(s => s.time.startsWith(time));
+                    if (slot) {
+                        html +=
+                            `<div class="tt-slot ${slot.mod.toLowerCase()}">${slot.mod}<br><small>${slot.venue}</small></div>`;
+                    } else {
+                        html += '<div></div>';
+                    }
+                }
+            });
+            document.getElementById('ttGrid').innerHTML = html;
+        }
+
+        // ==================== SCHEDULE ====================
+        function renderSchedule() {
+            const now = new Date();
+            document.getElementById('schedSub').textContent = `Week of ${formatDateShort(new Date(now.setDate(now.getDate()-now.getDay()+1)))}`;
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            let html = '';
+            days.forEach((dayName, i) => {
+                const dayNum = i + 1;
+                const slots = getTimetableForDay(dayNum);
+                html += `
+            <div class="schedule-day">
+              <div class="schedule-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
+                <span>${dayName}</span><span style="font-size:0.7rem;color:var(--muted)">${slots.length} classes</span>
+              </div>
+              <div class="schedule-day-body ${i === new Date().getDay()-1 ? 'open' : ''}">
+                ${slots.length === 0 ? '<div style="color:var(--muted)">No classes</div>' : slots.map(s => `<div>📌 <strong>${s.time}</strong> — ${s.mod} @ ${s.venue}</div>`).join('')}
+                <div style="margin-top:6px;color:var(--accent2);font-size:0.7rem">📖 Suggested study: 2h review after class</div>
+              </div>
+            </div>`;
+            });
+            document.getElementById('fullSchedule').innerHTML = html;
+        }
+
+        function toggleAll() {
+            const bodies = document.querySelectorAll('.schedule-day-body');
+            const allOpen = [...bodies].every(b => b.classList.contains('open'));
+            bodies.forEach(b => b.classList.toggle('open', !allOpen));
+            document.querySelector('.toggle-all-btn').textContent = allOpen ? '▼ Expand all days' : '▲ Collapse all days';
+        }
+
+        // ==================== MARKS ====================
+        function renderMarks() {
+            const modules = [
+                { name: 'AOP', assessments: [{ name: 'Test 1', weight: 30, mark: null }, { name: 'Test 2',
+                        weight: 30, mark: null }, { name: 'Assignment', weight: 40, mark: null }] },
+                { name: 'ORS', assessments: [{ name: 'Test 1', weight: 35, mark: null }, { name: 'Test 2',
+                        weight: 35, mark: null }, { name: 'Practical', weight: 30, mark: null }] },
+                { name: 'SEF', assessments: [{ name: 'Test 1', weight: 30, mark: null }, { name: 'Project',
+                        weight: 40, mark: null }, { name: 'Exam', weight: 30, mark: null }] },
+                { name: 'ISC', assessments: [{ name: 'Test 1', weight: 30, mark: null }, { name: 'Test 2',
+                        weight: 30, mark: null }, { name: 'Assignment', weight: 40, mark: null }] },
+            ];
+            // Load saved marks
+            const saved = JSON.parse(localStorage.getItem('studyhub_marks') || '{}');
+            modules.forEach(m => {
+                m.assessments.forEach(a => {
+                    const key = m.name + '|' + a.name;
+                    if (saved[key] !== undefined) a.mark = saved[key];
+                });
+            });
+
+            let html = '';
+            modules.forEach(m => {
+                const completed = m.assessments.filter(a => a.mark !== null);
+                const totalWeight = completed.reduce((s, a) => s + a.weight, 0);
+                const weightedSum = completed.reduce((s, a) => s + (a.mark || 0) * a.weight / 100, 0);
+                const currentAvg = totalWeight > 0 ? Math.round((weightedSum / totalWeight) * 100) : 0;
+                const remainingWeight = 100 - totalWeight;
+                const neededFor75 = remainingWeight > 0 ? Math.round(((75 - weightedSum) / remainingWeight) * 100) : 0;
+
+                html += `
+            <div class="card" style="margin-bottom:0.75rem">
+              <div style="font-weight:700;font-size:15px;margin-bottom:8px">${m.name}</div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Current: <strong>${currentAvg}%</strong> | Need <strong>${Math.max(0,neededFor75)}%</strong> on remaining to hit 75%</div>
+              ${m.assessments.map(a => `
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px">
+                  <span style="flex:1">${a.name} (${a.weight}%)</span>
+                  <input type="number" min="0" max="100" value="${a.mark !== null ? a.mark : ''}" placeholder="Mark"
+                    style="width:65px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:5px 8px;font-size:13px;text-align:center"
+                    onchange="updateMark('${m.name}','${a.name}',this.value)">
+                  <span style="font-size:11px;color:var(--muted)">/100</span>
+                </div>
+              `).join('')}
+              <div class="progress-bar-wrap"><div class="progress-bar-fill ${currentAvg>=70?'good':currentAvg>=40?'warn':'danger'}" style="width:${currentAvg}%"></div></div>
+            </div>`;
+            });
+            document.getElementById('marksContent').innerHTML = html;
+        }
+
+        function updateMark(mod, assessment, value) {
+            const saved = JSON.parse(localStorage.getItem('studyhub_marks') || '{}');
+            const key = mod + '|' + assessment;
+            const numVal = parseFloat(value);
+            if (isNaN(numVal) || numVal < 0 || numVal > 100) {
+                delete saved[key];
+            } else {
+                saved[key] = numVal;
+            }
+            localStorage.setItem('studyhub_marks', JSON.stringify(saved));
+            renderMarks();
+        }
+
+        // ==================== MODULES ====================
+        function renderModules() {
+            const modules = [
+                { code: 'AOP216D', name: 'Android & OOP', desc: 'Mobile application development using Android & Kotlin.',
+                    credits: 12 },
+                { code: 'ORS216D', name: 'Operations Research', desc: 'Mathematical optimization & decision-making models.',
+                    credits: 12 },
+                { code: 'SEF216D', name: 'Software Engineering', desc: 'Software development lifecycle & methodologies.',
+                    credits: 12 },
+                { code: 'ISC216D', name: 'Information Security', desc: 'Cybersecurity principles & cryptographic systems.',
+                    credits: 12 },
+            ];
+            document.getElementById('modulesContent').innerHTML = modules.map(m => `
+            <div class="card" style="margin-bottom:0.75rem">
+              <div style="font-weight:700;font-size:15px">${m.code} — ${m.name}</div>
+              <div style="font-size:12px;color:var(--muted);margin:4px 0">${m.credits} credits</div>
+              <div style="font-size:13px">${m.desc}</div>
+              <div style="margin-top:8px;font-size:12px;color:var(--muted)">📖 Learning Outcomes: ${(moduleLOs[m.code.split('216D')[0]] || []).join(', ')}</div>
+            </div>`).join('');
+        }
+
+        // ==================== ALERTS ====================
+        function renderAlerts() {
+            const alerts = [
+                { msg: 'AOP Test 1 — 17 Aug 2026', urgency: 'high', daysLeft: Math.ceil((new Date('2026-08-17') - new Date()) /
+                        (86400000)) },
+                { msg: 'ORS Practical Assignment due — 24 Aug 2026', urgency: 'medium', daysLeft: Math.ceil((new Date(
+                        '2026-08-24') - new Date()) / (86400000)) },
+                { msg: 'Test Week 1 begins — 17 Aug 2026', urgency: 'high', daysLeft: Math.ceil((new Date('2026-08-17') -
+                        new Date()) / (86400000)) },
+                { msg: 'SEF Group Project submission — 5 Sep 2026', urgency: 'medium', daysLeft: Math.ceil((new Date(
+                        '2026-09-05') - new Date()) / (86400000)) },
+            ];
+            document.getElementById('alertsContent').innerHTML = alerts.map(a => `
+            <div class="card" style="border-color:${a.urgency==='high'?'rgba(248,81,73,.3)':'rgba(210,153,34,.3)'};margin-bottom:0.5rem">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:20px">${a.urgency==='high'?'🔴':'🟡'}</span>
+                <div>
+                  <div style="font-size:14px;font-weight:600">${a.msg}</div>
+                  <div style="font-size:12px;color:var(--muted)">${a.daysLeft} days remaining</div>
+                </div>
+              </div>
+            </div>`).join('');
+            document.getElementById('alertBadge').textContent = alerts.filter(a => a.urgency === 'high').length;
+        }
+
+        // ==================== TO-DO ====================
+        function addTodo() {
+            const title = document.getElementById('newTaskTitle').value.trim();
+            const category = document.getElementById('newTaskCategory').value;
+            const deadline = document.getElementById('newTaskDeadline').value;
+            if (!title) return alert('Please enter a task title');
+            if (!deadline) return alert('Please set a deadline');
+            todos.push({ id: todoIdCounter++, title, category, deadline, done: false });
+            saveTodos();
+            document.getElementById('newTaskTitle').value = '';
+            document.getElementById('newTaskDeadline').value = '';
+            renderTodoList();
+            renderDashboard();
+        }
+
+        function filterTodos(filter) {
+            currentTodoFilter = filter;
+            document.querySelectorAll('#page-todo .btn').forEach(b => b.classList.remove('active'));
+            const btnMap = { all: 'filterAll', school: 'filterSchool', work: 'filterWork', aws: 'filterAWS',
+                internship: 'filterInternship', overdue: 'filterOverdue' };
+            const btn = document.getElementById(btnMap[filter]);
+            if (btn) btn.classList.add('active');
+            renderTodoList();
+        }
+
+        function renderTodoList() {
+            let filtered = [...todos];
+            if (currentTodoFilter === 'school') filtered = filtered.filter(t => t.category === 'school');
+            if (currentTodoFilter === 'work') filtered = filtered.filter(t => t.category === 'work');
+            if (currentTodoFilter === 'aws') filtered = filtered.filter(t => t.category === 'aws');
+            if (currentTodoFilter === 'internship') filtered = filtered.filter(t => t.category === 'internship');
+            if (currentTodoFilter === 'overdue') filtered = filtered.filter(t => !t.done && new Date(t.deadline) < new Date(
+                ));
+            filtered.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+            document.getElementById('todoList').innerHTML = filtered.length === 0 ?
+                '<div style="text-align:center;color:var(--muted);padding:2rem">No tasks found ✨</div>' :
+                filtered.map(t => {
+                    const isOverdue = new Date(t.deadline) < new Date() && !t.done;
+                    return `
+              <div class="card" style="margin-bottom:0.4rem;padding:0.7rem 1rem;display:flex;align-items:center;gap:10px;${t.done?'opacity:0.5':''}">
+                <input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo(${t.id})" style="cursor:pointer;width:18px;height:18px;accent-color:var(--accent2)">
+                <span style="flex:1;font-size:13px;${t.done?'text-decoration:line-through':''}">${t.title}</span>
+                <span style="font-size:11px;padding:3px 8px;border-radius:10px;background:var(--surface2);white-space:nowrap">${getCategoryLabel(t.category)}</span>
+                <span style="font-size:11px;color:${isOverdue?'var(--danger)':'var(--muted)'};white-space:nowrap">${formatDate(t.deadline)}</span>
+                <button class="btn" style="font-size:11px;padding:4px 8px;color:var(--danger)" onclick="deleteTodo(${t.id})">🗑</button>
+              </div>`;
+                }).join('');
+        }
+
+        function deleteTodo(id) {
+            const idx = todos.findIndex(t => t.id === id);
+            if (idx > -1) {
+                todos.splice(idx, 1);
+                saveTodos();
+                renderTodoList();
+                renderDashboard();
+            }
+        }
+
+        // ==================== AWS ====================
+        function renderAWSPage() {
+            const awsTodos = todos.filter(t => t.category === 'aws');
+            document.getElementById('awsTodoList').innerHTML = awsTodos.length === 0 ?
+                '<div style="color:var(--muted);font-size:13px">No AWS tasks yet</div>' :
+                awsTodos.map(t => `
+              <div style="padding:6px 0;font-size:13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)">
+                <input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo(${t.id});renderAWSPage()" style="accent-color:var(--accent2)">
+                <span style="${t.done?'text-decoration:line-through;opacity:0.5':''}">${t.title}</span>
+                <span style="font-size:11px;color:var(--muted);margin-left:auto">${formatDate(t.deadline)}</span>
+              </div>`).join('');
+
+            document.getElementById('awsLearningPath').innerHTML = [
+                { step: '1. AWS Cloud Practitioner Essentials', status: 'in-progress' },
+                { step: '2. AWS Technical Essentials', status: 'pending' },
+                { step: '3. Solutions Architect Associate', status: 'pending' },
+                { step: '4. Hands-on Labs & Projects', status: 'pending' },
+            ].map(s => `
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 0">
+              <span>${s.status==='in-progress'?'🔄':s.status==='done'?'✅':'⬜'}</span>
+              <span>${s.step}</span>
+            </div>`).join('');
+
+            const savedNote = localStorage.getItem('aws_notes');
+            if (savedNote) document.getElementById('awsNotes').value = savedNote;
+        }
+
+        function saveAWSNote() {
+            const note = document.getElementById('awsNotes').value;
+            localStorage.setItem('aws_notes', note);
+            alert('Notes saved! ✅');
+        }
+
+        // ==================== BOOKS ====================
+        function addBook() {
+            const title = document.getElementById('bookTitle').value.trim();
+            const author = document.getElementById('bookAuthor').value.trim();
+            const category = document.getElementById('bookCategory').value;
+            if (!title) return alert('Please enter a book title');
+            books.push({ id: bookIdCounter++, title, author, category, startDate: new Date().toISOString().split('T')[
+                    0], endDate: null, done: false });
+            saveBooks();
+            document.getElementById('bookTitle').value = '';
+            document.getElementById('bookAuthor').value = '';
+            renderBooks();
+        }
+
+        function saveBooks() { localStorage.setItem('studyhub_books', JSON.stringify(books)); }
+
+        function loadBooks() {
+            const stored = localStorage.getItem('studyhub_books');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    books.length = 0;
+                    parsed.forEach(b => books.push(b));
+                    bookIdCounter = Math.max(...books.map(b => b.id), 2) + 1;
+                } catch (e) {}
+            }
+        }
+
+        function renderBooks() {
+            const completed = books.filter(b => b.done).length;
+            const total = books.length;
+            document.getElementById('bookStats').innerHTML = `
+            <div class="stat-card"><div class="stat-val" style="color:var(--accent2)">${completed}</div><div class="stat-label">Completed</div></div>
+            <div class="stat-card"><div class="stat-val" style="color:var(--accent)">${total}</div><div class="stat-label">Total Books</div></div>
+            <div class="stat-card"><div class="stat-val" style="color:var(--purple)">${total-completed}</div><div class="stat-label">In Progress</div></div>`;
+
+            document.getElementById('bookList').innerHTML = books.length === 0 ?
+                '<div style="color:var(--muted);text-align:center;padding:1rem">No books added yet</div>' :
+                books.map(b => `
+            <div class="card" style="margin-bottom:0.4rem;padding:0.7rem 1rem;display:flex;align-items:center;gap:10px;${b.done?'opacity:0.5':''}">
+              <input type="checkbox" ${b.done?'checked':''} onchange="toggleBook(${b.id})" style="accent-color:var(--accent2);cursor:pointer;width:18px;height:18px">
+              <span style="flex:1;font-size:13px;${b.done?'text-decoration:line-through':''}"><strong>${b.title}</strong> — ${b.author}</span>
+              <span style="font-size:11px;padding:3px 8px;border-radius:10px;background:var(--surface2)">${b.category}</span>
+              <span style="font-size:11px;color:var(--muted)">${b.startDate}</span>
+              <button class="btn" style="font-size:11px;padding:4px 8px;color:var(--danger)" onclick="deleteBook(${b.id})">🗑</button>
+            </div>`).join('');
+        }
+
+        function toggleBook(id) {
+            const book = books.find(b => b.id === id);
+            if (book) {
+                book.done = !book.done;
+                book.endDate = book.done ? new Date().toISOString().split('T')[0] : null;
+                saveBooks();
+                renderBooks();
+            }
+        }
+
+        function deleteBook(id) {
+            const idx = books.findIndex(b => b.id === id);
+            if (idx > -1) { books.splice(idx, 1);
+                saveBooks();
+                renderBooks(); }
+        }
+
+        // ==================== INTERNSHIP ====================
+        function addCompany() {
+            const name = prompt('Company name:');
+            if (!name) return;
+            const role = prompt('Role:');
+            if (!role) return;
+            const status = prompt('Status (Applied/Interviewing/Offer/Rejected/Researching):') || 'Researching';
+            companies.push({ id: companyIdCounter++, name, role, status, date: new Date().toISOString().split('T')[0] });
+            saveCompanies();
+            renderInternship();
+        }
+
+        function saveCompanies() { localStorage.setItem('studyhub_companies', JSON.stringify(companies)); }
+
+        function loadCompanies() {
+            const stored = localStorage.getItem('studyhub_companies');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    companies.length = 0;
+                    parsed.forEach(c => companies.push(c));
+                    companyIdCounter = Math.max(...companies.map(c => c.id), 2) + 1;
+                } catch (e) {}
+            }
+        }
+
+        function renderInternship() {
+            document.getElementById('companyList').innerHTML = companies.length === 0 ?
+                '<div style="color:var(--muted);text-align:center;padding:1rem">No companies tracked yet</div>' :
+                companies.map(c => `
+            <div class="card" style="margin-bottom:0.4rem;padding:0.7rem 1rem;display:flex;align-items:center;gap:10px">
+              <span style="font-size:20px">🏢</span>
+              <span style="flex:1;font-size:13px"><strong>${c.name}</strong> — ${c.role}</span>
+              <span style="font-size:11px;padding:3px 10px;border-radius:10px;background:${c.status==='Applied'?'rgba(79,156,249,.2)':c.status==='Offer'?'rgba(63,185,80,.2)':c.status==='Rejected'?'rgba(248,81,73,.2)':'var(--surface2)'};color:${c.status==='Applied'?'var(--accent)':c.status==='Offer'?'var(--accent2)':c.status==='Rejected'?'var(--danger)':'var(--muted)'}">${c.status}</span>
+              <span style="font-size:11px;color:var(--muted)">${c.date}</span>
+              <button class="btn" style="font-size:11px;padding:4px 8px;color:var(--danger)" onclick="deleteCompany(${c.id})">🗑</button>
+            </div>`).join('');
+        }
+
+        function deleteCompany(id) {
+            const idx = companies.findIndex(c => c.id === id);
+            if (idx > -1) { companies.splice(idx, 1);
+                saveCompanies();
+                renderInternship(); }
+        }
+
+        // ==================== EMERGENCY ====================
+        function renderEmergency() {
+            let html = '';
+            Object.keys(moduleLOs).forEach(mod => {
+                html +=
+                    `<div style="font-weight:700;font-size:14px;margin:10px 0 6px;color:${getModColor(mod)}">${mod}</div>`;
+                moduleLOs[mod].forEach(lo => {
+                    const key = mod + '|' + lo;
+                    const status = loStatus[key];
+                    html += `
+              <div class="lo-item ${status==='know'?'know':status==='struggle'?'struggle':''}" onclick="cycleLOStatus('${mod}','${lo}')">
+                <span style="flex:1">${lo}</span>
+                <span class="lo-badge ${status==='know'?'know':status==='struggle'?'struggle':''}" style="background:${status==='know'?'rgba(63,185,80,.2)':status==='struggle'?'rgba(248,81,73,.2)':'var(--surface2)'};color:${status==='know'?'var(--accent2)':status==='struggle'?'var(--danger)':'var(--muted)'}">
+                  ${status==='know'?'✓ Know':status==='struggle'?'✗ Struggle':'Tap to set'}
+                </span>
+              </div>`;
+                });
+            });
+            document.getElementById('loChecklist').innerHTML = html;
+        }
+
+        function cycleLOStatus(mod, lo) {
+            const key = mod + '|' + lo;
+            if (loStatus[key] === null) loStatus[key] = 'know';
+            else if (loStatus[key] === 'know') loStatus[key] = 'struggle';
+            else loStatus[key] = null;
+            renderEmergency();
+        }
+
+        function generateRecoveryPlan() {
+            const struggles = [];
+            Object.keys(loStatus).forEach(key => {
+                if (loStatus[key] === 'struggle') {
+                    const [mod, lo] = key.split('|');
+                    struggles.push({ mod, lo });
+                }
+            });
+            if (struggles.length === 0) {
+                document.getElementById('emergencyTimetable').innerHTML =
+                    '<div class="card"><div style="color:var(--accent2);font-weight:700">🎉 No struggles marked! You\'re on track.</div></div>';
+                document.getElementById('emergencyProgression').innerHTML = '';
+                return;
+            }
+            // Progression
+            const totalLOs = Object.keys(loStatus).length;
+            const known = Object.values(loStatus).filter(s => s === 'know').length;
+            const struggleCount = struggles.length;
+            document.getElementById('emergencyProgression').innerHTML = `
+            <div class="card" style="border-color:rgba(248,81,73,.3);margin-bottom:0.75rem">
+              <div style="font-weight:700;margin-bottom:6px">📊 Recovery Progress</div>
+              <div>Known: <strong>${known}/${totalLOs}</strong> (${Math.round(known/totalLos*100)}%)</div>
+              <div>Struggling: <strong>${struggleCount}/${totalLOs}</strong></div>
+              <div class="progress-bar-wrap"><div class="progress-bar-fill ${known/totalLos>=0.7?'good':'warn'}" style="width:${Math.round(known/totalLos*100)}%"></div></div>
+            </div>`;
+
+            // Recovery timetable
+            let planHtml = '<div class="card"><div style="font-weight:700;margin-bottom:8px">🆘 Recovery Schedule</div>';
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            const perDay = Math.ceil(struggles.length / 5);
+            days.forEach((day, i) => {
+                const dayItems = struggles.slice(i * perDay, (i + 1) * perDay);
+                if (dayItems.length > 0) {
+                    planHtml +=
+                        `<div style="margin-bottom:8px"><strong>${day}</strong><br>${dayItems.map(s => `• ${s.mod}: ${s.lo} <small style="color:var(--accent)">(Focus 45min)</small>`).join('<br>')}</div>`;
+                }
+            });
+            planHtml +=
+                '<div style="font-size:11px;color:var(--muted);margin-top:8px">⚡ Review each LO for 45 min then test yourself. Retake the checklist after each session.</div></div>';
+            document.getElementById('emergencyTimetable').innerHTML = planHtml;
+        }
+
+        // ==================== TIMER ====================
+        function renderTimerPage() {
+            renderTimerHistory();
+        }
+
+        function timerPickMod(mod) {
+            timerMod = mod;
+            timerLO = null;
+            document.querySelectorAll('#timerSetupCard .btn[id^="tmod-"]').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('tmod-' + mod);
+            if (btn) btn.classList.add('active');
+            const los = moduleLOs[mod] || [];
+            document.getElementById('timerLOPicker').innerHTML = `
+            <div class="label">Select Learning Outcome</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${los.map(lo => `<button class="btn" id="tlo-${mod}-${lo.replace(/[^a-zA-Z0-9]/g,'')}" onclick="timerPickLO('${mod}','${lo.replace(/'/g,"\\'")}')" style="font-size:11px">${lo}</button>`).join('')}
+            </div>`;
+        }
+
+        function timerPickLO(mod, lo) {
+            timerLO = lo;
+            document.querySelectorAll('#timerLOPicker .btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('tlo-' + mod + '-' + lo.replace(/[^a-zA-Z0-9]/g, ''));
+            if (btn) btn.classList.add('active');
+        }
+
+        function timerSetDur(dur) {
+            timerDuration = dur;
+            document.querySelectorAll('#timerSetupCard .btn[id^="tdur-"]').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('tdur-' + dur);
+            if (btn) btn.classList.add('active');
+        }
+
+        function timerStart() {
+            if (!timerLO) {
+                alert('Please select a Learning Outcome first.');
+                return;
+            }
+            timerSeconds = timerDuration * 60;
+            timerIsPaused = false;
+            timerSessionStart = new Date();
+            timerElapsedBeforeStop = 0;
+            document.getElementById('timerSetupCard').style.display = 'none';
+            document.getElementById('timerActiveCard').style.display = 'block';
+            document.getElementById('timerLogCard').style.display = 'none';
+            document.getElementById('timerModLabel').textContent = timerMod;
+            document.getElementById('timerLOLabel').textContent = timerLO;
+            document.getElementById('timerStatus').textContent = 'Session running...';
+            document.getElementById('timerPauseBtn').style.display = 'inline-flex';
+            document.getElementById('timerResumeBtn').style.display = 'none';
+            updateTimerDisplay();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(timerTick, 1000);
+        }
+
+        function timerTick() {
+            if (!timerIsPaused) {
+                timerSeconds--;
+                updateTimerDisplay();
+                if (timerSeconds <= 0) {
+                    timerStop();
+                    alert('⏰ Time\'s up! Great job. Now log what you covered.');
+                }
+            }
+        }
+
+        function timerPause() {
+            timerIsPaused = true;
+            document.getElementById('timerStatus').textContent = '⏸ Paused';
+            document.getElementById('timerPauseBtn').style.display = 'none';
+            document.getElementById('timerResumeBtn').style.display = 'inline-flex';
+        }
+
+        function timerResume() {
+            timerIsPaused = false;
+            document.getElementById('timerStatus').textContent = 'Session running...';
+            document.getElementById('timerPauseBtn').style.display = 'inline-flex';
+            document.getElementById('timerResumeBtn').style.display = 'none';
+        }
+
+        function timerStop() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerElapsedBeforeStop = (timerDuration * 60) - timerSeconds;
+            document.getElementById('timerActiveCard').style.display = 'none';
+            document.getElementById('timerLogCard').style.display = 'block';
+            document.getElementById('timerSetupCard').style.display = 'block';
+            const mins = Math.floor(timerElapsedBeforeStop / 60);
+            const secs = timerElapsedBeforeStop % 60;
+            document.getElementById('timerLogSummary').textContent =
+                `Module: ${timerMod} | LO: ${timerLO} | Time spent: ${mins}m ${secs}s`;
+            timerConfidence = 3;
+            document.querySelectorAll('#timerLogCard .btn[id^="conf-"]').forEach(b => b.classList.remove('active'));
+            document.getElementById('conf-3').classList.add('active');
+            document.getElementById('timerLogAnalysis').innerHTML = '';
+            document.getElementById('timerLogCovered').value = '';
+        }
+
+        function timerSetConf(level) {
+            timerConfidence = level;
+            document.querySelectorAll('#timerLogCard .btn[id^="conf-"]').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('conf-' + level);
+            if (btn) btn.classList.add('active');
+            const analysisMap = {
+                1: '<span style="color:var(--danger)">😰 Don\'t worry — schedule a review session and revisit the basics.</span>',
+                2: '<span style="color:var(--warn)">😕 Review the core concepts again and try practice problems.</span>',
+                3: '<span style="color:var(--accent)">😐 Good progress! Reinforce with more examples.</span>',
+                4: '<span style="color:var(--accent2)">😊 Solid understanding — you\'re on track for the test.</span>',
+                5: '<span style="color:var(--accent2)">🔥 Excellent! You\'ve mastered this topic.</span>',
+            };
+            document.getElementById('timerLogAnalysis').innerHTML = analysisMap[level] || '';
+        }
+
+        function timerSaveLog() {
+            const covered = document.getElementById('timerLogCovered').value.trim();
+            const sessions = JSON.parse(localStorage.getItem('timerSessions') || '[]');
+            sessions.push({
+                mod: timerMod,
+                lo: timerLO,
+                duration: Math.floor(timerElapsedBeforeStop / 60),
+                confidence: timerConfidence,
+                covered: covered || '(no notes)',
+                date: new Date().toISOString(),
+            });
+            localStorage.setItem('timerSessions', JSON.stringify(sessions));
+            document.getElementById('timerLogCard').style.display = 'none';
+            document.getElementById('timerSetupCard').style.display = 'block';
+            timerLO = null;
+            timerSeconds = 0;
+            timerElapsedBeforeStop = 0;
+            renderTimerHistory();
+            alert('Session saved! ✅');
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(Math.max(0, timerSeconds) / 60);
+            const secs = Math.max(0, timerSeconds) % 60;
+            document.getElementById('timerDisplay').textContent =
+                String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        }
+
+        function renderTimerHistory() {
+            const sessions = JSON.parse(localStorage.getItem('timerSessions') || '[]');
+            if (sessions.length === 0) {
+                document.getElementById('timerHistory').innerHTML =
+                    '<div style="color:var(--muted);text-align:center;padding:1rem">No sessions logged yet</div>';
+                return;
+            }
+            document.getElementById('timerHistory').innerHTML = sessions.reverse().slice(0, 20).map(s => `
+            <div style="padding:6px 0;font-size:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+              <span>${'🔥'.repeat(Math.min(s.confidence,5))}</span>
+              <span><strong>${s.mod}</strong> — ${s.lo}</span>
+              <span style="color:var(--muted)">${s.duration}min</span>
+              <span style="color:var(--muted);font-size:10px;margin-left:auto">${new Date(s.date).toLocaleDateString('en-ZA')}</span>
+            </div>`).join('');
+        }
+
+        function timerClearLog() {
+            if (confirm('Clear all session history?')) {
+                localStorage.removeItem('timerSessions');
+                renderTimerHistory();
+            }
+        }
+
+        // ==================== FOCUS ====================
+        function renderFocus() {
+            document.getElementById('aiSuggestionResult').innerHTML = '';
+            const mods = ['AOP', 'ORS', 'SEF', 'ISC'];
+            let graphHtml = '<div style="display:flex;flex-direction:column;gap:10px">';
+            mods.forEach(mod => {
+                const pct = getModuleProgress(mod);
+                const cls = pct >= 70 ? 'good' : pct >= 40 ? 'warn' : 'danger';
+                graphHtml += `
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>${mod}</span><span>${pct}% mastered</span></div>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill ${cls}" style="width:${pct}%"></div></div>
+              </div>`;
+            });
+            graphHtml +=
+                '<div style="font-size:11px;color:var(--muted);margin-top:4px">Target: 75%+ on all modules for exam readiness</div></div>';
+            document.getElementById('glowUpGraph').innerHTML = graphHtml;
+        }
+
+        function getAISuggestion() {
+            const now = new Date();
+            const hour = now.getHour();
+            const day = now.getDay();
+            const mods = ['AOP', 'ORS', 'SEF', 'ISC'];
+            // Find weakest module
+            let weakest = mods[0];
+            let lowestPct = 100;
+            mods.forEach(mod => {
+                const pct = getModuleProgress(mod);
+                if (pct < lowestPct) { lowestPct = pct;
+                    weakest = mod; }
+            });
+            const upcomingClass = getTimetableForDay(day)[0];
+            let suggestion = '';
+            if (upcomingClass && hour < 12) {
+                suggestion =
+                    `📅 You have <strong>${upcomingClass.mod}</strong> at ${upcomingClass.time} today. Review ${upcomingClass.mod} notes now to prepare.`;
+            } else if (lowestPct < 50) {
+                suggestion =
+                    `⚠️ <strong>${weakest}</strong> is your weakest module (${lowestPct}% mastered). Focus on ${(moduleLOs[weakest]||[])[0] || 'the basics'} for 45 min.`;
+            } else {
+                suggestion =
+                    `✅ You're doing well! Do a 25-min review of <strong>${mods[Math.floor(Math.random()*mods.length)]}</strong> to stay sharp.`;
+            }
+            document.getElementById('aiSuggestionResult').innerHTML = `
+            <div class="card" style="border-color:rgba(79,156,249,.4);background:rgba(79,156,249,.05)">
+              <div style="font-size:14px;line-height:1.7">${suggestion}</div>
+              <button class="btn" style="margin-top:8px;background:var(--accent);color:white;border-color:var(--accent)" onclick="show('timer')">🍅 Start Focus Timer →</button>
+            </div>`;
+        }
+
+        // ==================== INIT ====================
+        function init() {
+            loadTodos();
+            loadBooks();
+            loadCompanies();
+            // Load AWS notes
+            const awsNote = localStorage.getItem('aws_notes');
+            if (awsNote) document.getElementById('awsNotes').value = awsNote;
+            // Set default timer selections
+            timerPickMod('AOP');
+            timerSetDur(25);
+            // Initial render
+            renderDashboard();
+            renderTimetable();
+            renderSchedule();
+            renderMarks();
+            renderModules();
+            renderAlerts();
+            renderTodoList();
+            renderAWSPage();
+            renderBooks();
+            renderInternship();
+            renderEmergency();
+            renderFocus();
+            renderTimerHistory();
+        }
+
+        init();
+        console.log('✅ StudyHub initialized — Work & Personal section is now rendering correctly!');
+    </script>
 </body>
 </html>
