@@ -301,6 +301,202 @@
     .bnav-btn { min-width: 44px; padding: 5px 6px; font-size: 9px; }
     .bnav-btn .bnav-icon { font-size: 18px; }
   }
+
+ /* ... (keep all existing CSS from your original code) ... */
+  
+  /* NEW FEATURES STYLES */
+  .split-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .split-section {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,.4);
+  }
+  
+  .split-section h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .todo-input {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+  
+  .todo-input input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+  }
+  
+  .todo-input input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79,156,249,.2);
+  }
+  
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: var(--surface2);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  
+  .todo-item:hover {
+    transform: translateX(4px);
+    box-shadow: -3px 0 12px rgba(79,156,249,.15);
+  }
+  
+  .todo-item.overdue {
+    border-left-color: var(--danger);
+    background: rgba(248,81,73,.08);
+  }
+  
+  .todo-item.due-today {
+    border-left-color: var(--warn);
+    background: rgba(210,153,34,.08);
+  }
+  
+  .todo-item.completed {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+  
+  .todo-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  .todo-checkbox.checked {
+    background: var(--accent2);
+    border-color: var(--accent2);
+  }
+  
+  .todo-content {
+    flex: 1;
+  }
+  
+  .todo-title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .todo-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  
+  .todo-deadline {
+    font-size: 11px;
+    color: var(--warn);
+  }
+  
+  .book-card {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .book-progress {
+    flex: 1;
+  }
+  
+  .book-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  
+  .book-author {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  
+  .company-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .company-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+  
+  .resource-link {
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(79,156,249,.1);
+    border: 1px solid rgba(79,156,249,.2);
+    border-radius: 6px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 4px;
+    transition: all 0.2s;
+  }
+  
+  .resource-link:hover {
+    background: rgba(79,156,249,.2);
+    transform: translateY(-2px);
+  }
+  
+  .readiness-meter {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .split-dashboard {
+      grid-template-columns: 1fr;
+    }
+    
+    .todo-item {
+      flex-wrap: wrap;
+    }
+  }
 </style>
 </head>
 <body>
@@ -546,6 +742,306 @@
     <button class="bnav-btn" onclick="show('alerts')"><span class="bnav-icon">🔔</span>Alerts</button>
     <button class="bnav-btn" onclick="show('focus')"><span class="bnav-icon">⚡</span>Focus</button>
     <button class="bnav-btn" onclick="show('emergency')"><span class="bnav-icon">🆘</span>SOS</button>
+    <button class="bnav-btn" onclick="show('timer')"><span class="bnav-icon">🍅</span>Timer</button>
+  </div>
+</nav>
+
+ <canvas id="particles"></canvas>
+<div id="app">
+
+<nav>
+  <div class="nav-brand">Study<span>Hub</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="show('dashboard')"><div class="dot"></div> Dashboard</button>
+    <button class="nav-tab" onclick="show('timetable')">Timetable</button>
+    <button class="nav-tab" onclick="show('schedule')">Daily Schedule</button>
+    <button class="nav-tab" onclick="show('marks')"><div class="dot warn"></div> Marks Tracker</button>
+    <button class="nav-tab" onclick="show('modules')">Modules</button>
+    <button class="nav-tab" onclick="show('alerts')"><div class="dot danger"></div> Alerts</button>
+    <button class="nav-tab" onclick="show('todo')">📋 To-Do</button>
+    <button class="nav-tab" onclick="show('aws')">☁️ AWS</button>
+    <button class="nav-tab" onclick="show('books')">📚 Books</button>
+    <button class="nav-tab" onclick="show('internship')">💼 Internship</button>
+    <button class="nav-tab" onclick="show('focus')">⚡ Focus</button>
+    <button class="nav-tab" onclick="show('emergency')">🆘 Emergency</button>
+    <button class="nav-tab" onclick="show('timer')">🍅 Timer</button>
+  </div>
+</nav>
+
+<!-- ========== DASHBOARD (SPLIT VIEW) ========== -->
+<div id="page-dashboard" class="page active">
+  <div class="section-title" id="greeting"></div>
+  <div class="section-sub">Semester 2, 2026 — TUT Soshanguve South Campus</div>
+  
+  <!-- Split Dashboard: School vs Work -->
+  <div class="split-dashboard">
+    <!-- School Section -->
+    <div class="split-section">
+      <h3>🎓 School Focus</h3>
+      <div id="schoolTodoList"></div>
+      <button class="btn" onclick="show('todo')" style="width:100%;justify-content:center;margin-top:0.75rem">
+        View All School Tasks →
+      </button>
+    </div>
+    
+    <!-- Work/Personal Section -->
+    <div class="split-section">
+      <h3>💼 Work & Personal</h3>
+      <div id="workTodoList"></div>
+      <button class="btn" onclick="show('todo')" style="width:100%;justify-content:center;margin-top:0.75rem">
+        View All Work Tasks →
+      </button>
+    </div>
+  </div>
+  
+  <div id="currentActivity"></div>
+  <div id="dashAlerts"></div>
+  
+  <div class="grid-4" style="margin-bottom:1rem" id="dashStats"></div>
+  
+  <div class="card" style="margin-bottom:1rem; border-color: rgba(79,156,249,.3);">
+    <div style="font-size:15px; font-weight:700; margin-bottom:.75rem;">📊 Progress Report – Marks & Time</div>
+    <div id="progressReport"></div>
+  </div>
+  
+  <!-- ... (keep existing dashboard content) ... -->
+  <div class="card" style="margin-bottom:1rem">
+    <div class="flex-between mb-1">
+      <div style="font-size:15px;font-weight:700">Module overview</div>
+      <button class="btn" style="font-size:11px" onclick="show('marks')">View marks →</button>
+    </div>
+    <div id="moduleOverview"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card today-card">
+      <div style="font-size:15px;font-weight:700;margin-bottom:.75rem" id="todayClassesTitle">Today's classes</div>
+      <div id="todayClasses"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:15px;font-weight:700;margin-bottom:.25rem">Focus priority this week</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.75rem" id="focusPriorityDate"></div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="focusPriorityList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TO-DO LIST PAGE ========== -->
+<div id="page-todo" class="page">
+  <div class="section-title">📋 Task Manager</div>
+  <div class="section-sub">Stay on top of schoolwork, AWS tasks, and personal goals</div>
+  
+  <!-- Add Task Form -->
+  <div class="card" style="margin-bottom:1rem">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">➕ Add New Task</div>
+    <div class="todo-input">
+      <input type="text" id="newTaskTitle" placeholder="What needs to be done?" style="flex:2">
+      <select id="newTaskCategory" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
+        <option value="school">🎓 School</option>
+        <option value="work">💼 Work/Personal</option>
+        <option value="aws">☁️ AWS</option>
+        <option value="internship">💼 Internship</option>
+      </select>
+      <input type="date" id="newTaskDeadline" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
+      <button class="btn" onclick="addTodo()" style="background:var(--accent);color:white;border-color:var(--accent)">Add</button>
+    </div>
+  </div>
+  
+  <!-- Filter Tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+    <button class="btn active" id="filterAll" onclick="filterTodos('all')">All</button>
+    <button class="btn" id="filterSchool" onclick="filterTodos('school')">🎓 School</button>
+    <button class="btn" id="filterWork" onclick="filterTodos('work')">💼 Work</button>
+    <button class="btn" id="filterAWS" onclick="filterTodos('aws')">☁️ AWS</button>
+    <button class="btn" id="filterInternship" onclick="filterTodos('internship')">💼 Internship</button>
+    <button class="btn" id="filterOverdue" onclick="filterTodos('overdue')">⚠️ Overdue</button>
+  </div>
+  
+  <!-- Task List -->
+  <div id="todoList"></div>
+</div>
+
+<!-- ========== AWS STUDENT BUILDER PAGE ========== -->
+<div id="page-aws" class="page">
+  <div class="section-title">☁️ AWS Student Builder @ TUT</div>
+  <div class="section-sub">Resources, notes, and tasks for the AWS Student Builder group</div>
+  
+  <!-- AWS Group Info -->
+  <div class="card" style="margin-bottom:1rem;border-color:rgba(255,153,0,.3)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+      <div style="font-size:32px">☁️</div>
+      <div>
+        <div style="font-size:16px;font-weight:700">TUT AWS Student Builder Group</div>
+        <div style="font-size:12px;color:var(--muted)">Computer Science Department</div>
+      </div>
+    </div>
+    
+    <div style="margin-bottom:1rem">
+      <div class="label">Quick Links</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://aws.amazon.com/education/awseducate/" target="_blank" class="resource-link">🎓 AWS Educate</a>
+        <a href="https://aws.amazon.com/training/" target="_blank" class="resource-link">📚 AWS Training</a>
+        <a href="https://aws.amazon.com/certification/" target="_blank" class="resource-link">🏆 AWS Certifications</a>
+        <a href="https://aws.amazon.com/free/" target="_blank" class="resource-link">🆓 AWS Free Tier</a>
+        <a href="https://aws.amazon.com/developer/community/students/" target="_blank" class="resource-link">👥 Student Community</a>
+      </div>
+    </div>
+    
+    <div style="margin-bottom:1rem">
+      <div class="label">Group Notes</div>
+      <textarea id="awsNotes" rows="6" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:10px;outline:none;resize:vertical;font-family:var(--font)" placeholder="Add your AWS study notes, meeting notes, or important information here..."></textarea>
+      <button class="btn" onclick="saveAWSNote()" style="margin-top:0.5rem">💾 Save Notes</button>
+    </div>
+    
+    <div>
+      <div class="label">Learning Path (Cloud Practitioner → Solutions Architect)</div>
+      <div style="display:flex;flex-direction:column;gap:8px" id="awsLearningPath"></div>
+    </div>
+  </div>
+  
+  <!-- AWS Tasks -->
+  <div class="card" style="margin-bottom:1rem">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📋 AWS To-Do List</div>
+    <div id="awsTodoList"></div>
+  </div>
+</div>
+
+<!-- ========== BOOKS PAGE ========== -->
+<div id="page-books" class="page">
+  <div class="section-title">📚 Reading Tracker</div>
+  <div class="section-sub">Track books you've read and time to completion</div>
+  
+  <!-- Add Book Form -->
+  <div class="card" style="margin-bottom:1rem">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">➕ Add Book</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end">
+      <div>
+        <div class="label">Book Title</div>
+        <input type="text" id="bookTitle" placeholder="Enter book title" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
+      </div>
+      <div>
+        <div class="label">Author</div>
+        <input type="text" id="bookAuthor" placeholder="Author name" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
+      </div>
+      <div>
+        <div class="label">Category</div>
+        <select id="bookCategory" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:8px;outline:none">
+          <option>Technical</option>
+          <option>Self-Help</option>
+          <option>Fiction</option>
+          <option>Biography</option>
+          <option>Academic</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <button class="btn" onclick="addBook()" style="background:var(--accent);color:white;border-color:var(--accent);height:40px">Add</button>
+    </div>
+  </div>
+  
+  <!-- Reading Stats -->
+  <div class="grid-3" style="margin-bottom:1rem" id="bookStats"></div>
+  
+  <!-- Books List -->
+  <div id="bookList"></div>
+</div>
+
+<!-- ========== INTERNSHIP PREP PAGE ========== -->
+<div id="page-internship" class="page">
+  <div class="section-title">💼 Internship Preparation</div>
+  <div class="section-sub">Technical interview prep, company tracking, and readiness assessment</div>
+  
+  <!-- Interview Prep Resources -->
+  <div class="card" style="margin-bottom:1rem">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🎯 Technical Interview Prep Platforms</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+      <div class="company-card">
+        <h4>📊 LeetCode</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Practice coding problems, algorithms & data structures</p>
+        <a href="https://leetcode.com/" target="_blank" class="resource-link">Start Practicing →</a>
+      </div>
+      
+      <div class="company-card">
+        <h4>💻 HackerRank</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Coding challenges & interview preparation kit</p>
+        <a href="https://www.hackerrank.com/" target="_blank" class="resource-link">Start Practicing →</a>
+      </div>
+      
+      <div class="company-card">
+        <h4>🎓 AlgoExpert</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Curated coding interview questions with video solutions</p>
+        <a href="https://www.algoexpert.io/" target="_blank" class="resource-link">Start Practicing →</a>
+      </div>
+      
+      <div class="company-card">
+        <h4>📚 System Design Primer</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Learn large-scale system design for interviews</p>
+        <a href="https://github.com/donnemartin/system-design-primer" target="_blank" class="resource-link">Start Learning →</a>
+      </div>
+      
+      <div class="company-card">
+        <h4>🤖 Pramp</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Free mock interviews with peers</p>
+        <a href="https://www.pramp.com/" target="_blank" class="resource-link">Start Mock Interviews →</a>
+      </div>
+      
+      <div class="company-card">
+        <h4>📖 Cracking the Coding Interview</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Essential book for technical interviews</p>
+        <a href="https://www.crackingthecodinginterview.com/" target="_blank" class="resource-link">Get the Book →</a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Company Applications Tracker -->
+  <div class="card" style="margin-bottom:1rem">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">🏢 Company Applications Tracker</div>
+    <div style="margin-bottom:1rem">
+      <button class="btn" onclick="addCompany()" style="background:var(--accent);color:white;border-color:var(--accent)">➕ Add Company</button>
+    </div>
+    <div id="companyList"></div>
+  </div>
+  
+  <!-- Readiness Assessment -->
+  <div class="card" style="margin-bottom:1rem">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">📊 Interview Readiness Assessment</div>
+    <div style="margin-bottom:1rem">
+      <div class="label">Rate your skills (1-5):</div>
+      <div id="readinessAssessment"></div>
+    </div>
+    <div id="readinessScore"></div>
+  </div>
+  
+  <!-- AWS Cloud Interview Prep -->
+  <div class="card">
+    <div style="font-size:14px;font-weight:700;margin-bottom:.75rem">☁️ AWS/Cloud Interview Questions</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8">
+      • What are the core AWS services (EC2, S3, Lambda, RDS)?<br>
+      • Explain VPC, Subnets, and Security Groups<br>
+      • What is auto-scaling and load balancing?<br>
+      • Difference between SQL and NoSQL databases<br>
+      • Explain CI/CD pipeline with AWS services<br>
+      • What is Infrastructure as Code (IaC)?<br>
+      • Describe serverless architecture benefits<br>
+      • AWS Well-Architected Framework pillars<br>
+      • Containerization (ECS, EKS) vs traditional deployment
+    </div>
+  </div>
+</div>
+
+<!-- ... (keep all other existing pages: timetable, schedule, marks, modules, alerts, focus, emergency, timer) ... -->
+
+</div>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-btn active" onclick="show('dashboard')"><span class="bnav-icon">🏠</span>Home</button>
+    <button class="bnav-btn" onclick="show('timetable')"><span class="bnav-icon">📅</span>Classes</button>
+    <button class="bnav-btn" onclick="show('schedule')"><span class="bnav-icon">🗓️</span>Schedule</button>
+    <button class="bnav-btn" onclick="show('marks')"><span class="bnav-icon">📊</span>Marks</button>
+    <button class="bnav-btn" onclick="show('todo')"><span class="bnav-icon">📋</span>Tasks</button>
+    <button class="bnav-btn" onclick="show('aws')"><span class="bnav-icon">☁️</span>AWS</button>
+    <button class="bnav-btn" onclick="show('books')"><span class="bnav-icon">📚</span>Books</button>
+    <button class="bnav-btn" onclick="show('internship')"><span class="bnav-icon">💼</span>Intern</button>
     <button class="bnav-btn" onclick="show('timer')"><span class="bnav-icon">🍅</span>Timer</button>
   </div>
 </nav>
@@ -2083,6 +2579,646 @@ document.addEventListener('mousemove',e=>{
 document.addEventListener('mouseleave',()=>{
   document.querySelectorAll('.card,.stat-card').forEach(c=>{c.style.transform='';c.style.boxShadow='';});
 });
+ // ======================== NEW FEATURE: TO-DO SYSTEM ========================
+let todos = [];
+let todoFilter = 'all';
+
+try {
+  const saved = localStorage.getItem('studyhub_todos');
+  if (saved) todos = JSON.parse(saved);
+} catch(e) {}
+
+function saveTodos() {
+  try {
+    localStorage.setItem('studyhub_todos', JSON.stringify(todos));
+  } catch(e) {}
+}
+
+function addTodo() {
+  const title = document.getElementById('newTaskTitle').value.trim();
+  const category = document.getElementById('newTaskCategory').value;
+  const deadline = document.getElementById('newTaskDeadline').value;
+  
+  if (!title) return;
+  
+  todos.push({
+    id: Date.now(),
+    title,
+    category,
+    deadline,
+    completed: false,
+    createdAt: new Date().toISOString(),
+    reminded: false
+  });
+  
+  document.getElementById('newTaskTitle').value = '';
+  document.getElementById('newTaskDeadline').value = '';
+  saveTodos();
+  refreshAll();
+}
+
+function toggleTodo(id) {
+  const todo = todos.find(t => t.id === id);
+  if (todo) {
+    todo.completed = !todo.completed;
+    saveTodos();
+    refreshAll();
+  }
+}
+
+function deleteTodo(id) {
+  todos = todos.filter(t => t.id !== id);
+  saveTodos();
+  refreshAll();
+}
+
+function filterTodos(filter) {
+  todoFilter = filter;
+  
+  // Update button states
+  document.querySelectorAll('#page-todo .btn').forEach(btn => {
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  });
+  
+  const activeBtn = document.getElementById('filter' + filter.charAt(0).toUpperCase() + filter.slice(1));
+  if (activeBtn) {
+    activeBtn.style.background = 'var(--accent)';
+    activeBtn.style.color = 'white';
+    activeBtn.style.borderColor = 'var(--accent)';
+  }
+  
+  renderTodoList();
+}
+
+function renderTodoList() {
+  const el = document.getElementById('todoList');
+  if (!el) return;
+  
+  let filtered = todos;
+  
+  if (todoFilter === 'overdue') {
+    const today = new Date().toISOString().split('T')[0];
+    filtered = todos.filter(t => !t.completed && t.deadline && t.deadline < today);
+  } else if (todoFilter !== 'all') {
+    filtered = todos.filter(t => t.category === todoFilter);
+  }
+  
+  // Sort: incomplete first, then by deadline
+  filtered.sort((a, b) => {
+    if (a.completed && !b.completed) return 1;
+    if (!a.completed && b.completed) return -1;
+    if (a.deadline && b.deadline) return a.deadline.localeCompare(b.deadline);
+    return 0;
+  });
+  
+  if (filtered.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">No tasks found 📋</div>';
+    return;
+  }
+  
+  el.innerHTML = filtered.map(todo => {
+    const isOverdue = !todo.completed && todo.deadline && todo.deadline < new Date().toISOString().split('T')[0];
+    const isToday = !todo.completed && todo.deadline === new Date().toISOString().split('T')[0];
+    const categoryEmoji = {
+      school: '🎓',
+      work: '💼',
+      aws: '☁️',
+      internship: '💼'
+    };
+    
+    return `
+      <div class="todo-item ${todo.completed ? 'completed' : ''} ${isOverdue ? 'overdue' : ''} ${isToday ? 'due-today' : ''}">
+        <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${todo.id})">
+          ${todo.completed ? '✓' : ''}
+        </div>
+        <div class="todo-content">
+          <div class="todo-title">${todo.title}</div>
+          <div class="todo-meta">
+            ${categoryEmoji[todo.category] || ''} ${todo.category.toUpperCase()}
+            ${todo.deadline ? ` · Due: ${todo.deadline}` : ''}
+            ${isOverdue ? ' · ⚠️ OVERDUE' : ''}
+            ${isToday ? ' · 📌 DUE TODAY' : ''}
+          </div>
+        </div>
+        <button class="btn" onclick="deleteTodo(${todo.id})" style="font-size:11px;padding:4px 8px">🗑️</button>
+      </div>
+    `;
+  }).join('');
+  
+  // Check for overdue reminders
+  checkOverdueReminders();
+}
+
+function checkOverdueReminders() {
+  const today = new Date().toISOString().split('T')[0];
+  todos.forEach(todo => {
+    if (!todo.completed && !todo.reminded && todo.deadline && todo.deadline <= today) {
+      if (Notification.permission === 'granted') {
+        new Notification('⚠️ Overdue Task', {
+          body: `${todo.title} was due on ${todo.deadline}`,
+          icon: '📋'
+        });
+      }
+      todo.reminded = true;
+    }
+  });
+  saveTodos();
+}
+
+// Render split dashboard tasks
+function renderDashboardTasks() {
+  const schoolEl = document.getElementById('schoolTodoList');
+  const workEl = document.getElementById('workTodoList');
+  
+  if (!schoolEl || !workEl) return;
+  
+  const schoolTasks = todos.filter(t => !t.completed && t.category === 'school').slice(0, 5);
+  const workTasks = todos.filter(t => !t.completed && (t.category === 'work' || t.category === 'internship')).slice(0, 5);
+  
+  schoolEl.innerHTML = schoolTasks.length === 0 
+    ? '<div style="color:var(--muted);font-size:13px">No pending school tasks</div>'
+    : schoolTasks.map(t => `
+      <div style="padding:8px;background:var(--surface2);border-radius:6px;margin-bottom:4px">
+        <div style="font-size:13px">${t.title}</div>
+        <div style="font-size:11px;color:${t.deadline && t.deadline < new Date().toISOString().split('T')[0] ? 'var(--danger)' : 'var(--muted)'}">
+          ${t.deadline || 'No deadline'}
+        </div>
+      </div>
+    `).join('');
+    
+  workEl.innerHTML = workTasks.length === 0
+    ? '<div style="color:var(--muted);font-size:13px">No pending work tasks</div>'
+    : workTasks.map(t => `
+      <div style="padding:8px;background:var(--surface2);border-radius:6px;margin-bottom:4px">
+        <div style="font-size:13px">${t.title}</div>
+        <div style="font-size:11px;color:${t.deadline && t.deadline < new Date().toISOString().split('T')[0] ? 'var(--danger)' : 'var(--muted)'}">
+          ${t.deadline || 'No deadline'}
+        </div>
+      </div>
+    `).join('');
+}
+
+// ======================== AWS STUDENT BUILDER FEATURES ========================
+let awsNotes = '';
+
+try {
+  awsNotes = localStorage.getItem('studyhub_aws_notes') || '';
+} catch(e) {}
+
+function saveAWSNote() {
+  awsNotes = document.getElementById('awsNotes').value;
+  try {
+    localStorage.setItem('studyhub_aws_notes', awsNotes);
+  } catch(e) {}
+  
+  // Show success feedback
+  const btn = event.target;
+  const originalText = btn.textContent;
+  btn.textContent = '✅ Saved!';
+  setTimeout(() => btn.textContent = originalText, 2000);
+}
+
+function renderAWSPage() {
+  const notesEl = document.getElementById('awsNotes');
+  if (notesEl) notesEl.value = awsNotes;
+  
+  // Render learning path
+  const pathEl = document.getElementById('awsLearningPath');
+  if (!pathEl) return;
+  
+  const learningPath = [
+    {step: '1. Cloud Practitioner Essentials', status: 'in-progress', link: 'https://aws.amazon.com/training/digital/aws-cloud-practitioner-essentials/'},
+    {step: '2. Solutions Architect Associate', status: 'pending', link: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/'},
+    {step: '3. Developer Associate', status: 'pending', link: 'https://aws.amazon.com/certification/certified-developer-associate/'},
+    {step: '4. Hands-on Projects', status: 'pending', link: 'https://aws.amazon.com/getting-started/hands-on/'}
+  ];
+  
+  pathEl.innerHTML = learningPath.map(item => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface2);border-radius:8px">
+      <div style="width:24px;height:24px;border-radius:50%;background:${item.status === 'completed' ? 'var(--accent2)' : item.status === 'in-progress' ? 'var(--warn)' : 'rgba(255,255,255,.1)'};display:flex;align-items:center;justify-content:center;font-size:12px">
+        ${item.status === 'completed' ? '✓' : item.status === 'in-progress' ? '▶' : '○'}
+      </div>
+      <div style="flex:1;font-size:13px">${item.step}</div>
+      <a href="${item.link}" target="_blank" class="resource-link" style="font-size:11px">View →</a>
+    </div>
+  `).join('');
+  
+  // Render AWS tasks
+  const awsTasks = todos.filter(t => t.category === 'aws' && !t.completed).slice(0, 5);
+  const awsTasksEl = document.getElementById('awsTodoList');
+  if (awsTasksEl) {
+    awsTasksEl.innerHTML = awsTasks.length === 0
+      ? '<div style="color:var(--muted);font-size:13px">No pending AWS tasks. Add some above!</div>'
+      : awsTasks.map(t => `
+        <div style="padding:8px;background:var(--surface2);border-radius:6px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:13px">${t.title}</div>
+            <div style="font-size:11px;color:var(--muted)">${t.deadline || 'No deadline'}</div>
+          </div>
+          <button class="btn" onclick="toggleTodo(${t.id})" style="font-size:11px;padding:4px 8px">✓ Done</button>
+        </div>
+      `).join('');
+  }
+}
+
+// ======================== BOOK TRACKER ========================
+let books = [];
+
+try {
+  const saved = localStorage.getItem('studyhub_books');
+  if (saved) books = JSON.parse(saved);
+} catch(e) {}
+
+function saveBooks() {
+  try {
+    localStorage.setItem('studyhub_books', JSON.stringify(books));
+  } catch(e) {}
+}
+
+function addBook() {
+  const title = document.getElementById('bookTitle').value.trim();
+  const author = document.getElementById('bookAuthor').value.trim();
+  const category = document.getElementById('bookCategory').value;
+  
+  if (!title || !author) return;
+  
+  const startDate = new Date().toISOString().split('T')[0];
+  
+  books.push({
+    id: Date.now(),
+    title,
+    author,
+    category,
+    startDate,
+    endDate: null,
+    completed: false,
+    totalDays: null,
+    notes: ''
+  });
+  
+  document.getElementById('bookTitle').value = '';
+  document.getElementById('bookAuthor').value = '';
+  saveBooks();
+  renderBooks();
+}
+
+function completeBook(id) {
+  const book = books.find(b => b.id === id);
+  if (book) {
+    const endDate = new Date().toISOString().split('T')[0];
+    const start = new Date(book.startDate);
+    const end = new Date(endDate);
+    const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    
+    book.completed = true;
+    book.endDate = endDate;
+    book.totalDays = days;
+    saveBooks();
+    renderBooks();
+  }
+}
+
+function deleteBook(id) {
+  books = books.filter(b => b.id !== id);
+  saveBooks();
+  renderBooks();
+}
+
+function renderBooks() {
+  const statsEl = document.getElementById('bookStats');
+  const listEl = document.getElementById('bookList');
+  
+  if (!statsEl || !listEl) return;
+  
+  const completed = books.filter(b => b.completed);
+  const reading = books.filter(b => !b.completed);
+  const avgDays = completed.length > 0 
+    ? Math.round(completed.reduce((sum, b) => sum + (b.totalDays || 0), 0) / completed.length)
+    : 0;
+  
+  statsEl.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent)">${books.length}</div>
+      <div class="stat-lbl">Total Books</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--accent2)">${completed.length}</div>
+      <div class="stat-lbl">Completed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" style="color:var(--warn)">${avgDays}</div>
+      <div class="stat-lbl">Avg Days to Finish</div>
+    </div>
+  `;
+  
+  if (books.length === 0) {
+    listEl.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">No books added yet. Start tracking your reading!</div>';
+    return;
+  }
+  
+  // Sort: reading first, then recently completed
+  const sorted = [...books].sort((a, b) => {
+    if (a.completed && !b.completed) return 1;
+    if (!a.completed && b.completed) return -1;
+    return new Date(b.startDate) - new Date(a.startDate);
+  });
+  
+  listEl.innerHTML = sorted.map(book => {
+    const startDate = new Date(book.startDate);
+    const today = new Date();
+    const daysSince = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    return `
+      <div class="book-card">
+        <div style="font-size:24px;min-width:40px;text-align:center">
+          ${book.completed ? '✅' : '📖'}
+        </div>
+        <div class="book-progress">
+          <div class="book-title">${book.title}</div>
+          <div class="book-author">by ${book.author} · ${book.category}</div>
+          <div style="font-size:12px;color:var(--muted)">
+            Started: ${book.startDate}
+            ${book.completed 
+              ? ` · Finished: ${book.endDate} · Took ${book.totalDays} days` 
+              : ` · Reading for ${daysSince} days`}
+          </div>
+          ${!book.completed ? `
+            <div style="margin-top:8px">
+              <button class="btn" onclick="completeBook(${book.id})" style="font-size:11px;background:var(--accent2);color:white;border-color:var(--accent2)">
+                ✅ Mark as Complete
+              </button>
+            </div>
+          ` : ''}
+        </div>
+        <button class="btn" onclick="deleteBook(${book.id})" style="font-size:11px;padding:4px 8px">🗑️</button>
+      </div>
+    `;
+  }).join('');
+}
+
+// ======================== INTERNSHIP PREP ========================
+let companies = [];
+let readinessScores = {};
+
+try {
+  companies = JSON.parse(localStorage.getItem('studyhub_companies') || '[]');
+  readinessScores = JSON.parse(localStorage.getItem('studyhub_readiness') || '{}');
+} catch(e) {}
+
+function saveCompanies() {
+  localStorage.setItem('studyhub_companies', JSON.stringify(companies));
+}
+
+function saveReadiness() {
+  localStorage.setItem('studyhub_readiness', JSON.stringify(readinessScores));
+}
+
+function addCompany() {
+  const name = prompt('Company name:');
+  const role = prompt('Role/Position:');
+  const deadline = prompt('Application deadline (YYYY-MM-DD):');
+  
+  if (!name || !role) return;
+  
+  companies.push({
+    id: Date.now(),
+    name,
+    role,
+    deadline: deadline || '',
+    status: 'researching', // researching, applied, interviewing, offered, rejected
+    notes: '',
+    requirements: []
+  });
+  
+  saveCompanies();
+  renderCompanies();
+}
+
+function updateCompanyStatus(id, status) {
+  const company = companies.find(c => c.id === id);
+  if (company) {
+    company.status = status;
+    saveCompanies();
+    renderCompanies();
+  }
+}
+
+function renderCompanies() {
+  const el = document.getElementById('companyList');
+  if (!el) return;
+  
+  if (companies.length === 0) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px">No companies added yet. Start tracking your applications!</div>';
+    return;
+  }
+  
+  const statusColors = {
+    researching: 'var(--muted)',
+    applied: 'var(--accent)',
+    interviewing: 'var(--warn)',
+    offered: 'var(--accent2)',
+    rejected: 'var(--danger)'
+  };
+  
+  const statusEmojis = {
+    researching: '🔍',
+    applied: '📤',
+    interviewing: '🎤',
+    offered: '🎉',
+    rejected: '❌'
+  };
+  
+  el.innerHTML = companies.map(company => {
+    const deadline = company.deadline ? new Date(company.deadline) : null;
+    const isOverdue = deadline && deadline < new Date() && company.status === 'researching';
+    
+    return `
+      <div class="company-card">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+          <div>
+            <h4>${company.name}</h4>
+            <div style="font-size:12px;color:var(--muted)">${company.role}</div>
+            ${company.deadline ? `<div style="font-size:11px;color:${isOverdue ? 'var(--danger)' : 'var(--muted)'}">Deadline: ${company.deadline} ${isOverdue ? '⚠️ OVERDUE' : ''}</div>` : ''}
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:24px">${statusEmojis[company.status]}</div>
+            <div style="font-size:11px;color:${statusColors[company.status]}">${company.status.toUpperCase()}</div>
+          </div>
+        </div>
+        
+        <div style="margin-top:8px">
+          <select onchange="updateCompanyStatus(${company.id}, this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;padding:4px 8px">
+            <option value="researching" ${company.status === 'researching' ? 'selected' : ''}>🔍 Researching</option>
+            <option value="applied" ${company.status === 'applied' ? 'selected' : ''}>📤 Applied</option>
+            <option value="interviewing" ${company.status === 'interviewing' ? 'selected' : ''}>🎤 Interviewing</option>
+            <option value="offered" ${company.status === 'offered' ? 'selected' : ''}>🎉 Offered</option>
+            <option value="rejected" ${company.status === 'rejected' ? 'selected' : ''}>❌ Rejected</option>
+          </select>
+        </div>
+        
+        <div style="margin-top:8px">
+          <div class="label" style="font-size:10px">Key Requirements:</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            <span class="pill blue">Java/Python</span>
+            <span class="pill green">AWS/Cloud</span>
+            <span class="pill purple">Data Structures</span>
+            <span class="pill amber">System Design</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderReadinessAssessment() {
+  const el = document.getElementById('readinessAssessment');
+  const scoreEl = document.getElementById('readinessScore');
+  if (!el || !scoreEl) return;
+  
+  const skills = [
+    {id: 'algorithms', name: 'Algorithms & Data Structures'},
+    {id: 'systemDesign', name: 'System Design'},
+    {id: 'coding', name: 'Coding (Java/Python)'},
+    {id: 'cloud', name: 'Cloud Computing (AWS)'},
+    {id: 'databases', name: 'Databases & SQL'},
+    {id: 'behavioral', name: 'Behavioral Questions'},
+    {id: 'oop', name: 'Object-Oriented Programming'},
+    {id: 'security', name: 'Security Fundamentals'}
+  ];
+  
+  el.innerHTML = skills.map(skill => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px;margin-bottom:4px;background:var(--surface2);border-radius:8px">
+      <div style="flex:1;font-size:13px">${skill.name}</div>
+      <div style="display:flex;gap:4px">
+        ${[1,2,3,4,5].map(score => `
+          <button 
+            onclick="setReadiness('${skill.id}', ${score})"
+            style="width:30px;height:30px;border-radius:50%;border:none;cursor:pointer;font-size:12px;font-weight:700;
+            background:${(readinessScores[skill.id] || 0) >= score ? 'var(--accent)' : 'rgba(255,255,255,.1)'};
+            color:${(readinessScores[skill.id] || 0) >= score ? 'white' : 'var(--muted)'}"
+          >
+            ${score}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  
+  // Calculate overall readiness
+  const scores = Object.values(readinessScores);
+  const avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+  const pct = Math.round((avg / 5) * 100);
+  
+  scoreEl.innerHTML = `
+    <div style="text-align:center;padding:1rem;background:rgba(79,156,249,.1);border-radius:12px">
+      <div style="font-size:36px;font-weight:800;color:${pct >= 70 ? 'var(--accent2)' : pct >= 50 ? 'var(--warn)' : 'var(--danger)'}">${pct}%</div>
+      <div style="font-size:13px;color:var(--muted)">Overall Interview Readiness</div>
+      <div style="margin-top:8px;font-size:12px;color:var(--muted)">
+        ${pct >= 80 ? '🎉 You\'re well prepared! Start applying!' : 
+          pct >= 60 ? '📚 Good foundation — focus on weak areas' : 
+          '🎯 Keep practicing — you\'re building skills!'}
+      </div>
+    </div>
+  `;
+}
+
+function setReadiness(skill, score) {
+  readinessScores[skill] = score;
+  saveReadiness();
+  renderReadinessAssessment();
+}
+
+// ======================== MODIFIED REFRESHALL ========================
+function refreshAll() {
+  const _n = new Date();
+  const newToday = new Date(_n.getFullYear(), _n.getMonth(), _n.getDate());
+  if (newToday.getTime() !== TODAY.getTime()) { location.reload(); return; }
+  
+  buildModuleOverview();
+  buildMarks();
+  buildAlerts();
+  buildGlowUp();
+  buildLOChecklist();
+  buildFocusPriority();
+  buildDashStats();
+  buildProgressReport();
+  buildEmergencyProgression();
+  renderTodoList();
+  renderDashboardTasks();
+  renderAWSPage();
+  renderBooks();
+  renderCompanies();
+  renderReadinessAssessment();
+  timerRenderHistory();
+  
+  document.getElementById('daysToExam').textContent = Math.max(0, daysUntil(EXAM_START));
+  const schedSub = document.getElementById('schedSub');
+  if (schedSub) schedSub.textContent = 'From today — ' + TODAY.toLocaleDateString('en-ZA', {weekday: 'long', day: 'numeric', month: 'long'}) + ' through exam end (20 Nov 2026)';
+  
+  const aiEl = document.getElementById('aiSuggestionResult');
+  if (aiEl && aiEl.innerHTML.trim()) runAISuggestion();
+}
+
+// ======================== MODIFIED SHOW FUNCTION ========================
+function show(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(t => t.classList.remove('active'));
+  
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
+  
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes(page)) {
+      t.classList.add('active');
+    }
+  });
+  
+  document.querySelectorAll('.bnav-btn').forEach(t => {
+    if (t.getAttribute('onclick') && t.getAttribute('onclick').includes(page)) {
+      t.classList.add('active');
+    }
+  });
+  
+  if (page === 'focus') buildGlowUp();
+  if (page === 'emergency') initEmergencyPage();
+  if (page === 'timer') initTimerPage();
+  if (page === 'todo') renderTodoList();
+  if (page === 'aws') renderAWSPage();
+  if (page === 'books') renderBooks();
+  if (page === 'internship') {
+    renderCompanies();
+    renderReadinessAssessment();
+  }
+}
+
+// ======================== INITIALIZATION ========================
+// ... (keep all existing initialization code) ...
+loadMarks();
+buildModuleOverview();
+buildTodayClasses();
+buildTimetable();
+buildMarks();
+buildModules();
+buildAlerts();
+buildFullSchedule();
+buildProgressReport();
+buildEmergencyProgression();
+buildFocusPriority();
+buildDashStats();
+initEmergencyPage();
+initTimerPage();
+buildGlowUp();
+renderTodoList();
+renderDashboardTasks();
+renderAWSPage();
+renderBooks();
+renderCompanies();
+renderReadinessAssessment();
+
+// ... (keep all other existing code: particles, 3D tilt, etc.) ...
 </script>
 </body>
 </html>
