@@ -61,10 +61,10 @@
         /* ===== NAV ===== */
         nav {
             display: flex;
-              align-items: center;
-              gap: 6px;
-              height: 54px;
-              overflow-x: auto;
+            align-items: center;
+            gap: 4px;
+            height: 54px;
+            overflow-x: auto;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -72,11 +72,7 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border);
-            padding: 0 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            height: 54px;
+            padding: 0 0.5rem;
             box-shadow: 0 4px 30px rgba(0, 0, 0, .5);
             overflow-x: auto;
             overflow-y: visible;
@@ -93,7 +89,7 @@
             font-weight: 700;
             color: var(--accent);
             letter-spacing: -0.3px;
-            margin-right: 8px;
+            margin-right: 4px;
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -101,38 +97,72 @@
             color: var(--text);
         }
 
-        .nav-tabs {
-          display: flex;
-          gap: 0;
-          height: 100%;
-          overflow-x: auto;
-          overflow-y: visible;
-          flex: 1;
-          scrollbar-width: none;
-          -webkit-overflow-scrolling: touch;
-          align-items: center;
-          padding: 0 2px;
-          flex-shrink: 1;
-          min-width: 0;
-          flex-wrap: nowrap;   /* ← ADD THIS LINE */
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 4px;
+            margin-left: auto;
+            flex-shrink: 0;
+            touch-action: manipulation;
+            min-height: 36px;
+            min-width: 36px;
+            justify-content: center;
+            align-items: center;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: all .25s ease;
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 5px);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -5px);
         }
 
-        /* Section switcher */
+        .nav-tabs-wrap {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+            overflow-y: visible;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            flex-wrap: nowrap;
+            gap: 0;
+        }
+        .nav-tabs-wrap::-webkit-scrollbar {
+            display: none;
+        }
+
         .section-switcher {
             display: flex;
-            gap: 4px;
+            gap: 2px;
             background: var(--surface2);
             border-radius: 8px;
             padding: 3px;
             flex-shrink: 0;
-            margin-right: 6px;
+            margin-right: 4px;
             border: 1px solid var(--border);
         }
         .section-btn {
-            padding: 5px 12px;
+            padding: 4px 10px;
             border: none;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             background: transparent;
@@ -140,7 +170,7 @@
             transition: all .2s ease;
             white-space: nowrap;
             touch-action: manipulation;
-            min-height: 32px;
+            min-height: 30px;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -162,7 +192,6 @@
             box-shadow: 0 0 16px rgba(240, 136, 62, .2);
         }
 
-        /* Nav tabs container — scrollable on all screens */
         .nav-tabs {
             display: flex;
             gap: 0;
@@ -176,6 +205,7 @@
             padding: 0 2px;
             flex-shrink: 1;
             min-width: 0;
+            flex-wrap: nowrap;
         }
         .nav-tabs::-webkit-scrollbar {
             display: none;
@@ -187,8 +217,8 @@
         .nav-tab {
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 0 10px;
+            gap: 3px;
+            padding: 0 8px;
             font-size: 12px;
             font-weight: 500;
             color: var(--muted);
@@ -203,7 +233,7 @@
             white-space: nowrap;
             flex-shrink: 0;
             touch-action: manipulation;
-            min-height: 44px;
+            min-height: 42px;
             padding-top: 2px;
         }
         .nav-tab:active {
@@ -254,6 +284,153 @@
         }
         .badge.green {
             background: var(--accent2);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .7);
+            z-index: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: all .3s ease;
+        }
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            max-width: 80vw;
+            height: 100%;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 600;
+            transition: left .3s cubic-bezier(.4, 0, .2, 1);
+            padding: 1rem 0.8rem 2rem;
+            overflow-y: auto;
+            box-shadow: 4px 0 40px rgba(0, 0, 0, .6);
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .sidebar .s-brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+        .sidebar .s-brand span {
+            color: var(--text);
+        }
+        .sidebar .s-section {
+            margin-bottom: 1.2rem;
+        }
+        .sidebar .s-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--muted);
+            font-weight: 700;
+            margin-bottom: 6px;
+            padding: 0 4px;
+        }
+        .sidebar .s-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .15s;
+            touch-action: manipulation;
+            min-height: 42px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-weight: 500;
+        }
+        .sidebar .s-item:active {
+            transform: scale(0.96);
+        }
+        .sidebar .s-item:hover {
+            background: rgba(255, 255, 255, .04);
+            color: var(--text);
+        }
+        .sidebar .s-item.active-s {
+            background: rgba(79, 156, 249, .12);
+            color: var(--accent);
+        }
+        .sidebar .s-item.active-work-s {
+            background: rgba(240, 136, 62, .12);
+            color: var(--orange);
+        }
+        .sidebar .s-item .s-icon {
+            font-size: 16px;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar .s-item .s-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .sidebar .s-item .s-badge {
+            font-size: 9px;
+            background: var(--danger);
+            color: #fff;
+            padding: 0 6px;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-left: auto;
+        }
+        .sidebar .s-item .s-badge.orange {
+            background: var(--orange);
+        }
+        .sidebar .s-switcher {
+            display: flex;
+            gap: 4px;
+            background: var(--surface2);
+            border-radius: 8px;
+            padding: 3px;
+            margin-bottom: 0.8rem;
+            border: 1px solid var(--border);
+        }
+        .sidebar .s-switcher button {
+            flex: 1;
+            padding: 5px 8px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            background: transparent;
+            color: var(--muted);
+            transition: all .2s ease;
+            touch-action: manipulation;
+            min-height: 32px;
+        }
+        .sidebar .s-switcher button.active-school-s {
+            background: rgba(79, 156, 249, .25);
+            color: var(--accent);
+        }
+        .sidebar .s-switcher button.active-work-s {
+            background: rgba(240, 136, 62, .25);
+            color: var(--orange);
         }
 
         /* ===== PAGES ===== */
@@ -1394,8 +1571,8 @@
                 margin-right: 4px;
             }
             .nav-tabs {
-                flex-wrap: nowrap;   /* ← ADD THIS LINE */
-              }
+                flex-wrap: nowrap;
+            }
             .nav-tab {
                 font-size: 10px;
                 padding: 0 6px;
@@ -1533,18 +1710,32 @@
                 min-height: 28px;
             }
             .nav-brand {
-              font-size: 12px;      /* smaller */
-              margin-right: 2px;
+                font-size: 12px;
+                margin-right: 2px;
             }
             .section-btn {
-              font-size: 9px;
-              padding: 3px 6px;
-              min-height: 24px;
+                font-size: 9px;
+                padding: 3px 6px;
+                min-height: 24px;
             }
             .nav-tab {
-              font-size: 9px;
-              padding: 0 5px;
-              min-height: 34px;
+                font-size: 9px;
+                padding: 0 5px;
+                min-height: 34px;
+            }
+            /* hamburger visible on mobile */
+            .hamburger {
+                display: flex !important;
+            }
+            .nav-tabs-wrap {
+                display: none !important;
+            }
+            .sidebar-overlay.open {
+                opacity: 1;
+                visibility: visible;
+            }
+            .sidebar.open {
+                left: 0;
             }
         }
 
@@ -1623,10 +1814,42 @@
         .toggle-all-btn,
         .book-item .book-rating,
         .task-item .task-actions button,
-        .company-item .company-status+button {
+        .company-item .company-status+button,
+        .s-item {
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
+        }
+
+        /* Sync status */
+        .sync-status {
+            font-size: 9px;
+            color: var(--muted);
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, .05);
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+        .sync-status.synced {
+            color: var(--accent2);
+        }
+        .sync-status.syncing {
+            color: var(--warn);
+            animation: pulse 1s infinite;
+        }
+        .sync-status.error {
+            color: var(--danger);
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .4;
+            }
         }
     </style>
 </head>
@@ -1639,32 +1862,77 @@
         <nav id="mainNav">
             <div class="nav-brand">Study<span>Hub</span></div>
 
-            <div class="section-switcher">
-                <button class="section-btn active-school" data-section="school" onclick="switchSection('school')">📚 School</button>
-                <button class="section-btn" data-section="work" onclick="switchSection('work')">💼 Work</button>
+            <!-- Desktop tabs -->
+            <div class="nav-tabs-wrap" id="desktopTabs">
+                <div class="section-switcher">
+                    <button class="section-btn active-school" data-section="school" onclick="switchSection('school')">📚 School</button>
+                    <button class="section-btn" data-section="work" onclick="switchSection('work')">💼 Work</button>
+                </div>
+                <!-- School tabs -->
+                <div class="nav-tabs" id="schoolTabs">
+                    <button class="nav-tab active" onclick="show('dashboard')"><div class="dot"></div> Dashboard</button>
+                    <button class="nav-tab" onclick="show('timetable')">Timetable</button>
+                    <button class="nav-tab" onclick="show('schedule')">Schedule</button>
+                    <button class="nav-tab" onclick="show('marks')"><div class="dot warn"></div> Marks</button>
+                    <button class="nav-tab" onclick="show('modules')">Modules</button>
+                    <button class="nav-tab" onclick="show('alerts')"><div class="dot danger"></div> Alerts <span class="badge">4</span></button>
+                    <button class="nav-tab" onclick="show('focus')">⚡ Focus</button>
+                    <button class="nav-tab" onclick="show('emergency')">🆘 SOS</button>
+                    <button class="nav-tab" onclick="show('timer')">🍅 Timer</button>
+                </div>
+                <!-- Work tabs -->
+                <div class="nav-tabs hidden" id="workTabs">
+                    <button class="nav-tab active-work-tab" onclick="show('tasks')"><div class="dot orange"></div> Tasks</button>
+                    <button class="nav-tab" onclick="show('aws')"><div class="dot orange"></div> AWS</button>
+                    <button class="nav-tab" onclick="show('books')"><div class="dot orange"></div> Books</button>
+                    <button class="nav-tab" onclick="show('internship')"><div class="dot orange"></div> Internship</button>
+                </div>
             </div>
 
-            <!-- School tabs -->
-            <div class="nav-tabs" id="schoolTabs">
-                <button class="nav-tab active" onclick="show('dashboard')"><div class="dot"></div> Dashboard</button>
-                <button class="nav-tab" onclick="show('timetable')">Timetable</button>
-                <button class="nav-tab" onclick="show('schedule')">Schedule</button>
-                <button class="nav-tab" onclick="show('marks')"><div class="dot warn"></div> Marks</button>
-                <button class="nav-tab" onclick="show('modules')">Modules</button>
-                <button class="nav-tab" onclick="show('alerts')"><div class="dot danger"></div> Alerts <span class="badge">4</span></button>
-                <button class="nav-tab" onclick="show('focus')">⚡ Focus</button>
-                <button class="nav-tab" onclick="show('emergency')">🆘 SOS</button>
-                <button class="nav-tab" onclick="show('timer')">🍅 Timer</button>
-            </div>
+            <!-- Hamburger (mobile) -->
+            <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
 
-            <!-- Work tabs -->
-            <div class="nav-tabs hidden" id="workTabs">
-                <button class="nav-tab active-work-tab" onclick="show('tasks')"><div class="dot orange"></div> Tasks</button>
-                <button class="nav-tab" onclick="show('aws')"><div class="dot orange"></div> AWS</button>
-                <button class="nav-tab" onclick="show('books')"><div class="dot orange"></div> Books</button>
-                <button class="nav-tab" onclick="show('internship')"><div class="dot orange"></div> Internship</button>
-            </div>
+            <span class="sync-status" id="syncStatus">☁️</span>
         </nav>
+
+        <!-- ===== SIDEBAR (mobile) ===== -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+        <div class="sidebar" id="sidebar">
+            <div class="s-brand">Study<span>Hub</span></div>
+            <div class="s-switcher">
+                <button class="active-school-s" data-sb-section="school" onclick="switchSidebarSection('school')">📚 School</button>
+                <button data-sb-section="work" onclick="switchSidebarSection('work')">💼 Work</button>
+            </div>
+            <div id="sidebarSchool">
+                <div class="s-section">
+                    <div class="s-section-title">School</div>
+                    <button class="s-item active-s" onclick="sidebarNav('dashboard')"><span class="s-icon">🏠</span> Dashboard</button>
+                    <button class="s-item" onclick="sidebarNav('timetable')"><span class="s-icon">📅</span> Timetable</button>
+                    <button class="s-item" onclick="sidebarNav('schedule')"><span class="s-icon">🗓️</span> Schedule</button>
+                    <button class="s-item" onclick="sidebarNav('marks')"><span class="s-icon">📊</span> Marks</button>
+                    <button class="s-item" onclick="sidebarNav('modules')"><span class="s-icon">📚</span> Modules</button>
+                    <button class="s-item" onclick="sidebarNav('alerts')"><span class="s-icon">🔔</span> Alerts <span class="s-badge">4</span></button>
+                    <button class="s-item" onclick="sidebarNav('focus')"><span class="s-icon">⚡</span> Focus</button>
+                    <button class="s-item" onclick="sidebarNav('emergency')"><span class="s-icon">🆘</span> SOS</button>
+                    <button class="s-item" onclick="sidebarNav('timer')"><span class="s-icon">🍅</span> Timer</button>
+                </div>
+            </div>
+            <div id="sidebarWork" style="display:none;">
+                <div class="s-section">
+                    <div class="s-section-title">Work</div>
+                    <button class="s-item active-work-s" onclick="sidebarNav('tasks')"><span class="s-icon">✅</span> Tasks</button>
+                    <button class="s-item" onclick="sidebarNav('aws')"><span class="s-icon">☁️</span> AWS</button>
+                    <button class="s-item" onclick="sidebarNav('books')"><span class="s-icon">📖</span> Books</button>
+                    <button class="s-item" onclick="sidebarNav('internship')"><span class="s-icon">💼</span> Internship</button>
+                </div>
+            </div>
+            <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);">
+                <div style="font-size:10px;color:var(--muted);">Sync: <span id="sidebarSyncStatus">☁️</span></div>
+                <button class="btn" style="width:100%;font-size:11px;margin-top:6px;background:rgba(79,156,249,.1);border-color:rgba(79,156,249,.3);" onclick="forceSync()">🔄 Sync now</button>
+            </div>
+        </div>
 
         <!-- ========== SCHOOL PAGES ========== -->
 
@@ -2019,7 +2287,349 @@
 
     </div>
 
+    <!-- =================================================================== -->
+    <!-- ======================== JAVASCRIPT ================================ -->
+    <!-- =================================================================== -->
+
+    <!-- Firebase SDK (for cross-device sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js">
+    </script>
+
     <script>
+        // ===================================================================
+        // ======================== FIREBASE SYNC =============================
+        // ===================================================================
+
+        // ---- CONFIGURATION ----
+        // To enable cross-device sync, create a Firebase project at https://console.firebase.google.com/
+        // Then replace the config below with your project's config.
+        // The free "Spark" plan works perfectly for this use case.
+        const FIREBASE_CONFIG = {
+            // ↓↓↓ PASTE YOUR FIREBASE CONFIG HERE ↓↓↓
+            apiKey: "AIzaSyDemoKey123456789", // <-- REPLACE with your actual API key
+            authDomain: "your-project.firebaseapp.com", // <-- REPLACE
+            projectId: "your-project-id", // <-- REPLACE
+            storageBucket: "your-project.appspot.com", // <-- REPLACE
+            messagingSenderId: "123456789", // <-- REPLACE
+            appId: "1:123456789:web:abcdef" // <-- REPLACE
+            // ↑↑↑ PASTE YOUR FIREBASE CONFIG HERE ↑↑↑
+        };
+
+        let firebaseEnabled = false;
+        let firestore = null;
+        let syncUserId = '';
+        let syncInterval = null;
+
+        // Generate or load user ID for sync
+        function getSyncUserId() {
+            let id = localStorage.getItem('studyhub_userid');
+            if (!id) { id = 'user_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+                localStorage.setItem('studyhub_userid', id); }
+            return id;
+        }
+
+        // ---- INIT FIREBASE ----
+        function initFirebase() {
+            try {
+                // Check if config looks valid (not default placeholder)
+                const cfg = FIREBASE_CONFIG;
+                if (cfg.apiKey && cfg.apiKey !== 'AIzaSyDemoKey123456789' && cfg.projectId &&
+                    cfg.projectId !== 'your-project-id') {
+                    firebase.initializeApp(cfg);
+                    firestore = firebase.firestore();
+                    // Enable offline persistence
+                    firestore.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+                    firebaseEnabled = true;
+                    syncUserId = getSyncUserId();
+                    console.log('🔥 Firebase initialized. User ID:', syncUserId);
+                    updateSyncStatus('synced');
+                    // Start auto-sync
+                    startAutoSync();
+                    // Load data from cloud on startup
+                    loadFromCloud();
+                    return true;
+                } else {
+                    console.warn('⚠️ Firebase not configured. Using localStorage only.');
+                    updateSyncStatus('offline');
+                    return false;
+                }
+            } catch (e) {
+                console.warn('⚠️ Firebase init failed:', e);
+                updateSyncStatus('error');
+                return false;
+            }
+        }
+
+        // ---- SYNC STATUS UI ----
+        function updateSyncStatus(status, msg) {
+            const el = document.getElementById('syncStatus');
+            const sidebarEl = document.getElementById('sidebarSyncStatus');
+            const statusMap = {
+                synced: { text: '☁️ Synced', cls: 'synced' },
+                syncing: { text: '🔄 Syncing…', cls: 'syncing' },
+                error: { text: '⚠️ Sync error', cls: 'error' },
+                offline: { text: '☁️ Offline', cls: '' }
+            };
+            const s = statusMap[status] || statusMap.offline;
+            if (el) { el.textContent = s.text;
+                el.className = 'sync-status ' + s.cls; }
+            if (sidebarEl) { sidebarEl.textContent = s.text; }
+        }
+
+        // ---- AUTO SYNC ----
+        function startAutoSync() {
+            if (syncInterval) clearInterval(syncInterval);
+            syncInterval = setInterval(() => {
+                if (firebaseEnabled && navigator.onLine) {
+                    syncAllToCloud();
+                }
+            }, 30000); // every 30s
+        }
+
+        // ---- DATA SNAPSHOT ----
+        function getDataSnapshot() {
+            // Collect all data from localStorage into one object
+            const data = {
+                marks: {},
+                tasks: [],
+                books: [],
+                companies: [],
+                interviewTasks: [],
+                readiness: {},
+                awsNotes: [],
+                loStatus: {},
+                timerLogs: [],
+                timestamp: Date.now()
+            };
+            // Marks
+            for (const [k, m] of Object.entries(modules)) {
+                data.marks[k] = m.assessments.map(a => a.score);
+            }
+            // Tasks
+            try { data.tasks = JSON.parse(localStorage.getItem('studyhub_tasks') || '[]'); } catch (e) {}
+            // Books
+            try { data.books = JSON.parse(localStorage.getItem('studyhub_books') || '[]'); } catch (e) {}
+            // Companies
+            try { data.companies = JSON.parse(localStorage.getItem('studyhub_companies') || '[]'); } catch (e) {}
+            // Interview tasks
+            try { data.interviewTasks = JSON.parse(localStorage.getItem('studyhub_interview_tasks') || '[]'); } catch (
+            e) {}
+            // Readiness
+            try { data.readiness = JSON.parse(localStorage.getItem('studyhub_readiness') || '{}'); } catch (e) {}
+            // AWS notes
+            try { data.awsNotes = JSON.parse(localStorage.getItem('studyhub_aws') || '[]'); } catch (e) {}
+            // LO status
+            try { data.loStatus = JSON.parse(localStorage.getItem('studyhub_lo') || '{}'); } catch (e) {}
+            // Timer logs
+            try { data.timerLogs = JSON.parse(localStorage.getItem('studyhub_timer') || '[]'); } catch (e) {}
+            return data;
+        }
+
+        // ---- LOAD DATA FROM CLOUD ----
+        async function loadFromCloud() {
+            if (!firebaseEnabled || !firestore) return;
+            try {
+                updateSyncStatus('syncing');
+                const docRef = firestore.collection('studyhub_data').doc(syncUserId);
+                const doc = await docRef.get();
+                if (doc.exists) {
+                    const cloudData = doc.data();
+                    if (cloudData && cloudData.data) {
+                        const d = cloudData.data;
+                        // Only apply if cloud data is newer than local
+                        const localSnapshot = getDataSnapshot();
+                        const cloudTs = d.timestamp || 0;
+                        const localTs = localSnapshot.timestamp || 0;
+                        if (cloudTs > localTs) {
+                            // Merge cloud data into localStorage
+                            // Marks
+                            if (d.marks) {
+                                for (const [k, scores] of Object.entries(d.marks)) {
+                                    if (modules[k]) {
+                                        scores.forEach((s, i) => {
+                                            if (modules[k].assessments[i]) {
+                                                modules[k].assessments[i].score = (typeof s ===
+                                                    'number' && !isNaN(s)) ? s : null;
+                                            }
+                                        });
+                                    }
+                                }
+                                saveMarks();
+                            }
+                            // Tasks
+                            if (d.tasks) { localStorage.setItem('studyhub_tasks', JSON.stringify(d.tasks));
+                                tasks = d.tasks; }
+                            // Books
+                            if (d.books) { localStorage.setItem('studyhub_books', JSON.stringify(d.books));
+                                books = d.books; }
+                            // Companies
+                            if (d.companies) { localStorage.setItem('studyhub_companies', JSON.stringify(d
+                                    .companies));
+                                companies = d.companies; }
+                            // Interview tasks
+                            if (d.interviewTasks) { localStorage.setItem('studyhub_interview_tasks', JSON
+                                    .stringify(d.interviewTasks));
+                                interviewTasks = d.interviewTasks; }
+                            // Readiness
+                            if (d.readiness) { localStorage.setItem('studyhub_readiness', JSON.stringify(d
+                                    .readiness));
+                                readiness = d.readiness; }
+                            // AWS notes
+                            if (d.awsNotes) { localStorage.setItem('studyhub_aws', JSON.stringify(d.awsNotes));
+                                awsNotes = d.awsNotes; }
+                            // LO status
+                            if (d.loStatus) { localStorage.setItem('studyhub_lo', JSON.stringify(d.loStatus));
+                                loStatus = d.loStatus; }
+                            // Timer logs
+                            if (d.timerLogs) { localStorage.setItem('studyhub_timer', JSON.stringify(d
+                                    .timerLogs));
+                                timerLogs = d.timerLogs; }
+
+                            // Refresh UI
+                            refreshAll();
+                            renderTasks();
+                            renderAWSNotes();
+                            renderBooks();
+                            renderCompanies();
+                            renderInterviewTasks();
+                            updateReadinessDisplay();
+                            timerRenderHistory();
+                            checkOverdueTasks();
+                            updateSyncStatus('synced');
+                            console.log('☁️ Cloud data loaded (newer).');
+                        } else {
+                            updateSyncStatus('synced');
+                            console.log('☁️ Local data is newer, skipping cloud load.');
+                        }
+                    }
+                } else {
+                    // No cloud data yet, push local data
+                    await syncAllToCloud();
+                    updateSyncStatus('synced');
+                }
+            } catch (e) {
+                console.warn('⚠️ Cloud load error:', e);
+                updateSyncStatus('error');
+            }
+        }
+
+        // ---- SYNC ALL TO CLOUD ----
+        async function syncAllToCloud() {
+            if (!firebaseEnabled || !firestore) return;
+            try {
+                updateSyncStatus('syncing');
+                const data = getDataSnapshot();
+                data.timestamp = Date.now();
+                const docRef = firestore.collection('studyhub_data').doc(syncUserId);
+                await docRef.set({ data: data, updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+                { merge: true });
+                updateSyncStatus('synced');
+                console.log('☁️ Data synced to cloud.');
+            } catch (e) {
+                console.warn('⚠️ Cloud sync error:', e);
+                updateSyncStatus('error');
+            }
+        }
+
+        // ---- FORCE SYNC (manual) ----
+        function forceSync() {
+            if (!firebaseEnabled) {
+                alert('Firebase is not configured. Please set up your Firebase config in the script.');
+                return;
+            }
+            updateSyncStatus('syncing');
+            Promise.all([loadFromCloud(), syncAllToCloud()]).then(() => {
+                refreshAll();
+                renderTasks();
+                renderAWSNotes();
+                renderBooks();
+                renderCompanies();
+                renderInterviewTasks();
+                updateReadinessDisplay();
+                timerRenderHistory();
+                checkOverdueTasks();
+                updateSyncStatus('synced');
+            }).catch(() => {
+                updateSyncStatus('error');
+            });
+        }
+
+        // ---- WRAP LOCAL STORAGE SAVES TO TRIGGER SYNC ----
+        const origSaveMarks = saveMarks;
+        saveMarks = function() {
+            origSaveMarks();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origSaveTasks = saveTasks;
+        saveTasks = function() {
+            origSaveTasks();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origSaveBooks = saveBooks;
+        saveBooks = function() {
+            origSaveBooks();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origSaveCompanies = saveCompanies;
+        saveCompanies = function() {
+            origSaveCompanies();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origSaveInterviewTasks = saveInterviewTasks;
+        saveInterviewTasks = function() {
+            origSaveInterviewTasks();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origSaveReadiness = saveReadiness;
+        saveReadiness = function() {
+            origSaveReadiness();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origSaveAWS = saveAWS;
+        saveAWS = function() {
+            origSaveAWS();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origSaveLO = saveLO;
+        saveLO = function() {
+            origSaveLO();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+        const origTimerSaveLogs = timerSaveLogs;
+        timerSaveLogs = function() {
+            origTimerSaveLogs();
+            if (firebaseEnabled) {
+                clearTimeout(window._syncTimer);
+                window._syncTimer = setTimeout(() => syncAllToCloud(), 2000);
+            }
+        };
+
         // ===================================================================
         // ======================== FULL APPLICATION =========================
         // ===================================================================
@@ -2037,8 +2647,14 @@
         const TW1_END = new Date('2026-08-31T00:00:00');
         const TW2_START = new Date('2026-09-28T00:00:00');
         const TW2_END = new Date('2026-10-12T00:00:00');
-        const ST1_DATES = { AOP: new Date('2026-08-17T00:00:00'), ORS: new Date('2026-08-18T00:00:00'), SEF: new Date(
-                '2026-08-19T00:00:00'), ISC: new Date('2026-08-20T00:00:00') };
+
+        // ---- UPDATED ST1 DATES (user-provided) ----
+        const ST1_DATES = {
+            AOP: new Date('2026-08-26T08:30:00'), // 26 Aug 08:30-11:30
+            ORS: new Date('2026-08-20T09:00:00'), // 20 Aug 09:00-11:00
+            SEF: new Date('2026-08-17T12:30:00'), // 17 Aug 12:30-15:30
+            ISC: new Date('2026-08-25T09:00:00') // 25 Aug 09:00-11:00
+        };
         const ST2_DATES = { AOP: new Date('2026-10-05T00:00:00'), ORS: new Date('2026-10-06T00:00:00'), SEF: new Date(
                 '2026-10-07T00:00:00'), ISC: new Date('2026-10-08T00:00:00') };
         const PREDICATE_DAY = new Date('2026-10-26T00:00:00');
@@ -2064,22 +2680,56 @@
 
         function switchSection(section) {
             currentSection = section;
-            // Update buttons
             document.querySelectorAll('.section-btn').forEach(b => {
                 b.classList.remove('active-school', 'active-work');
                 if (b.dataset.section === section) {
                     b.classList.add(section === 'school' ? 'active-school' : 'active-work');
                 }
             });
-            // Toggle tab containers
+            // Also update sidebar switcher
+            document.querySelectorAll('.s-switcher button').forEach(b => {
+                b.classList.remove('active-school-s', 'active-work-s');
+                if (b.dataset.sbSection === section) {
+                    b.classList.add(section === 'school' ? 'active-school-s' : 'active-work-s');
+                }
+            });
             document.getElementById('schoolTabs').classList.toggle('hidden', section !== 'school');
             document.getElementById('workTabs').classList.toggle('hidden', section !== 'work');
-            // Toggle bottom nav
             document.getElementById('bottomSchool').style.display = section === 'school' ? 'flex' : 'none';
             document.getElementById('bottomWork').style.display = section === 'work' ? 'flex' : 'none';
-
+            document.getElementById('sidebarSchool').style.display = section === 'school' ? '' : 'none';
+            document.getElementById('sidebarWork').style.display = section === 'work' ? '' : 'none';
             const activePage = section === 'school' ? currentSchoolTab : currentWorkTab;
             show(activePage, section);
+            closeSidebar();
+        }
+
+        function switchSidebarSection(section) {
+            switchSection(section);
+        }
+
+        // ---- SIDEBAR ----
+        function toggleSidebar() {
+            const overlay = document.getElementById('sidebarOverlay');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.getElementById('hamburgerBtn');
+            overlay.classList.toggle('open');
+            sidebar.classList.toggle('open');
+            hamburger.classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            const overlay = document.getElementById('sidebarOverlay');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.getElementById('hamburgerBtn');
+            overlay.classList.remove('open');
+            sidebar.classList.remove('open');
+            hamburger.classList.remove('open');
+        }
+
+        function sidebarNav(page) {
+            show(page);
+            closeSidebar();
         }
 
         // ---- SHOW PAGE ----
@@ -2100,20 +2750,24 @@
                     if (b.dataset.section === sec) b.classList.add(sec === 'school' ? 'active-school' :
                     'active-work');
                 });
+                document.querySelectorAll('.s-switcher button').forEach(b => {
+                    b.classList.remove('active-school-s', 'active-work-s');
+                    if (b.dataset.sbSection === sec) b.classList.add(sec === 'school' ? 'active-school-s' :
+                        'active-work-s');
+                });
                 document.getElementById('schoolTabs').classList.toggle('hidden', sec !== 'school');
                 document.getElementById('workTabs').classList.toggle('hidden', sec !== 'work');
                 document.getElementById('bottomSchool').style.display = sec === 'school' ? 'flex' : 'none';
                 document.getElementById('bottomWork').style.display = sec === 'work' ? 'flex' : 'none';
+                document.getElementById('sidebarSchool').style.display = sec === 'school' ? '' : 'none';
+                document.getElementById('sidebarWork').style.display = sec === 'work' ? '' : 'none';
             }
 
-            // Hide all pages
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
-            // Show target
             const target = document.getElementById('page-' + page);
             if (target) target.classList.add('active');
 
-            // Update nav tabs
+            // Update desktop nav tabs
             if (sec === 'school') {
                 currentSchoolTab = page;
                 document.querySelectorAll('#schoolTabs .nav-tab').forEach(t => t.classList.remove('active'));
@@ -2122,13 +2776,27 @@
                     if (onclick.includes("'" + page + "'") || onclick.includes('"' + page + '"')) t.classList.add(
                         'active');
                 });
+                // Update sidebar school items
+                document.querySelectorAll('#sidebarSchool .s-item').forEach(t => t.classList.remove('active-s'));
+                document.querySelectorAll('#sidebarSchool .s-item').forEach(t => {
+                    const onclick = t.getAttribute('onclick') || '';
+                    if (onclick.includes("'" + page + "'") || onclick.includes('"' + page + '"')) t.classList
+                        .add('active-s');
+                });
             } else {
                 currentWorkTab = page;
                 document.querySelectorAll('#workTabs .nav-tab').forEach(t => t.classList.remove('active-work-tab'));
                 document.querySelectorAll('#workTabs .nav-tab').forEach(t => {
                     const onclick = t.getAttribute('onclick') || '';
-                    if (onclick.includes("'" + page + "'") || onclick.includes('"' + page + '"')) t.classList.add(
-                        'active-work-tab');
+                    if (onclick.includes("'" + page + "'") || onclick.includes('"' + page + '"')) t.classList
+                        .add('active-work-tab');
+                });
+                document.querySelectorAll('#sidebarWork .s-item').forEach(t => t.classList.remove(
+                'active-work-s'));
+                document.querySelectorAll('#sidebarWork .s-item').forEach(t => {
+                    const onclick = t.getAttribute('onclick') || '';
+                    if (onclick.includes("'" + page + "'") || onclick.includes('"' + page + '"')) t.classList
+                        .add('active-work-s');
                 });
             }
 
@@ -2304,7 +2972,7 @@
             document.getElementById('currentActivity').innerHTML = html;
         })();
 
-        // ---- MODULES DATA ----
+        // ---- MODULES DATA (UPDATED MARK WEIGHTS) ----
         const modules = {
             AOP: {
                 name: 'Advanced Object-Oriented Programming',
@@ -2313,16 +2981,21 @@
                 icon: '📱',
                 lecturer: 'W Birch',
                 target: 75,
-                assessments: [{ name: 'Class Test 1', weight: 10, coverage: ['AOP-A', 'AOP-B', 'AOP-C'] },
-                { name: 'Class Test 2', weight: 10, coverage: ['AOP-D', 'AOP-E', 'AOP-F'] },
-                { name: 'Group Assignment', weight: 20, coverage: ['AOP-A', 'AOP-B', 'AOP-C', 'AOP-D',
-                        'AOP-E', 'AOP-F'
-                    ] }, { name: 'Semester Test 1', weight: 30, coverage: ['AOP-A', 'AOP-B', 'AOP-C'],
-                    date: ST1_DATES.AOP }, { name: 'Semester Test 2', weight: 30,
-                    coverage: ['AOP-D', 'AOP-E', 'AOP-F'], date: ST2_DATES.AOP }],
+                assessments: [
+                    // Quizzes & Assignments = 15% (used for CT structure)
+                    { name: 'Quizzes & Assignments', weight: 15, coverage: ['AOP-A', 'AOP-B', 'AOP-C', 'AOP-D',
+                            'AOP-E', 'AOP-F'
+                        ] },
+                    { name: 'Class Test 1', weight: 12.5, coverage: ['AOP-A', 'AOP-B', 'AOP-C'] },
+                    { name: 'Semester Test 1', weight: 30, coverage: ['AOP-A', 'AOP-B', 'AOP-C', 'AOP-D'],
+                        date: ST1_DATES.AOP },
+                    { name: 'Class Test 2', weight: 12.5, coverage: ['AOP-D', 'AOP-E', 'AOP-F'] },
+                    { name: 'Semester Test 2', weight: 30, coverage: ['AOP-D', 'AOP-E', 'AOP-F', 'AOP-A'],
+                        date: ST2_DATES.AOP }
+                ],
                 quizzes: [],
                 predicate: null,
-                note: 'Class Tests 20%, Assignment 20%, Semester Tests 60%. Need 50% to pass.',
+                note: 'AS (Quizzes & Assignments) 15% + CT1 12.5% + ST1 30% + CT2 12.5% + ST2 30% = 100%. ST1: 26 Aug 08:30–11:30.',
                 topics: ['Java Swing GUIs', 'File Manipulation', 'Data Structures & Generics',
                     'Database Connectivity (Derby)', 'Multithreading', 'Client-Server Applications'
                 ],
@@ -2349,21 +3022,19 @@
                 icon: '⚙️',
                 lecturer: 'Mr. M.J. Mathiane',
                 target: 75,
-                assessments: [{ name: 'Class Test 1', weight: 5, coverage: ['ORS-1', 'ORS-2'] },
-                { name: 'Class Test 2', weight: 5, coverage: ['ORS-3', 'ORS-4'] },
-                { name: 'Assignment', weight: 10, coverage: ['ORS-1', 'ORS-2', 'ORS-3'] },
-                { name: 'Project', weight: 30, coverage: ['ORS-4', 'ORS-5', 'ORS-6'] },
-                { name: 'Semester Test 1', weight: 25, coverage: ['ORS-1', 'ORS-2', 'ORS-3'],
-                    date: ST1_DATES.ORS }, { name: 'Semester Test 2', weight: 25,
-                    coverage: ['ORS-4', 'ORS-5', 'ORS-6'], date: ST2_DATES.ORS }],
-                quizzes: [{ name: 'Quiz 1', weight: 0, coverage: ['ORS-1'] },
-                { name: 'Quiz 2', weight: 0, coverage: ['ORS-2'] },
-                { name: 'Quiz 3', weight: 0, coverage: ['ORS-3'] },
-                { name: 'Quiz 4', weight: 0, coverage: ['ORS-4'] },
-                { name: 'Quiz 5', weight: 0, coverage: ['ORS-5'] },
-                { name: 'Quiz 6', weight: 0, coverage: ['ORS-6'] }],
+                assessments: [
+                    { name: 'Class Test 1 & Quizzes', weight: 5, coverage: ['ORS-1', 'ORS-2'] },
+                    { name: 'Class Test 2 & Quizzes', weight: 5, coverage: ['ORS-3', 'ORS-4'] },
+                    { name: 'Assignment', weight: 10, coverage: ['ORS-1', 'ORS-2', 'ORS-3'] },
+                    { name: 'Project', weight: 30, coverage: ['ORS-4', 'ORS-5', 'ORS-6'] },
+                    { name: 'Semester Test 1', weight: 25, coverage: ['ORS-1', 'ORS-2', 'ORS-3'],
+                        date: ST1_DATES.ORS },
+                    { name: 'Semester Test 2', weight: 25, coverage: ['ORS-4', 'ORS-5', 'ORS-6'],
+                        date: ST2_DATES.ORS }
+                ],
+                quizzes: [],
                 predicate: null,
-                note: 'Predicate = CT1(5%) + CT2(5%) + Assignment(10%) + Project(30%) + ST1(25%) + ST2(25%).',
+                note: 'CT1+Quizzes 5% + CT2+Quizzes 5% + Assignment 10% + Project 30% + ST1 25% + ST2 25% = 100%. ST1: 20 Aug 09:00–11:00.',
                 topics: ['Linux Distributions', 'Command Line Interface', 'File & Directory Management',
                     'Users & Groups', 'Package Management', 'File System & Disk Management', 'Networking'
                 ],
@@ -2389,22 +3060,23 @@
                 icon: '🛠️',
                 lecturer: 'K Mogapi',
                 target: 75,
-                assessments: [{ name: 'Class Test 1', weight: 10, coverage: ['SEF-1', 'SEF-2'] },
-                { name: 'Semester Test 1', weight: 30, coverage: ['SEF-1', 'SEF-2', 'SEF-3'],
-                    date: ST1_DATES.SEF }, { name: 'Class Test 2', weight: 10,
-                    coverage: ['SEF-4', 'SEF-5'] }, { name: 'Semester Test 2', weight: 30,
-                    coverage: ['SEF-4', 'SEF-5', 'SEF-6'], date: ST2_DATES.SEF },
-                { name: 'Group Assignment / Project', weight: 20, coverage: ['SEF-1', 'SEF-2',
-                        'SEF-3', 'SEF-4', 'SEF-5', 'SEF-6'
-                    ] }],
-                quizzes: [{ name: 'Quiz 1', weight: 0, coverage: ['SEF-1'] },
-                { name: 'Quiz 2', weight: 0, coverage: ['SEF-2'] },
-                { name: 'Quiz 3', weight: 0, coverage: ['SEF-3'] },
-                { name: 'Quiz 4', weight: 0, coverage: ['SEF-4'] },
-                { name: 'Quiz 5', weight: 0, coverage: ['SEF-5'] },
-                { name: 'Quiz 6', weight: 0, coverage: ['SEF-6'] }],
+                assessments: [
+                    { name: 'Class Test 1', weight: 13, coverage: ['SEF-1', 'SEF-2'] },
+                    { name: 'Class Test 2', weight: 13, coverage: ['SEF-4', 'SEF-5'] },
+                    { name: 'Semester Test 1', weight: 21, coverage: ['SEF-1', 'SEF-2', 'SEF-3'],
+                        date: ST1_DATES.SEF },
+                    { name: 'Semester Test 2', weight: 21, coverage: ['SEF-4', 'SEF-5', 'SEF-6'],
+                        date: ST2_DATES.SEF },
+                    { name: 'Quizzes (best 4 of 6)', weight: 17, coverage: ['SEF-1', 'SEF-2', 'SEF-3', 'SEF-4',
+                            'SEF-5', 'SEF-6'
+                        ] },
+                    { name: 'Project', weight: 15, coverage: ['SEF-1', 'SEF-2', 'SEF-3', 'SEF-4', 'SEF-5',
+                            'SEF-6'
+                        ] }
+                ],
+                quizzes: [],
                 predicate: null,
-                note: 'Class Tests 20%, Semester Tests 60%, Group Project 20%.',
+                note: 'CT1 13% + CT2 13% + ST1 21% + ST2 21% + Quizzes (best 4/6) 17% + Project 15% = 100%. ST1: 17 Aug 12:30–15:30.',
                 topics: ['Introduction to SE & AI', 'SDLC in AI Era', 'Requirements Engineering with AI',
                     'UML Modelling', 'Data Engineering', 'AI for Project Management'
                 ],
@@ -2430,17 +3102,20 @@
                 icon: '🔒',
                 lecturer: 'Dr T.M. Tshilongamulenzhe',
                 target: 75,
-                assessments: [{ name: 'Class Tests 1', weight: 5, coverage: ['ISC-1', 'ISC-2'] },
-                { name: 'Semester Test 1', weight: 30, coverage: ['ISC-1', 'ISC-2', 'ISC-3'],
-                    date: ST1_DATES.ISC }, { name: 'Class Tests 2', weight: 5,
-                    coverage: ['ISC-3', 'ISC-4'] }, { name: 'Semester Test 2', weight: 30,
-                    coverage: ['ISC-3', 'ISC-4', 'ISC-5'], date: ST2_DATES.ISC },
-                { name: 'Group Project', weight: 30, coverage: ['ISC-1', 'ISC-2', 'ISC-3',
-                        'ISC-4', 'ISC-5'
-                    ] }],
+                assessments: [
+                    { name: 'Class Tests 1', weight: 5, coverage: ['ISC-1', 'ISC-2'] },
+                    { name: 'Semester Test 1', weight: 30, coverage: ['ISC-1', 'ISC-2', 'ISC-3'],
+                        date: ST1_DATES.ISC },
+                    { name: 'Class Tests 2', weight: 5, coverage: ['ISC-3', 'ISC-4'] },
+                    { name: 'Semester Test 2', weight: 30, coverage: ['ISC-3', 'ISC-4', 'ISC-5'],
+                        date: ST2_DATES.ISC },
+                    { name: 'Group Project', weight: 30, coverage: ['ISC-1', 'ISC-2', 'ISC-3', 'ISC-4',
+                            'ISC-5'
+                        ] }
+                ],
                 quizzes: [],
                 predicate: null,
-                note: 'CT1(5%) + ST1(30%) + CT2(5%) + ST2(30%) + Project(30%).',
+                note: 'CT1 5% + ST1 30% + CT2 5% + ST2 30% + Project 30% = 100%. ST1: 25 Aug 09:00–11:00.',
                 topics: ['Security Principles (CIA)', 'Risk, Threats & Vulnerabilities',
                     'Authentication & Authorization', 'Access Control', 'Firewalls & VPN',
                     'Intrusion Detection', 'Ethical Hacking'
@@ -2728,8 +3403,9 @@
                     const label = d < 0 ? 'was yesterday' : d === 0 ? 'TODAY' : d === 1 ? 'tomorrow' :
                         `in ${d} days`;
                     const testName = date === ST1_DATES[mod] ? 'ST1' : 'ST2';
+                    const timeStr = date.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
                     alerts.push({ level: urgency, title: `${testName} ${mod} — ${modules[mod].name} ${label}`,
-                        body: `${date.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})}. Coverage: ${modules[mod].assessments.find(a=>a.date && isSameDay(a.date,date))?.coverage?.join(', ') || 'All LOs'}`,
+                        body: `${date.toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long'})} at ${timeStr}. Coverage: ${modules[mod].assessments.find(a=>a.date && isSameDay(a.date,date))?.coverage?.join(', ') || 'All LOs'}`,
                         icon: d <= 1 ? '🚨' : '⏰' });
                 }
             });
@@ -4099,6 +4775,10 @@
         // ======================== INIT ======================================
         // ===================================================================
 
+        // ---- INIT FIREBASE ----
+        initFirebase();
+
+        // ---- LOAD DATA ----
         loadMarks();
         buildModuleOverview();
         buildTodayClasses();
@@ -4176,6 +4856,11 @@
         })();
 
         console.log('📚 StudyHub loaded! School & Work sections ready.');
+        if (firebaseEnabled) {
+            console.log('☁️ Firebase sync enabled. User ID:', syncUserId);
+        } else {
+            console.log('📁 Using localStorage only. To enable cross-device sync, configure Firebase.');
+        }
     </script>
 </body>
 </html>
