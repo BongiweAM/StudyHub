@@ -99,7 +99,7 @@
 
         /* Hamburger */
         .hamburger {
-            display: none;
+            display: flex;
             flex-direction: column;
             gap: 4px;
             background: none;
@@ -130,6 +130,23 @@
         }
         .hamburger.open span:nth-child(3) {
             transform: rotate(-45deg) translate(4px, -5px);
+        }
+        
+        /* Hide nav tabs and section switcher on mobile, show only hamburger and brand */
+        @media (max-width: 768px) {
+            .nav-tabs-wrap {
+                display: none !important;
+            }
+            .section-switcher {
+                display: none !important;
+            }
+        }
+        
+        /* Show full nav on desktop, hide hamburger */
+        @media (min-width: 769px) {
+            .hamburger {
+                display: none !important;
+            }
         }
 
         .nav-tabs-wrap {
@@ -378,6 +395,9 @@
         .sidebar .s-item.active-work-s {
             background: rgba(240, 136, 62, .12);
             color: var(--orange);
+        }
+        .sidebar .s-item .s-text {
+            flex: 1;
         }
         .sidebar .s-item .s-icon {
             font-size: 16px;
@@ -1910,24 +1930,64 @@
             <div id="sidebarSchool">
                 <div class="s-section">
                     <div class="s-section-title">School</div>
-                    <button class="s-item active-s" onclick="sidebarNav('dashboard')"><span class="s-icon">🏠</span> Dashboard</button>
-                    <button class="s-item" onclick="sidebarNav('timetable')"><span class="s-icon">📅</span> Timetable</button>
-                    <button class="s-item" onclick="sidebarNav('schedule')"><span class="s-icon">🗓️</span> Schedule</button>
-                    <button class="s-item" onclick="sidebarNav('marks')"><span class="s-icon">📊</span> Marks</button>
-                    <button class="s-item" onclick="sidebarNav('modules')"><span class="s-icon">📚</span> Modules</button>
-                    <button class="s-item" onclick="sidebarNav('alerts')"><span class="s-icon">🔔</span> Alerts <span class="s-badge">4</span></button>
-                    <button class="s-item" onclick="sidebarNav('focus')"><span class="s-icon">⚡</span> Focus</button>
-                    <button class="s-item" onclick="sidebarNav('emergency')"><span class="s-icon">🆘</span> SOS</button>
-                    <button class="s-item" onclick="sidebarNav('timer')"><span class="s-icon">🍅</span> Timer</button>
+                    <button class="s-item active-s" onclick="sidebarNav('dashboard')">
+                        <span class="s-icon">🏠</span>
+                        <span class="s-text">Dashboard</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('timetable')">
+                        <span class="s-icon">📅</span>
+                        <span class="s-text">Timetable</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('schedule')">
+                        <span class="s-icon">🗓️</span>
+                        <span class="s-text">Schedule</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('marks')">
+                        <span class="s-icon">📊</span>
+                        <span class="s-text">Marks</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('modules')">
+                        <span class="s-icon">📚</span>
+                        <span class="s-text">Modules</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('alerts')">
+                        <span class="s-icon">🔔</span>
+                        <span class="s-text">Alerts</span>
+                        <span class="s-badge">4</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('focus')">
+                        <span class="s-icon">⚡</span>
+                        <span class="s-text">Focus</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('emergency')">
+                        <span class="s-icon">🆘</span>
+                        <span class="s-text">SOS</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('timer')">
+                        <span class="s-icon">🍅</span>
+                        <span class="s-text">Timer</span>
+                    </button>
                 </div>
             </div>
             <div id="sidebarWork" style="display:none;">
                 <div class="s-section">
                     <div class="s-section-title">Work</div>
-                    <button class="s-item active-work-s" onclick="sidebarNav('tasks')"><span class="s-icon">✅</span> Tasks</button>
-                    <button class="s-item" onclick="sidebarNav('aws')"><span class="s-icon">☁️</span> AWS</button>
-                    <button class="s-item" onclick="sidebarNav('books')"><span class="s-icon">📖</span> Books</button>
-                    <button class="s-item" onclick="sidebarNav('internship')"><span class="s-icon">💼</span> Internship</button>
+                    <button class="s-item active-work-s" onclick="sidebarNav('tasks')">
+                        <span class="s-icon">✅</span>
+                        <span class="s-text">Tasks</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('aws')">
+                        <span class="s-icon">☁️</span>
+                        <span class="s-text">AWS</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('books')">
+                        <span class="s-icon">📖</span>
+                        <span class="s-text">Books</span>
+                    </button>
+                    <button class="s-item" onclick="sidebarNav('internship')">
+                        <span class="s-icon">💼</span>
+                        <span class="s-text">Internship</span>
+                    </button>
                 </div>
             </div>
             <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);">
@@ -2730,6 +2790,30 @@
         }
 
         function sidebarNav(page) {
+            // Update sidebar active state
+            document.querySelectorAll('.s-item').forEach(item => {
+                item.classList.remove('active-s', 'active-work-s');
+            });
+            
+            // Determine section based on page
+            const schoolPages = ['dashboard', 'timetable', 'schedule', 'marks', 'modules', 'alerts', 'focus', 'emergency', 'timer'];
+            const workPages = ['tasks', 'aws', 'books', 'internship'];
+            
+            const isSchool = schoolPages.includes(page);
+            const isWork = workPages.includes(page);
+            
+            // Find and activate the clicked item
+            document.querySelectorAll('.s-item').forEach(item => {
+                const itemOnclick = item.getAttribute('onclick');
+                if (itemOnclick && itemOnclick.includes(`'${page}'`)) {
+                    if (isSchool) {
+                        item.classList.add('active-s');
+                    } else if (isWork) {
+                        item.classList.add('active-work-s');
+                    }
+                }
+            });
+            
             show(page);
             closeSidebar();
         }
