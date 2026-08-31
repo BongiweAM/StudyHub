@@ -65,6 +65,7 @@
             gap: 4px;
             height: 54px;
             overflow-x: auto;
+            overflow-y: hidden;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -74,14 +75,13 @@
             border-bottom: 1px solid var(--border);
             padding: 0 0.5rem;
             box-shadow: 0 4px 30px rgba(0, 0, 0, .5);
-            overflow-x: auto;
-            overflow-y: visible;
             flex-wrap: nowrap;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
         }
         nav::-webkit-scrollbar {
             display: none;
+            height: 0;
         }
 
         .nav-brand {
@@ -138,7 +138,7 @@
             flex: 1;
             min-width: 0;
             overflow-x: auto;
-            overflow-y: visible;
+            overflow-y: hidden;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
             flex-wrap: nowrap;
@@ -146,6 +146,7 @@
         }
         .nav-tabs-wrap::-webkit-scrollbar {
             display: none;
+            height: 0;
         }
 
         .section-switcher {
@@ -197,7 +198,7 @@
             gap: 0;
             height: 100%;
             overflow-x: auto;
-            overflow-y: visible;
+            overflow-y: hidden;
             flex: 1;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
@@ -209,6 +210,7 @@
         }
         .nav-tabs::-webkit-scrollbar {
             display: none;
+            height: 0;
         }
         .nav-tabs.hidden {
             display: none !important;
@@ -2982,15 +2984,17 @@
                 lecturer: 'W Birch',
                 target: 75,
                 assessments: [
-                    // Quizzes & Assignments = 15% (used for CT structure)
-                    { name: 'Quizzes & Assignments', weight: 15, coverage: ['AOP-A', 'AOP-B', 'AOP-C', 'AOP-D',
-                            'AOP-E', 'AOP-F'
-                        ] },
-                    { name: 'Class Test 1', weight: 12.5, coverage: ['AOP-A', 'AOP-B', 'AOP-C'] },
-                    { name: 'Semester Test 1', weight: 30, coverage: ['AOP-A', 'AOP-B', 'AOP-C', 'AOP-D'],
+                    // Quizzes & Assignments = 15% (broken into individual items)
+                    { name: 'Quiz 1', weight: 3, max: 100, score: null, coverage: ['AOP-A'] },
+                    { name: 'Quiz 2', weight: 3, max: 100, score: null, coverage: ['AOP-B'] },
+                    { name: 'Quiz 3', weight: 3, max: 100, score: null, coverage: ['AOP-C'] },
+                    { name: 'Assignment 1', weight: 3, max: 100, score: null, coverage: ['AOP-D'] },
+                    { name: 'Assignment 2', weight: 3, max: 100, score: null, coverage: ['AOP-E', 'AOP-F'] },
+                    { name: 'Class Test 1', weight: 12.5, max: 100, score: null, coverage: ['AOP-A', 'AOP-B', 'AOP-C'] },
+                    { name: 'Semester Test 1', weight: 30, max: 100, score: null, coverage: ['AOP-A', 'AOP-B', 'AOP-C', 'AOP-D'],
                         date: ST1_DATES.AOP },
-                    { name: 'Class Test 2', weight: 12.5, coverage: ['AOP-D', 'AOP-E', 'AOP-F'] },
-                    { name: 'Semester Test 2', weight: 30, coverage: ['AOP-D', 'AOP-E', 'AOP-F', 'AOP-A'],
+                    { name: 'Class Test 2', weight: 12.5, max: 100, score: null, coverage: ['AOP-D', 'AOP-E', 'AOP-F'] },
+                    { name: 'Semester Test 2', weight: 30, max: 100, score: null, coverage: ['AOP-D', 'AOP-E', 'AOP-F', 'AOP-A'],
                         date: ST2_DATES.AOP }
                 ],
                 quizzes: [],
@@ -3023,13 +3027,17 @@
                 lecturer: 'Mr. M.J. Mathiane',
                 target: 75,
                 assessments: [
-                    { name: 'Class Test 1 & Quizzes', weight: 5, coverage: ['ORS-1', 'ORS-2'] },
-                    { name: 'Class Test 2 & Quizzes', weight: 5, coverage: ['ORS-3', 'ORS-4'] },
-                    { name: 'Assignment', weight: 10, coverage: ['ORS-1', 'ORS-2', 'ORS-3'] },
-                    { name: 'Project', weight: 30, coverage: ['ORS-4', 'ORS-5', 'ORS-6'] },
-                    { name: 'Semester Test 1', weight: 25, coverage: ['ORS-1', 'ORS-2', 'ORS-3'],
+                    { name: 'Class Test 1', weight: 5, max: 100, score: null, coverage: ['ORS-1', 'ORS-2'] },
+                    { name: 'Quiz 1', weight: 0, max: 100, score: null, coverage: ['ORS-1'] },
+                    { name: 'Quiz 2', weight: 0, max: 100, score: null, coverage: ['ORS-2'] },
+                    { name: 'Class Test 2', weight: 5, max: 100, score: null, coverage: ['ORS-3', 'ORS-4'] },
+                    { name: 'Quiz 3', weight: 0, max: 100, score: null, coverage: ['ORS-3'] },
+                    { name: 'Quiz 4', weight: 0, max: 100, score: null, coverage: ['ORS-4'] },
+                    { name: 'Assignment', weight: 10, max: 100, score: null, coverage: ['ORS-1', 'ORS-2', 'ORS-3'] },
+                    { name: 'Project', weight: 30, max: 100, score: null, coverage: ['ORS-4', 'ORS-5', 'ORS-6'] },
+                    { name: 'Semester Test 1', weight: 25, max: 100, score: null, coverage: ['ORS-1', 'ORS-2', 'ORS-3'],
                         date: ST1_DATES.ORS },
-                    { name: 'Semester Test 2', weight: 25, coverage: ['ORS-4', 'ORS-5', 'ORS-6'],
+                    { name: 'Semester Test 2', weight: 25, max: 100, score: null, coverage: ['ORS-4', 'ORS-5', 'ORS-6'],
                         date: ST2_DATES.ORS }
                 ],
                 quizzes: [],
@@ -3061,16 +3069,19 @@
                 lecturer: 'K Mogapi',
                 target: 75,
                 assessments: [
-                    { name: 'Class Test 1', weight: 13, coverage: ['SEF-1', 'SEF-2'] },
-                    { name: 'Class Test 2', weight: 13, coverage: ['SEF-4', 'SEF-5'] },
-                    { name: 'Semester Test 1', weight: 21, coverage: ['SEF-1', 'SEF-2', 'SEF-3'],
+                    { name: 'Class Test 1', weight: 13, max: 100, score: null, coverage: ['SEF-1', 'SEF-2'] },
+                    { name: 'Class Test 2', weight: 13, max: 100, score: null, coverage: ['SEF-4', 'SEF-5'] },
+                    { name: 'Semester Test 1', weight: 21, max: 100, score: null, coverage: ['SEF-1', 'SEF-2', 'SEF-3'],
                         date: ST1_DATES.SEF },
-                    { name: 'Semester Test 2', weight: 21, coverage: ['SEF-4', 'SEF-5', 'SEF-6'],
+                    { name: 'Semester Test 2', weight: 21, max: 100, score: null, coverage: ['SEF-4', 'SEF-5', 'SEF-6'],
                         date: ST2_DATES.SEF },
-                    { name: 'Quizzes (best 4 of 6)', weight: 17, coverage: ['SEF-1', 'SEF-2', 'SEF-3', 'SEF-4',
-                            'SEF-5', 'SEF-6'
-                        ] },
-                    { name: 'Project', weight: 15, coverage: ['SEF-1', 'SEF-2', 'SEF-3', 'SEF-4', 'SEF-5',
+                    { name: 'Quiz 1', weight: 2.83, max: 100, score: null, coverage: ['SEF-1'] },
+                    { name: 'Quiz 2', weight: 2.83, max: 100, score: null, coverage: ['SEF-2'] },
+                    { name: 'Quiz 3', weight: 2.83, max: 100, score: null, coverage: ['SEF-3'] },
+                    { name: 'Quiz 4', weight: 2.83, max: 100, score: null, coverage: ['SEF-4'] },
+                    { name: 'Quiz 5', weight: 2.83, max: 100, score: null, coverage: ['SEF-5'] },
+                    { name: 'Quiz 6', weight: 2.83, max: 100, score: null, coverage: ['SEF-6'] },
+                    { name: 'Project', weight: 15, max: 100, score: null, coverage: ['SEF-1', 'SEF-2', 'SEF-3', 'SEF-4', 'SEF-5',
                             'SEF-6'
                         ] }
                 ],
@@ -3103,13 +3114,13 @@
                 lecturer: 'Dr T.M. Tshilongamulenzhe',
                 target: 75,
                 assessments: [
-                    { name: 'Class Tests 1', weight: 5, coverage: ['ISC-1', 'ISC-2'] },
-                    { name: 'Semester Test 1', weight: 30, coverage: ['ISC-1', 'ISC-2', 'ISC-3'],
+                    { name: 'Class Tests 1', weight: 5, max: 100, score: null, coverage: ['ISC-1', 'ISC-2'] },
+                    { name: 'Semester Test 1', weight: 30, max: 100, score: null, coverage: ['ISC-1', 'ISC-2', 'ISC-3'],
                         date: ST1_DATES.ISC },
-                    { name: 'Class Tests 2', weight: 5, coverage: ['ISC-3', 'ISC-4'] },
-                    { name: 'Semester Test 2', weight: 30, coverage: ['ISC-3', 'ISC-4', 'ISC-5'],
+                    { name: 'Class Tests 2', weight: 5, max: 100, score: null, coverage: ['ISC-3', 'ISC-4'] },
+                    { name: 'Semester Test 2', weight: 30, max: 100, score: null, coverage: ['ISC-3', 'ISC-4', 'ISC-5'],
                         date: ST2_DATES.ISC },
-                    { name: 'Group Project', weight: 30, coverage: ['ISC-1', 'ISC-2', 'ISC-3', 'ISC-4',
+                    { name: 'Group Project', weight: 30, max: 100, score: null, coverage: ['ISC-1', 'ISC-2', 'ISC-3', 'ISC-4',
                             'ISC-5'
                         ] }
                 ],
